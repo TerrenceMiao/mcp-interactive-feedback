@@ -1,14 +1,14 @@
-# 🎯 MCP Feedback Collector
+# 🎯 MCP Interactive Feedback
 
-[![npm version](https://badge.fury.io/js/mcp-feedback-collector.svg)](https://www.npmjs.com/package/mcp-feedback-collector)
+[![npm version](https://badge.fury.io/js/mcp-interactive-feedback.svg)](https://www.npmjs.com/package/mcp-interactive-feedback)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
-基于Node.js的现代化MCP反馈收集器，支持AI工作汇报和用户反馈收集。
+Nodejs based Interactive Feedback MCP Server - supports AI powered work reports and user feedback.
 
 ## ✨ 特性
 
-- 🚀 **一键启动**: 使用 `npx mcp-feedback-collector` 直接运行
+- 🚀 **一键启动**: 使用 `npx mcp-interactive-feedback` 直接运行
 - 🎨 **现代界面**: VS Code深色主题风格的Web界面
 - 🔧 **MCP集成**: 完整支持Model Context Protocol
 - 💬 **AI对话功能**: 集成AI助手，支持文字和图片对话
@@ -16,21 +16,17 @@
 - 🌐 **跨平台**: 支持Windows、macOS、Linux
 - ⚡ **高性能**: 解决了Python版本的稳定性问题
 
-## 开发过程视频教程
-### 油管：https://youtu.be/Osr1OSMgzlg
-### B站：https://www.bilibili.com/video/BV1PHTxzSErb/
-
 ## 🚀 快速开始
 
 ### 安装和运行
 
 ```bash
 # 直接运行（推荐）
-npx mcp-feedback-collector
+npx mcp-interactive-feedback
 
 # 或者全局安装
-npm install -g mcp-feedback-collector
-mcp-feedback-collector
+npm install -g mcp-interactive-feedback
+mcp-interactive-feedback
 ```
 
 ### 配置环境变量
@@ -63,25 +59,25 @@ MCP_CLEANUP_PORT_ON_START="true"   # 启动时清理端口 (默认: true)
 
 ```bash
 # 启动服务器（默认）
-mcp-feedback-collector
+mcp-interactive-feedback
 
 # 指定端口
-mcp-feedback-collector --port 8080
+mcp-interactive-feedback --port 8080
 
 # 仅Web模式
-mcp-feedback-collector --web
+mcp-interactive-feedback --web
 
 # 测试collect_feedback功能
-mcp-feedback-collector test-feedback
+mcp-interactive-feedback test-feedback
 
 # 自定义测试内容
-mcp-feedback-collector test-feedback -m "我的工作汇报" -t 120
+mcp-interactive-feedback test-feedback -m "我的工作汇报" -t 120
 
 # 健康检查
-mcp-feedback-collector health
+mcp-interactive-feedback health
 
 # 显示配置
-mcp-feedback-collector config
+mcp-interactive-feedback config
 ```
 
 ### Claude Desktop集成
@@ -93,9 +89,9 @@ mcp-feedback-collector config
 ```json
 {
   "mcpServers": {
-    "mcp-feedback-collector": {
+    "mcp-interactive-feedback": {
       "command": "npx",
-      "args": ["-y", "mcp-feedback-collector@latest"],
+      "args": ["-y", "mcp-interactive-feedback@latest"],
       "env": {
         "MCP_API_KEY": "your_api_key_here",
         "MCP_API_BASE_URL": "https://api.ssopen.top",
@@ -115,7 +111,7 @@ mcp-feedback-collector config
 ```json
 {
   "mcpServers": {
-    "mcp-feedback-collector": {
+    "mcp-interactive-feedback": {
       "command": "node",
       "args": ["path/to/your/project/dist/cli.js"],
       "env": {
@@ -142,7 +138,7 @@ mcp-feedback-collector config
 ```json
 {
   "mcpServers": {
-    "mcp-feedback-collector": {
+    "mcp-interactive-feedback": {
       "command": "npx",
       "args": ["tsx", "path/to/your/project/src/cli.ts"],
       "env": {
@@ -168,7 +164,7 @@ mcp-feedback-collector config
 ```json
 {
   "mcpServers": {
-    "mcp-feedback-collector": {
+    "mcp-interactive-feedback": {
       "command": "node",
       "args": ["d:/zhuomian/nodejsweb/dist/cli.js"],
       "env": {
@@ -191,13 +187,13 @@ mcp-feedback-collector config
 ## 在cursor规则中可以下面这样配置
 “Whenever you want to ask a question, always call the MCP .
 
-Whenever you’re about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user’s feedback is empty, then end the request. mcp-feedback-collector.collect_feedback ”
+Whenever you’re about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user’s feedback is empty, then end the request. mcp-interactive-feedback.collect_feedback ”
 
 
 ⚠️ **重要提醒**:
 - **不要在args中添加`--debug`参数**，这会导致JSON解析失败
 - Cursor/Claude Desktop要求极其纯净的JSON输出
-- 如需调试，请在命令行中单独使用：`npx mcp-feedback-collector --debug`
+- 如需调试，请在命令行中单独使用：`npx mcp-interactive-feedback --debug`
 
 💡 **API服务推荐**:
 - 默认配置使用 `https://api.ssopen.top` 中转站，支持多种AI模型
@@ -287,7 +283,7 @@ collect_feedback("我已经完成了代码重构工作，主要改进了性能�
 1. **WebSocket连接失败**
    ```bash
    # 检查服务器状态
-   mcp-feedback-collector health
+   mcp-interactive-feedback health
 
    # 访问测试页面
    http://localhost:5000/test.html
@@ -301,13 +297,13 @@ collect_feedback("我已经完成了代码重构工作，主要改进了性能�
    netstat -an | grep :5000
 
    # 使用其他端口
-   mcp-feedback-collector --port 5001
+   mcp-interactive-feedback --port 5001
    ```
 
 3. **API密钥错误**
    ```bash
    # 检查配置
-   mcp-feedback-collector config
+   mcp-interactive-feedback config
 
    # 设置环境变量
    export MCP_API_KEY="your_key_here"
@@ -316,7 +312,7 @@ collect_feedback("我已经完成了代码重构工作，主要改进了性能�
 4. **权限问题**
    ```bash
    # 使用npx避免全局安装权限问题
-   npx mcp-feedback-collector
+   npx mcp-interactive-feedback
    ```
 
 详细的故障排除指南请参考: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
@@ -337,8 +333,8 @@ collect_feedback("我已经完成了代码重构工作，主要改进了性能�
 
 ```bash
 # 克隆项目
-git clone https://github.com/sanshao85/mcp-feedback-collector-web.git
-cd mcp-feedback-collector-web
+git clone https://github.com/sanshao85/mcp-interactive-feedback-web.git
+cd mcp-interactive-feedback-web
 
 # 安装依赖
 npm install
@@ -369,7 +365,7 @@ npm start config
 ```json
 {
   "mcpServers": {
-    "mcp-feedback-collector": {
+    "mcp-interactive-feedback": {
       "command": "node",
       "args": ["您的项目路径/dist/cli.js"],
       "env": {
@@ -413,8 +409,8 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ## 🔗 相关链接
 
-- **项目主页**: [GitHub Repository](https://github.com/sanshao85/mcp-feedback-collector-web)
-- **NPM包**: [mcp-feedback-collector](https://www.npmjs.com/package/mcp-feedback-collector)
+- **项目主页**: [GitHub Repository](https://github.com/sanshao85/mcp-interactive-feedback-web)
+- **NPM包**: [mcp-interactive-feedback](https://www.npmjs.com/package/mcp-interactive-feedback)
 - **Model Context Protocol**: [官方网站](https://modelcontextprotocol.io)
 - **MCP规范**: [技术规范](https://spec.modelcontextprotocol.io)
 - **Claude Desktop**: [下载地址](https://claude.ai/desktop)

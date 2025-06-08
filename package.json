@@ -1,7 +1,7 @@
 {
-  "name": "mcp-feedback-collector",
-  "version": "2.0.8",
-  "description": "基于Node.js的MCP反馈收集器 - 支持AI工作汇报和用户反馈收集",
+  "name": "mcp-interactive-feedback",
+  "version": "1.0.2",
+  "description": "Nodejs based Interactive Feedback MCP Server - supports AI powered work reports and user feedback",
   "main": "dist/index.js",
   "bin": {
     "mcp-feedback-collector": "dist/cli.js"
@@ -24,11 +24,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sanshao85/mcp-feedback-collector-web.git"
+    "url": "git+https://github.com/TerrenceMiao/mcp-interactive-feedback.git"
   },
-  "homepage": "https://github.com/sanshao85/mcp-feedback-collector-web#readme",
+  "homepage": "https://github.com/TerrenceMiao/mcp-interactive-feedbackb#README",
   "bugs": {
-    "url": "https://github.com/sanshao85/mcp-feedback-collector-web/issues"
+    "url": "https://github.com/TerrenceMiao/mcp-interactive-feedback/issues"
   },
   "scripts": {
     "build": "tsc && npm run copy-static",
