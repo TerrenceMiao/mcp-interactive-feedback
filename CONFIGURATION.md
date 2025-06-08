@@ -1,29 +1,29 @@
-# MCP Feedback Collector 配置指南
+# MCP Feedback Collector Configuration Guide
 
-## 📋 环境变量配置
+## 📋 Environment Variable Configuration
 
-### 必需配置
+### Required Configuration
 
-| 变量名 | 说明 | 示例值 |
+| Variable Name | Description | Example Value |
 |--------|------|--------|
-| `MCP_API_KEY` | AI API密钥 | `sk-xxx...` |
+| `MCP_API_KEY` | AI API Key | `sk-xxx...` |
 
-### 可选配置
+### Optional Configuration
 
-| 变量名 | 说明 | 默认值 | 有效范围 |
+| Variable Name | Description | Default Value | Valid Range |
 |--------|------|--------|----------|
-| `MCP_API_BASE_URL` | AI API基础URL | `https://api.ssopen.top` | 有效URL |
-| `MCP_DEFAULT_MODEL` | 默认AI模型 | `gpt-4o-mini` | 任意字符串 |
-| `MCP_WEB_PORT` | Web服务器端口 | `5000` | 1024-65535 |
-| `MCP_DIALOG_TIMEOUT` | 反馈收集超时时间（秒） | `60000` | 10-60000 |
-| `MCP_ENABLE_CHAT` | 启用AI对话功能 | `true` | true/false |
-| `MCP_CORS_ORIGIN` | CORS允许的源 | `*` | 任意字符串 |
-| `MCP_MAX_FILE_SIZE` | 最大文件大小（字节） | `10485760` | 1024-104857600 |
-| `LOG_LEVEL` | 日志级别 | `info` | error/warn/info/debug |
+| `MCP_API_BASE_URL` | AI API Base URL | `https://api.ssopen.top` | Valid URL |
+| `MCP_DEFAULT_MODEL` | Default AI Model | `gpt-4o-mini` | Any string |
+| `MCP_WEB_PORT` | Web Server Port | `5000` | 1024-65535 |
+| `MCP_DIALOG_TIMEOUT` | Feedback Collection Timeout (seconds) | `60000` | 10-60000 |
+| `MCP_ENABLE_CHAT` | Enable AI Conversation Feature | `true` | true/false |
+| `MCP_CORS_ORIGIN` | CORS Allowed Origin | `*` | Any string |
+| `MCP_MAX_FILE_SIZE` | Maximum File Size (bytes) | `10485760` | 1024-104857600 |
+| `LOG_LEVEL` | Log Level | `info` | error/warn/info/debug |
 
-## 🔧 MCP配置示例
+## 🔧 MCP Configuration Examples
 
-### Cursor/Claude Desktop配置
+### Cursor/Claude Desktop Configuration
 
 ```json
 {
@@ -42,7 +42,7 @@
 }
 ```
 
-### NPX配置（推荐）
+### NPX Configuration (Recommended)
 
 ```json
 {
@@ -61,16 +61,16 @@
 }
 ```
 
-## ⏱️ 超时时间配置详解
+## ⏱️ Timeout Configuration Details
 
-### 环境变量方式
+### Environment Variable Method
 
 ```bash
-# 设置默认超时时间为16.7小时
+# Set default timeout to 16.7 hours
 export MCP_DIALOG_TIMEOUT="60000"
 ```
 
-### MCP配置方式
+### MCP Configuration Method
 
 ```json
 {
@@ -80,33 +80,33 @@ export MCP_DIALOG_TIMEOUT="60000"
 }
 ```
 
-### 工具函数调用
+### Tool Function Call
 
 ```typescript
-// 超时时间统一从环境变量读取
-interactive-feedback("工作汇报内容")
+// Timeout is read uniformly from environment variable
+interactive-feedback("Work report content")
 ```
 
-### 超时时间配置
+### Timeout Configuration
 
-超时时间通过环境变量 `MCP_DIALOG_TIMEOUT` 统一管理：
+Timeout is managed uniformly through the `MCP_DIALOG_TIMEOUT` environment variable:
 
-1. **环境变量 MCP_DIALOG_TIMEOUT** - 统一配置
-2. **默认值 60000秒** - 备用默认值
+1. **Environment Variable MCP_DIALOG_TIMEOUT** - Unified configuration
+2. **Default Value 60000 seconds** - Fallback default value
 
-### 超时时间建议
+### Timeout Recommendations
 
-| 使用场景 | 建议时间 | 说明 |
+| Use Case | Recommended Time | Description |
 |---------|---------|------|
-| 快速测试 | 60-300秒 | 用于功能验证 |
-| 日常使用 | 1800-3600秒 | 平衡用户体验 |
-| 详细反馈 | 7200-14400秒 | 复杂项目评审 |
-| 长期收集 | 21600-60000秒 | 持续反馈收集 |
-| 演示展示 | 300-600秒 | 避免等待过久 |
+| Quick Testing | 60-300 seconds | For feature verification |
+| Daily Use | 1800-3600 seconds | Balanced user experience |
+| Detailed Feedback | 7200-14400 seconds | Complex project reviews |
+| Long-term Collection | 21600-60000 seconds | Continuous feedback collection |
+| Demonstrations | 300-600 seconds | Avoid long waits |
 
-## 🎯 常用配置场景
+## 🎯 Common Configuration Scenarios
 
-### 快速测试（短超时）
+### Quick Testing (Short Timeout)
 
 ```json
 {
@@ -116,7 +116,7 @@ interactive-feedback("工作汇报内容")
 }
 ```
 
-### 详细反馈（长超时）
+### Detailed Feedback (Long Timeout)
 
 ```json
 {
@@ -126,7 +126,7 @@ interactive-feedback("工作汇报内容")
 }
 ```
 
-### 生产环境（平衡配置）
+### Production Environment (Balanced Configuration)
 
 ```json
 {
@@ -142,53 +142,53 @@ interactive-feedback("工作汇报内容")
 }
 ```
 
-## 🔍 配置验证
+## 🔍 Configuration Verification
 
-### 检查当前配置
+### Check Current Configuration
 
 ```bash
 npx mcp-interactive-feedback config
 ```
 
-### 健康检查
+### Health Check
 
 ```bash
 npx mcp-interactive-feedback health
 ```
 
-### 测试配置
+### Test Configuration
 
 ```bash
 npx mcp-interactive-feedback test-feedback --timeout 120
 ```
 
-## ⚠️ 注意事项
+## ⚠️ Important Notes
 
-1. **超时时间范围**: 必须在10-60000秒之间
-2. **端口冲突**: 确保指定的端口未被占用
-3. **API密钥**: 生产环境中请妥善保管API密钥
-4. **文件大小**: 图片上传受`MCP_MAX_FILE_SIZE`限制
-5. **网络环境**: 确保能访问指定的API基础URL
+1. **Timeout Range**: Must be between 10-60000 seconds
+2. **Port Conflicts**: Ensure the specified port is not occupied
+3. **API Key**: Properly secure API keys in production environments
+4. **File Size**: Image uploads are limited by `MCP_MAX_FILE_SIZE`
+5. **Network Environment**: Ensure access to the specified API base URL
 
-## 🐛 故障排除
+## 🐛 Troubleshooting
 
-### 配置无效
+### Invalid Configuration
 
 ```bash
-# 检查配置语法
+# Check configuration syntax
 npx mcp-interactive-feedback config
 
-# 查看详细错误信息
+# View detailed error information
 LOG_LEVEL=debug npx mcp-interactive-feedback start
 ```
 
-### 超时问题
+### Timeout Issues
 
 ```bash
-# 增加超时时间
+# Increase timeout
 export MCP_DIALOG_TIMEOUT="900"
 
-# 或在MCP配置中设置
+# Or set in MCP configuration
 {
   "env": {
     "MCP_DIALOG_TIMEOUT": "900"
@@ -196,9 +196,9 @@ export MCP_DIALOG_TIMEOUT="900"
 }
 ```
 
-### 端口冲突
+### Port Conflicts
 
 ```bash
-# 使用不同端口
+# Use a different port
 export MCP_WEB_PORT="8080"
 ```

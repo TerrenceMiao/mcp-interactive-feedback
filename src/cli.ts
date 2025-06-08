@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * MCP Feedback Collector - CLI入口
+ * MCP Feedback Collector - CLI Entry
  */
 
 import { program } from 'commander';
@@ -11,11 +11,11 @@ import { logger } from './utils/logger.js';
 import { MCPServer } from './server/mcp-server.js';
 import { MCPError } from './types/index.js';
 
-// 版本信息
+// Version information
 const VERSION = '2.0.8';
 
-// 在最开始检测MCP模式并设置日志级别
-// 改进的MCP模式检测：检查多个条件
+// Detect MCP mode at the beginning and set log level
+// Improved MCP mode detection: check multiple conditions
 const isMCPMode = !process.stdin.isTTY ||
                   process.env['NODE_ENV'] === 'mcp' ||
                   process.argv.includes('--mcp-mode');
@@ -26,15 +26,15 @@ if (isMCPMode) {
 }
 
 /**
- * 显示欢迎信息
+ * Display welcome message
  */
 function showWelcome(): void {
   console.log('🎯 MCP Feedback Collector v' + VERSION);
-  console.log('基于Node.js的现代化反馈收集器\n');
+  console.log('Modern Node.js-based feedback collector\n');
 }
 
 /**
- * 启动MCP服务器
+ * Start MCP server
  */
 async function startMCPServer(options: {
   port?: number;
@@ -43,163 +43,163 @@ async function startMCPServer(options: {
   debug?: boolean;
 }): Promise<void> {
   try {
-    // 加载配置
+    // Load configuration
     const config = getConfig();
 
     if (!isMCPMode) {
-      // 交互模式：显示欢迎信息和设置日志级别
+      // Interactive mode: display welcome message and set log level
       showWelcome();
       logger.setLevel(config.logLevel as any);
     }
 
-    // 应用命令行参数
+    // Apply command line parameters
     if (options.port) {
       config.webPort = options.port;
     }
 
-    // 设置调试模式（仅在非MCP模式下）
+    // Set debug mode (only in non-MCP mode)
     if (!isMCPMode && (options.debug || process.env['LOG_LEVEL'] === 'debug')) {
       config.logLevel = 'debug';
 
-      // 启用文件日志记录
+      // Enable file logging
       logger.enableFileLogging();
       logger.setLevel('debug');
-      logger.debug('🐛 调试模式已启用，日志将保存到文件');
+      logger.debug('🐛 Debug mode enabled, logs will be saved to file');
     }
     
-    // 显示配置信息
+    // Display configuration information
     if (logger.getLevel() === 'debug') {
       displayConfig(config);
       console.log('');
     }
     
-    // 创建并启动MCP服务器
+    // Create and start MCP server
     const server = new MCPServer(config);
     
     if (options.web) {
-      // 仅Web模式
-      logger.info('启动Web模式...');
+      // Web-only mode
+      logger.info('Starting Web mode...');
       await server.startWebOnly();
     } else {
-      // 完整MCP模式
-      logger.info('启动MCP服务器...');
+      // Full MCP mode
+      logger.info('Starting MCP server...');
       await server.start();
     }
     
-    // 处理优雅关闭
+    // Handle graceful shutdown
     process.on('SIGINT', async () => {
-      logger.info('收到SIGINT信号，正在关闭服务器...');
+      logger.info('Received SIGINT signal, shutting down server...');
       await server.stop();
       process.exit(0);
     });
     
     process.on('SIGTERM', async () => {
-      logger.info('收到SIGTERM信号，正在关闭服务器...');
+      logger.info('Received SIGTERM signal, shutting down server...');
       await server.stop();
       process.exit(0);
     });
     
   } catch (error) {
     if (error instanceof MCPError) {
-      logger.error(`MCP错误 [${error.code}]: ${error.message}`);
+      logger.error(`MCP error [${error.code}]: ${error.message}`);
       if (error.details) {
-        logger.debug('错误详情:', error.details);
+        logger.debug('Error details:', error.details);
       }
     } else if (error instanceof Error) {
-      logger.error('启动失败:', error.message);
-      logger.debug('错误堆栈:', error.stack);
+      logger.error('Startup failed:', error.message);
+      logger.debug('Error stack:', error.stack);
     } else {
-      logger.error('未知错误:', error);
+      logger.error('Unknown error:', error);
     }
     process.exit(1);
   }
 }
 
 /**
- * 显示健康检查信息
+ * Display health check information
  */
 async function healthCheck(): Promise<void> {
   try {
     const config = getConfig();
-    console.log('✅ 配置验证通过');
-    console.log(`📡 API端点: ${config.apiBaseUrl}`);
-    console.log(`🔑 API密钥: ${config.apiKey ? '已配置' : '未配置'}`);
-    console.log(`🌐 Web端口: ${config.webPort}`);
-    console.log(`⏱️  超时时间: ${config.dialogTimeout}秒`);
+    console.log('✅ Configuration validation passed');
+    console.log(`📡 API endpoint: ${config.apiBaseUrl}`);
+    console.log(`🔑 API key: ${config.apiKey ? 'configured' : 'not configured'}`);
+    console.log(`🌐 Web port: ${config.webPort}`);
+    console.log(`⏱️ Timeout: ${config.dialogTimeout} seconds`);
     
-    // TODO: 添加更多健康检查项
-    // - 端口可用性检查
-    // - API连接测试
-    // - 依赖项检查
+    // TODO: Add more health check items
+    // - Port availability check
+    // - API connection test
+    // - Dependencies check
     
   } catch (error) {
     if (error instanceof MCPError) {
-      console.error(`❌ 配置错误 [${error.code}]: ${error.message}`);
+      console.error(`❌ Configuration error [${error.code}]: ${error.message}`);
     } else {
-      console.error('❌ 健康检查失败:', error);
+      console.error('❌ Health check failed:', error);
     }
     process.exit(1);
   }
 }
 
-// 配置CLI命令
+// Configure CLI commands
 program
   .name('mcp-interactive-feedback')
-  .description('基于Node.js的MCP反馈收集器')
+  .description('Node.js based MCP feedback collector')
   .version(VERSION);
 
-// 主命令 - 启动服务器
+// Main command - Start server
 program
   .command('start', { isDefault: true })
-  .description('启动MCP反馈收集器')
-  .option('-p, --port <number>', '指定Web服务器端口', parseInt)
-  .option('-w, --web', '仅启动Web模式（不启动MCP服务器）')
-  .option('-c, --config <path>', '指定配置文件路径')
-  .option('-d, --debug', '启用调试模式（显示详细的MCP通信日志）')
-  .option('--mcp-mode', '强制启用MCP模式（用于调试）')
+  .description('Start MCP Feedback Collector')
+  .option('-p, --port <number>', 'Specify web server port', parseInt)
+  .option('-w, --web', 'Start web mode only (without MCP server)')
+  .option('-c, --config <path>', 'Specify configuration file path')
+  .option('-d, --debug', 'Enable debug mode (show detailed MCP communication logs)')
+  .option('--mcp-mode', 'Force enable MCP mode (for debugging)')
   .action(startMCPServer);
 
-// 健康检查命令
+// Health check command
 program
   .command('health')
-  .description('检查配置和系统状态')
+  .description('Check configuration and system status')
   .action(healthCheck);
 
-// 配置显示命令
+// Configuration display command
 program
   .command('config')
-  .description('显示当前配置')
+  .description('Display current configuration')
   .action(() => {
     try {
       const config = getConfig();
       displayConfig(config);
     } catch (error) {
-      console.error('配置加载失败:', error);
+      console.error('Configuration loading failed:', error);
       process.exit(1);
     }
   });
 
-// 性能监控命令
+// Performance monitoring command
 program
   .command('metrics')
-  .description('显示性能监控指标')
-  .option('-f, --format <format>', '输出格式 (json|text)', 'text')
+  .description('Display performance metrics')
+  .option('-f, --format <format>', 'Output format (json|text)', 'text')
   .action(async (options) => {
     try {
       showWelcome();
 
       const config = getConfig();
-      logger.setLevel('error'); // 减少日志输出
+      logger.setLevel('error'); // Reduce log output
 
-      logger.info('🔍 获取性能监控指标...');
+      logger.info('🔍 Getting performance metrics...');
 
-      // 创建MCP服务器实例
+      // Create MCP server instance
       const server = new MCPServer(config);
 
-      // 启动Web服务器
+      // Start web server
       await server.startWebOnly();
 
-      // 等待服务器完全启动
+      // Wait for server to fully start
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       try {
@@ -215,22 +215,22 @@ program
         }
 
       } catch (error) {
-        logger.error('❌ 获取性能指标失败:', error);
+        logger.error('❌ Failed to get performance metrics:', error);
       }
 
       await server.stop();
 
     } catch (error) {
-      logger.error('性能监控失败:', error);
+      logger.error('Performance monitoring failed:', error);
       process.exit(1);
     }
   });
 
-// 测试MCP工具函数命令
+// Test MCP tool function command
 program
   .command('test-feedback')
-  .description('测试interactive-feedback工具函数')
-  .option('-m, --message <message>', '测试工作汇报内容', '这是一个测试工作汇报，用于验证interactive-feedback功能是否正常工作。')
+  .description('Test interactive-feedback tool function')
+  .option('-m, --message <message>', 'Test work report content', 'This is a test work report to verify if the interactive-feedback function is working properly.')
   .action(async (options) => {
     try {
       showWelcome();
@@ -238,19 +238,19 @@ program
       const config = getConfig();
       logger.setLevel(config.logLevel as any);
 
-      logger.info('🧪 开始测试interactive-feedback工具函数...');
+      logger.info('🧪 Starting test of interactive-feedback tool function...');
 
-      // 创建MCP服务器实例
+      // Create MCP server instance
       const server = new MCPServer(config);
 
-      // 启动Web服务器
+      // Start web server
       await server.startWebOnly();
 
-      // 等待服务器完全启动
+      // Wait for server to fully start
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // 创建测试会话
-      logger.info('📋 创建测试会话...');
+      // Create test session
+      logger.info('📋 Creating test session...');
 
       const testParams = {
         work_summary: options.message
@@ -268,41 +268,41 @@ program
         const result = await response.json() as any;
 
         if (result.success) {
-          logger.info('✅ 测试会话创建成功');
-          logger.info(`📋 会话ID: ${result.session_id}`);
-          logger.info(`🌐 反馈页面: ${result.feedback_url}`);
+          logger.info('✅ Test session created successfully');
+          logger.info(`📋 Session ID: ${result.session_id}`);
+          logger.info(`🌐 Feedback page: ${result.feedback_url}`);
 
-          // 自动打开浏览器
+          // Automatically open browser
           try {
             const open = await import('open');
             await open.default(result.feedback_url);
-            logger.info('🚀 浏览器已自动打开反馈页面');
+            logger.info('🚀 Browser automatically opened feedback page');
           } catch (error) {
-            logger.warn('无法自动打开浏览器，请手动访问上述URL');
+            logger.warn('Unable to automatically open browser, please manually visit above URL');
           }
 
-          logger.info('💡 现在您可以在浏览器中测试完整的反馈流程');
-          logger.info(`⏱️  会话将在 ${config.dialogTimeout} 秒后超时`);
+          logger.info('💡 You can now test the complete feedback process in the browser');
+          logger.info(`⏱️ Session will timeout in ${config.dialogTimeout} seconds`);
 
         } else {
-          logger.error('❌ 测试会话创建失败:', result.error);
+          logger.error('❌ Test session creation failed:', result.error);
         }
       } catch (error) {
-        logger.error('❌ 创建测试会话时出错:', error);
+        logger.error('❌ Error creating test session:', error);
       }
 
-      // 保持进程运行
+      // Keep process running
       process.stdin.resume();
 
     } catch (error) {
-      logger.error('测试失败:', error);
+      logger.error('Test failed:', error);
       if (error instanceof Error) {
-        logger.error('错误详情:', error.message);
-        logger.error('错误堆栈:', error.stack);
+        logger.error('Error details:', error.message);
+        logger.error('Error stack:', error.stack);
       }
       process.exit(1);
     }
   });
 
-// 解析命令行参数
+// Parse command line arguments
 program.parse();

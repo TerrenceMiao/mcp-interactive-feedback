@@ -1,8 +1,8 @@
 /**
- * MCP Feedback Collector - 前端应用脚本
+ * MCP Feedback Collector - Frontend Application Script
  */
 
-// 全局变量
+// Global variables
 let socket = null;
 let currentTab = 'report';
 let selectedImages = [];
@@ -10,28 +10,28 @@ let chatImages = [];
 let isConnected = false;
 let currentFeedbackSession = null;
 
-// AI聊天相关变量
+// AI chat related variables
 let chatConfig = null;
 let chatHistory = [];
 let currentAIMessage = null;
 let currentAIContent = '';
 let isApiCalling = false;
 
-// 自动刷新相关变量
+// Auto-refresh related variables
 let autoRefreshInterval = null;
-let autoRefreshCountdown = 10;  // 改为10秒
+let autoRefreshCountdown = 10;  // Changed to 10 seconds
 let autoRefreshTimer = null;
-let lastWorkSummary = null;  // 记录上次的工作汇报内容
+let lastWorkSummary = null;  // Record the last work report content
 
-// 获取API配置
+// Get API configuration
 async function loadChatConfig() {
     try {
         const response = await fetch('/api/config');
         if (response.ok) {
             chatConfig = await response.json();
-            console.log('聊天配置加载成功:', chatConfig);
+            console.log('Chat configuration loaded successfully:', chatConfig);
 
-            // 检查是否需要显示API提示
+            // Check if API hint needs to be displayed
             if (!chatConfig.api_key) {
                 const apiHint = document.getElementById('api-hint');
                 if (apiHint) {
@@ -41,44 +41,44 @@ async function loadChatConfig() {
 
             return true;
         } else {
-            console.error('获取配置失败:', response.status);
+            console.error('Failed to get configuration:', response.status);
             return false;
         }
     } catch (error) {
-        console.error('加载配置时出错:', error);
+        console.error('Error loading configuration:', error);
         return false;
     }
 }
 
-// 初始化应用
+// Initialize application
 document.addEventListener('DOMContentLoaded', function() {
-    // 加载聊天配置
+    // Load chat configuration
     loadChatConfig();
 
-    // 获取并显示版本信息
+    // Get and display version information
     fetchVersionInfo();
 
     initializeSocket();
 
-    // 检查URL参数
+    // Check URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const mode = urlParams.get('mode');
     const session = urlParams.get('session');
 
-    console.log('URL参数:', { mode, session });
+    console.log('URL parameters:', { mode, session });
 
     if (mode === 'feedback' && session) {
-        // 传统反馈模式，设置会话ID并获取工作汇报
+        // Traditional feedback mode, set session ID and get work report
         currentFeedbackSession = session;
-        console.log('传统模式 - 设置反馈会话ID:', session);
+        console.log('Traditional mode - Setting feedback session ID:', session);
 
-        // 等待WebSocket连接建立后获取工作汇报
+        // Wait for WebSocket connection to establish before getting work report
         setTimeout(() => {
             if (isConnected && socket) {
-                console.log('请求工作汇报数据...');
+                console.log('Requesting work report data...');
                 socket.emit('get_work_summary', { feedback_session_id: session });
             } else {
-                console.log('WebSocket未连接，稍后重试...');
+                console.log('WebSocket not connected, retrying later...');
                 setTimeout(() => {
                     if (isConnected && socket) {
                         socket.emit('get_work_summary', { feedback_session_id: session });
@@ -87,19 +87,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 500);
 
-        // 显示反馈标签页
+        // Show feedback tab
         showTab('feedback');
     } else {
-        // 固定URL模式或默认模式
-        console.log('固定URL模式 - 等待会话分配');
+        // Fixed URL mode or default mode
+        console.log('Fixed URL mode - Waiting for session assignment');
 
-        // 等待WebSocket连接建立后请求会话分配
+        // Wait for WebSocket connection to establish before requesting session assignment
         setTimeout(() => {
             if (isConnected && socket) {
-                console.log('请求会话分配...');
+                console.log('Requesting session assignment...');
                 socket.emit('request_session');
             } else {
-                console.log('WebSocket未连接，稍后重试...');
+                console.log('WebSocket not connected, retrying later...');
                 setTimeout(() => {
                     if (isConnected && socket) {
                         socket.emit('request_session');
@@ -108,19 +108,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 500);
 
-        // 默认显示工作汇报标签页（因为HTML中默认是active的）
+        // Default display work report tab (because it's active by default in HTML)
         showTab('feedback');
     }
 
-    // 默认启动自动刷新
+    // Start auto-refresh by default
     setTimeout(() => {
         startAutoRefresh();
-    }, 1000); // 延迟1秒启动，确保页面完全加载
+    }, 1000); // Delay 1 second to start, ensuring page is fully loaded
 });
 
-// 初始化WebSocket连接
+// Initialize WebSocket connection
 function initializeSocket() {
-    console.log('初始化Socket.IO连接...');
+    console.log('Initializing Socket.IO connection...');
 
     socket = io({
         transports: ['websocket', 'polling'],
@@ -132,42 +132,42 @@ function initializeSocket() {
 
     socket.on('connect', function() {
         isConnected = true;
-        updateConnectionStatus('connected', '已连接');
-        console.log('WebSocket连接成功, ID:', socket.id);
+        updateConnectionStatus('connected', 'Connected');
+        console.log('WebSocket connection successful, ID:', socket.id);
     });
 
     socket.on('disconnect', function(reason) {
         isConnected = false;
-        updateConnectionStatus('disconnected', '连接断开');
-        console.log('WebSocket连接断开, 原因:', reason);
+        updateConnectionStatus('disconnected', 'Disconnected');
+        console.log('WebSocket connection closed, reason:', reason);
     });
 
     socket.on('connect_error', function(error) {
         isConnected = false;
-        updateConnectionStatus('disconnected', '连接失败');
-        console.error('WebSocket连接错误:', error);
-        showStatusMessage('error', '连接服务器失败，请检查网络或刷新页面重试');
+        updateConnectionStatus('disconnected', 'Connection Failed');
+        console.error('WebSocket connection error:', error);
+        showStatusMessage('error', 'Failed to connect to server, please check your network or refresh the page');
     });
 
     socket.on('feedback_session_started', function(data) {
-        console.log('反馈会话已开始:', data);
+        console.log('Feedback session started:', data);
     });
 
     socket.on('feedback_submitted', function(data) {
         clearFeedbackForm();
 
-        // 重新启用提交按钮
+        // Re-enable submit button
         const submitBtn = document.getElementById('submit-feedback-btn');
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '提交反馈';
+        submitBtn.innerHTML = 'Submit Feedback';
 
-        // 清理所有之前的状态消息（包括"已获取最新工作汇报"提示）
+        // Clear all previous status messages (including "Latest work report retrieved" notification)
         clearAllStatusMessages();
 
-        // 显示持续的成功消息（不自动关闭窗口）
-        showStatusMessage('success', '✅ 反馈提交成功！感谢您的宝贵意见。窗口将保持打开状态，您可以继续使用。');
+        // Show persistent success message (don't auto-close window)
+        showStatusMessage('success', '✅ Feedback submitted successfully! Thank you for your valuable input. The window will remain open for your continued use.');
 
-        console.log('反馈提交成功，窗口保持打开状态');
+        console.log('Feedback submitted successfully, window remains open');
     });
 
     socket.on('feedback_error', function(data) {
@@ -175,39 +175,39 @@ function initializeSocket() {
     });
 
     socket.on('work_summary_data', function(data) {
-        console.log('收到工作汇报数据:', data);
+        console.log('Received work report data:', data);
         if (data.work_summary) {
             displayWorkSummary(data.work_summary);
-            // 记录初始工作汇报内容
+            // Record initial work report content
             lastWorkSummary = data.work_summary;
-            // 切换到反馈标签页
+            // Switch to feedback tab
             showTab('feedback');
         }
     });
 
-    // 处理会话分配响应
+    // Handle session assignment response
     socket.on('session_assigned', function(data) {
-        console.log('收到会话分配:', data);
+        console.log('Received session assignment:', data);
         if (data.session_id) {
             currentFeedbackSession = data.session_id;
-            console.log('固定URL模式 - 分配的会话ID:', data.session_id);
+            console.log('Fixed URL mode - Assigned session ID:', data.session_id);
 
-            // 如果有工作汇报，显示它
+            // If there's a work report, display it
             if (data.work_summary) {
-                // 检查是否是新内容（如果页面已经有内容）
+                // Check if it's new content (if page already has content)
                 const hasExistingContent = lastWorkSummary && lastWorkSummary !== data.work_summary;
 
                 displayWorkSummary(data.work_summary);
 
-                // 如果是新内容且页面已经有内容，自动刷新页面
+                // If it's new content and page already has content, auto-refresh page
                 if (hasExistingContent) {
-                    console.log('检测到新的工作汇报内容，3秒后自动刷新页面以重置会话');
-                    showRefreshStatus('success', '✅ 检测到新工作汇报，页面将自动刷新');
+                    console.log('Detected new work report content, page will auto-refresh in 3 seconds to reset session');
+                    showRefreshStatus('success', '✅ New work report detected, page will auto-refresh');
                     setTimeout(() => {
                         window.location.reload();
                     }, 3000);
                 } else {
-                    // 记录初始工作汇报内容
+                    // Record initial work report content
                     lastWorkSummary = data.work_summary;
                     showTab('feedback');
                 }
@@ -215,56 +215,56 @@ function initializeSocket() {
         }
     });
 
-    // 处理无活跃会话的情况
+    // Handle case when no active session
     socket.on('no_active_session', function(data) {
-        console.log('无活跃会话:', data);
-        // 保持在聊天标签页，用户可以正常使用AI对话功能
+        console.log('No active session:', data);
+        // Stay on chat tab, user can use AI conversation functionality normally
     });
 
-    // 处理最新工作汇报响应
+    // Handle latest work report response
     socket.on('latest_summary_response', function(data) {
-        console.log('收到最新工作汇报响应:', data);
+        console.log('Received latest work report response:', data);
 
         if (data.success && data.work_summary) {
-            // 检查内容是否与上次不同
+            // Check if content is different from last time
             if (lastWorkSummary !== data.work_summary) {
-                // 显示最新的工作汇报
+                // Display latest work report
                 displayWorkSummary(data.work_summary);
-                // 更新记录的内容
+                // Update recorded content
                 lastWorkSummary = data.work_summary;
-                // 恢复按钮文字
+                // Restore button text
                 const refreshText = document.getElementById('refresh-text');
                 if (refreshText) {
-                    refreshText.textContent = '刷新最新汇报';
+                    refreshText.textContent = 'Refresh Latest Report';
                 }
-                // 使用文字状态显示，而不是弹出提示
-                showRefreshStatus('success', '✅ 已获取最新工作汇报，页面将自动刷新');
+                // Use text status display instead of popup notification
+                showRefreshStatus('success', '✅ Latest work report retrieved, page will auto-refresh');
 
-                // 获取到新内容后自动刷新页面，解决会话过期问题
-                console.log('检测到新的工作汇报内容，3秒后自动刷新页面以重置会话');
+                // Auto-refresh page after getting new content to solve session expiration issue
+                console.log('Detected new work report content, page will auto-refresh in 3 seconds to reset session');
                 setTimeout(() => {
                     window.location.reload();
                 }, 3000);
             } else {
-                // 内容相同，显示无变化状态
-                showRefreshStatus('success', '内容无变化');
-                console.log('工作汇报内容未变化，跳过提示');
+                // Content is the same, show no change status
+                showRefreshStatus('success', 'No content changes');
+                console.log('Work report content unchanged, skipping notification');
             }
         } else {
-            // 没有找到最新的工作汇报
-            showRefreshStatus('error', data.message || '暂无最新工作汇报');
+            // No latest work report found
+            showRefreshStatus('error', data.message || 'No latest work report available');
         }
     });
 }
 
-// 更新连接状态
+// Update connection status
 function updateConnectionStatus(status, text) {
     const statusEl = document.getElementById('connection-status');
     statusEl.className = `connection-status ${status}`;
     statusEl.textContent = text;
 }
 
-// 显示状态消息
+// Show status message
 function showStatusMessage(type, message, autoRemove = true) {
     const container = document.getElementById('status-messages');
     const messageEl = document.createElement('div');
@@ -273,11 +273,11 @@ function showStatusMessage(type, message, autoRemove = true) {
 
     container.appendChild(messageEl);
 
-    // 根据类型和参数决定自动移除时间
+    // Decide auto-remove time based on type and parameters
     if (autoRemove) {
-        let removeTime = 3000; // 默认3秒
+        let removeTime = 3000; // Default 3 seconds
         if (type === 'success') {
-            removeTime = 2000; // 成功消息2秒后移除
+            removeTime = 2000; // Success messages removed after 2 seconds
         }
 
         setTimeout(() => {
@@ -287,11 +287,11 @@ function showStatusMessage(type, message, autoRemove = true) {
         }, removeTime);
     }
 
-    // 返回消息元素，以便外部可以更新内容
+    // Return message element so external code can update content
     return messageEl;
 }
 
-// 清理所有状态消息
+// Clear all status messages
 function clearAllStatusMessages() {
     const container = document.getElementById('status-messages');
     if (container) {
@@ -299,30 +299,30 @@ function clearAllStatusMessages() {
     }
 }
 
-// 显示指定标签页
+// Show specified tab
 function showTab(tabName) {
     currentTab = tabName;
 
-    // 更新标签状态
+    // Update tab status
     document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.classList.remove('active');
     });
 
-    // 找到对应的标签按钮并激活
+    // Find corresponding tab button and activate
     const tabs = document.querySelectorAll('.nav-tab');
     tabs.forEach(tab => {
-        if ((tabName === 'feedback' && tab.textContent.includes('工作汇报')) ||
-            (tabName === 'chat' && tab.textContent.includes('AI对话'))) {
+        if ((tabName === 'feedback' && tab.textContent.includes('Work Report')) ||
+            (tabName === 'chat' && tab.textContent.includes('AI Conversation'))) {
             tab.classList.add('active');
         }
     });
 
-    // 更新内容区域显示
+    // Update content area display
     document.querySelectorAll('.content-area').forEach(area => {
         area.classList.remove('active');
     });
 
-    // 根据标签名称显示对应内容
+    // Show corresponding content based on tab name
     const contentId = tabName === 'feedback' ? 'report-content' : 'chat-content';
     const contentElement = document.getElementById(contentId);
     if (contentElement) {
@@ -330,9 +330,9 @@ function showTab(tabName) {
     }
 }
 
-// 切换标签（保持向后兼容）
+// Switch tab (maintain backward compatibility)
 function switchTab(tabName) {
-    // 映射标签名称
+    // Map tab names
     const tabMapping = {
         'report': 'feedback',
         'feedback': 'feedback',
@@ -343,7 +343,7 @@ function switchTab(tabName) {
     showTab(newTabName);
 }
 
-// 反馈表单相关功能
+// Feedback form related functions
 function selectImages() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -375,8 +375,8 @@ function pasteImages() {
             }
         }
     }).catch(err => {
-        console.log('粘贴失败:', err);
-        showStatusMessage('error', '粘贴图片失败，请尝试选择文件方式');
+        console.log('Paste failed:', err);
+        showStatusMessage('error', 'Failed to paste image, please try selecting files instead');
     });
 }
 
@@ -424,7 +424,7 @@ function clearFeedbackForm() {
     updateImagePreviews();
 }
 
-// 快捷语内容
+// Quick phrase content
 const QUICK_PHRASE = `
 
 ---
@@ -433,19 +433,19 @@ Whenever you want to ask a question, always call the MCP .
 
 Whenever you're about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user's feedback is empty, then end the request. mcp-interactive-feedback.interactive-feedback`;
 
-// 提交反馈
+// Submit feedback
 document.getElementById('feedback-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
     let feedbackText = document.getElementById('feedback-text').value.trim();
 
-    // 检查是否需要附加快捷语
+    // Check if quick phrase should be appended
     const addQuickPhrase = document.getElementById('add-quick-phrase').checked;
     if (addQuickPhrase && feedbackText) {
         feedbackText += QUICK_PHRASE;
     }
 
-    console.log('提交反馈:', {
+    console.log('Submitting feedback:', {
         text: feedbackText,
         images: selectedImages.length,
         session: currentFeedbackSession,
@@ -453,36 +453,36 @@ document.getElementById('feedback-form').addEventListener('submit', function(e) 
     });
 
     if (!feedbackText && selectedImages.length === 0) {
-        showStatusMessage('error', '请输入反馈内容或选择图片');
+        showStatusMessage('error', 'Please enter feedback content or select images');
         return;
     }
 
     if (!isConnected) {
-        showStatusMessage('error', '连接已断开，请刷新页面重试');
+        showStatusMessage('error', 'Connection lost, please refresh the page and try again');
         return;
     }
 
-    // 检查会话ID
+    // Check session ID
     if (!currentFeedbackSession) {
-        showStatusMessage('error', '当前为演示模式，请通过MCP工具函数调用来创建正式的反馈会话');
-        console.log('演示模式 - 反馈内容:', {
+        showStatusMessage('error', 'Currently in demo mode, please create an official feedback session through MCP tool function call');
+        console.log('Demo mode - Feedback content:', {
             text: feedbackText,
             images: selectedImages.length,
             timestamp: new Date().toLocaleString()
         });
 
-        // 显示演示反馈
-        showStatusMessage('info', '演示反馈已记录到控制台，请查看浏览器开发者工具');
+        // Show demo feedback
+        showStatusMessage('info', 'Demo feedback has been logged to console, please check browser developer tools');
         clearFeedbackForm();
         return;
     }
 
-    // 禁用提交按钮
+    // Disable submit button
     const submitBtn = document.getElementById('submit-feedback-btn');
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '提交中...';
+    submitBtn.innerHTML = 'Submitting...';
 
-    // 发送反馈数据
+    // Send feedback data
     const feedbackData = {
         text: feedbackText,
         images: selectedImages.map(img => ({
@@ -495,61 +495,55 @@ document.getElementById('feedback-form').addEventListener('submit', function(e) 
         sessionId: currentFeedbackSession
     };
 
-    console.log('发送反馈数据:', feedbackData);
+    console.log('Sending feedback data:', feedbackData);
     socket.emit('submit_feedback', feedbackData);
-
-    // 5秒后重新启用按钮（防止卡住）
-    setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '提交反馈';
-    }, 5000);
 });
 
-// 显示工作汇报内容
+// Show work report content
 function displayWorkSummary(workSummary) {
-    console.log('displayWorkSummary 被调用:', workSummary);
+    console.log('displayWorkSummary called:', workSummary);
 
     if (!workSummary || workSummary.trim() === '') {
-        console.log('工作汇报内容为空');
+        console.log('Work report content is empty');
         return;
     }
 
-    // 找到工作汇报内容区域
+    // Find work report content area
     const reportContent = document.getElementById('report-content');
     if (!reportContent) {
-        console.error('找不到 report-content 元素');
+        console.error('report-content element not found');
         return;
     }
 
-    // 隐藏默认消息
+    // Hide default message
     const defaultMessage = document.getElementById('default-message');
     if (defaultMessage) {
         defaultMessage.style.display = 'none';
     }
 
-    // 检查是否已经有AI工作汇报卡片
+    // Check if AI work report card already exists
     const existingCard = reportContent.querySelector('.ai-work-report');
     if (existingCard) {
         existingCard.remove();
     }
 
-    // 创建AI工作汇报卡片
+    // Create AI work report card
     const aiReportCard = document.createElement('div');
     aiReportCard.className = 'report-card ai-work-report';
     aiReportCard.innerHTML = `
         <div class="card-header">
             <div class="card-title">
                 <span>🤖</span>
-                AI工作汇报
+                AI Work Report
             </div>
-            <div class="card-subtitle">刚刚完成</div>
+            <div class="card-subtitle">Just completed</div>
         </div>
         <div class="card-body">
             <div class="work-summary-content">${workSummary.replace(/\n/g, '<br>')}</div>
         </div>
     `;
 
-    // 插入到现有内容之前
+    // Insert before existing content
     const firstCard = reportContent.querySelector('.report-card');
     if (firstCard) {
         reportContent.insertBefore(aiReportCard, firstCard);
@@ -557,9 +551,9 @@ function displayWorkSummary(workSummary) {
         reportContent.appendChild(aiReportCard);
     }
 
-    console.log('AI工作汇报卡片已添加');
+    console.log('AI work report card added');
 
-    // 添加样式（只添加一次）
+    // Add styles (only once)
     if (!document.querySelector('#work-summary-styles')) {
         const style = document.createElement('style');
         style.id = 'work-summary-styles';
@@ -583,10 +577,10 @@ function displayWorkSummary(workSummary) {
     }
 }
 
-// ==================== 工作汇报刷新功能 ====================
+// ==================== Work report refresh functionality ====================
 
 /**
- * 显示刷新状态
+ * Show refresh status
  */
 function showRefreshStatus(type, message) {
     const statusText = document.getElementById('refresh-status-text');
@@ -595,7 +589,7 @@ function showRefreshStatus(type, message) {
     statusText.className = `refresh-status-text ${type}`;
     statusText.textContent = message;
 
-    // 如果是成功或错误状态，2秒后自动清空
+    // If it's success or error status, clear after 2 seconds
     if (type === 'success' || type === 'error') {
         setTimeout(() => {
             statusText.textContent = '';
@@ -605,7 +599,7 @@ function showRefreshStatus(type, message) {
 }
 
 /**
- * 隐藏刷新状态
+ * Hide refresh status
  */
 function hideRefreshStatus() {
     const statusText = document.getElementById('refresh-status-text');
@@ -616,71 +610,69 @@ function hideRefreshStatus() {
 }
 
 /**
- * 手动刷新工作汇报
+ * Manual refresh work report
  */
 function refreshWorkSummary() {
-    console.log('手动刷新工作汇报');
+    console.log('Manual refresh work report');
 
     const refreshBtn = document.getElementById('refresh-report-btn');
     const refreshText = document.getElementById('refresh-text');
 
     if (!refreshBtn || !refreshText) {
-        console.error('找不到刷新按钮元素');
+        console.error('Refresh button element not found');
         return;
     }
 
     if (isConnected && socket) {
-        // 显示加载状态
-        refreshText.textContent = '正在获取最新工作汇报...';
-        showRefreshStatus('loading', '正在获取最新工作汇报...');
+        // Show loading status
+        refreshText.textContent = 'Getting latest work report...';
+        showRefreshStatus('loading', 'Getting latest work report...');
 
-        // 请求最新的工作汇报
+        // Request latest work report
         socket.emit('request_latest_summary');
 
-        // 5秒后恢复按钮文字（防止卡住）
+        // 5 seconds later restore button text (prevent blocking)
         setTimeout(() => {
-            refreshText.textContent = '刷新最新汇报';
+            refreshText.textContent = 'Refresh Latest Report';
             hideRefreshStatus();
         }, 5000);
     } else {
-        // 连接断开时的处理
-        showRefreshStatus('error', '连接已断开，无法刷新');
+        // Handle disconnection
+        showRefreshStatus('error', 'Disconnected, cannot refresh');
     }
 }
 
-
-
 /**
- * 开始自动刷新
+ * Start auto-refresh
  */
 function startAutoRefresh() {
-    console.log('开始自动刷新');
+    console.log('Starting auto-refresh');
 
-    // 清除现有的定时器
+    // Clear existing timer
     stopAutoRefresh();
 
-    // 重置倒计时
+    // Reset countdown
     autoRefreshCountdown = 10;
     updateAutoRefreshCountdown();
 
-    // 设置倒计时定时器
+    // Set countdown timer
     autoRefreshTimer = setInterval(() => {
         autoRefreshCountdown--;
         updateAutoRefreshCountdown();
 
         if (autoRefreshCountdown <= 0) {
-            // 执行刷新
+            // Execute refresh
             refreshWorkSummary();
-            // 重置倒计时
+            // Reset countdown
             autoRefreshCountdown = 10;
         }
     }, 1000);
 
-    console.log('自动刷新已启用，每10秒刷新一次');
+    console.log('Auto-refresh enabled, refreshing every 10 seconds');
 }
 
 /**
- * 停止自动刷新
+ * Stop auto-refresh
  */
 function stopAutoRefresh() {
     if (autoRefreshTimer) {
@@ -691,11 +683,11 @@ function stopAutoRefresh() {
     autoRefreshCountdown = 10;
     updateAutoRefreshCountdown();
 
-    console.log('自动刷新已停止');
+    console.log('Auto-refresh stopped');
 }
 
 /**
- * 更新自动刷新倒计时显示
+ * Update auto-refresh countdown display
  */
 function updateAutoRefreshCountdown() {
     const countdownEl = document.getElementById('auto-refresh-countdown');
@@ -706,14 +698,14 @@ function updateAutoRefreshCountdown() {
     }
 
     if (statusText) {
-        statusText.textContent = `下次自动刷新：${autoRefreshCountdown}秒后`;
+        statusText.textContent = `Next auto-refresh: ${autoRefreshCountdown} seconds later`;
         statusText.className = 'refresh-status-text';
     }
 }
 
-// ==================== AI聊天功能 ====================
+// ==================== AI chat functionality ====================
 
-// 聊天相关功能
+// Chat related functions
 function selectChatImage() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -745,8 +737,8 @@ function pasteChatImage() {
             }
         }
     }).catch(err => {
-        console.log('粘贴失败:', err);
-        showStatusMessage('error', '粘贴图片失败，请尝试选择文件方式');
+        console.log('Paste failed:', err);
+        showStatusMessage('error', 'Failed to paste image, please try selecting files instead');
     });
 }
 
@@ -761,7 +753,7 @@ function addChatImage(file) {
         };
         chatImages.push(imageData);
         updateChatImagePreviews();
-        showStatusMessage('info', `已添加图片: ${file.name}`);
+        showStatusMessage('info', `Image added: ${file.name}`);
     };
     reader.readAsDataURL(file);
 }
@@ -812,56 +804,56 @@ async function sendChatMessage() {
         return;
     }
 
-    // 检查配置
+    // Check configuration
     if (!chatConfig || !chatConfig.api_key) {
-        showStatusMessage('error', 'API配置未加载或API密钥未设置');
+        showStatusMessage('error', 'API configuration not loaded or API key not set');
         return;
     }
 
     if (isApiCalling) {
-        showStatusMessage('warning', '正在处理中，请稍候...');
+        showStatusMessage('warning', 'Processing, please wait...');
         return;
     }
 
-    // 添加用户消息到界面
+    // Add user message to interface
     addMessageToChat('user', messageText, chatImages);
 
-    // 清空输入
+    // Clear input
     if (input) input.value = '';
     const currentImages = chatImages.slice();
     chatImages = [];
     updateChatImagePreviews();
 
-    // 禁用发送按钮
+    // Disable send button
     const sendBtn = document.getElementById('send-chat-btn');
     sendBtn.disabled = true;
     isApiCalling = true;
 
-    // 准备接收AI回复
+    // Prepare to receive AI reply
     currentAIContent = '';
     currentAIMessage = addMessageToChat('ai', '', []);
 
     try {
         await callChatAPI(messageText, currentImages);
     } catch (error) {
-        console.error('聊天API调用失败:', error);
-        showStatusMessage('error', `聊天失败: ${error.message}`);
+        console.error('Chat API call failed:', error);
+        showStatusMessage('error', `Chat failed: ${error.message}`);
     } finally {
-        // 重新启用发送按钮
+        // Re-enable send button
         sendBtn.disabled = false;
         isApiCalling = false;
     }
 }
 
-// 直接调用聊天API
+// Directly call chat API
 async function callChatAPI(messageText, images) {
-    // 构建消息格式
+    // Build message format
     const userMessage = buildAPIMessage(messageText, images);
 
-    // 添加到聊天历史
+    // Add to chat history
     chatHistory.push(userMessage);
 
-    // 构建API请求
+    // Build API request
     const requestBody = {
         model: chatConfig.model,
         messages: chatHistory,
@@ -870,7 +862,7 @@ async function callChatAPI(messageText, images) {
         max_tokens: chatConfig.max_tokens || 2000
     };
 
-    console.log('发送API请求:', {
+    console.log('Sending API request:', {
         url: `${chatConfig.api_base_url}/v1/chat/completions`,
         model: requestBody.model,
         messageCount: requestBody.messages.length
@@ -887,20 +879,20 @@ async function callChatAPI(messageText, images) {
     });
 
     if (!response.ok) {
-        throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
 
-    // 处理流式响应
+    // Handle stream response
     await handleStreamResponse(response);
 }
 
-// 构建API消息格式
+// Build API message format
 function buildAPIMessage(messageText, images) {
     if (!images || images.length === 0) {
-        // 纯文本消息
+        // Pure text message
         return { role: "user", content: messageText };
     } else {
-        // 包含图片的消息
+        // Message with images
         const content = [];
 
         if (messageText) {
@@ -909,7 +901,7 @@ function buildAPIMessage(messageText, images) {
 
         images.forEach(img => {
             let imageData = img.data;
-            // 确保是完整的data URL格式
+            // Ensure it's complete data URL format
             if (!imageData.startsWith('data:image/')) {
                 imageData = `data:image/png;base64,${imageData}`;
             }
@@ -924,7 +916,7 @@ function buildAPIMessage(messageText, images) {
     }
 }
 
-// 处理流式响应
+// Handle stream response
 async function handleStreamResponse(response) {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -945,18 +937,18 @@ async function handleStreamResponse(response) {
                 if (line.trim() === '') continue;
 
                 if (line.startsWith('data: ')) {
-                    const data = line.slice(6); // 移除 'data: ' 前缀
+                    const data = line.slice(6); // Remove 'data: ' prefix
 
                     if (data === '[DONE]') {
-                        // 流式响应结束
+                        // Stream response ended
                         if (aiResponseContent) {
-                            // 将AI回复添加到聊天历史
+                            // Add AI reply to chat history
                             chatHistory.push({
                                 role: "assistant",
                                 content: aiResponseContent
                             });
                         }
-                        console.log('AI回复完成，总长度:', aiResponseContent.length);
+                        console.log('AI reply completed, total length:', aiResponseContent.length);
                         return;
                     }
 
@@ -967,25 +959,25 @@ async function handleStreamResponse(response) {
                             if (delta && delta.content) {
                                 aiResponseContent += delta.content;
 
-                                // 更新界面显示
+                                // Update interface display
                                 if (currentAIMessage) {
                                     currentAIMessage.innerHTML = aiResponseContent;
 
-                                    // 滚动到底部
+                                    // Scroll to bottom
                                     const chatMessages = document.getElementById('chat-messages');
                                     chatMessages.scrollTop = chatMessages.scrollHeight;
                                 }
                             }
                         }
                     } catch (e) {
-                        // 忽略JSON解析错误
-                        console.log('JSON解析错误:', e);
+                        // Ignore JSON parsing error
+                        console.log('JSON parsing error:', e);
                     }
                 }
             }
         }
     } catch (error) {
-        console.error('处理流式响应时出错:', error);
+        console.error('Error handling stream response:', error);
         throw error;
     } finally {
         reader.releaseLock();
@@ -1014,33 +1006,33 @@ function addMessageToChat(sender, text, images) {
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    return bubbleDiv; // 返回气泡元素，用于更新AI消息
+    return bubbleDiv; // Return bubble element for updating AI message
 }
 
 function clearChat() {
-    if (confirm('确定要清空所有聊天记录吗？')) {
-        // 清空聊天历史
+    if (confirm('Are you sure you want to clear all chat history?')) {
+        // Clear chat history
         chatHistory = [];
 
-        // 清空界面显示
+        // Clear interface display
         clearChatMessages();
 
-        showStatusMessage('info', '聊天记录已清空');
+        showStatusMessage('info', 'Chat history cleared');
     }
 }
 
 function clearChatMessages() {
     const chatMessages = document.getElementById('chat-messages');
-    // 保留欢迎消息和API提示
+    // Keep welcome message and API hint
     const children = Array.from(chatMessages.children);
     children.forEach((child, index) => {
-        if (index > 2) { // 保留前3个元素（时间、欢迎消息、API提示）
+        if (index > 2) { // Keep first 3 elements (time, welcome message, API hint)
             child.remove();
         }
     });
 }
 
-// 获取版本信息
+// Get version information
 async function fetchVersionInfo() {
     try {
         const response = await fetch('/api/version');
@@ -1048,14 +1040,14 @@ async function fetchVersionInfo() {
             const data = await response.json();
             updateVersionDisplay(data.version);
         } else {
-            console.log('无法获取版本信息，使用默认版本');
+            console.log('Failed to get version information, using default version');
         }
     } catch (error) {
-        console.log('获取版本信息失败:', error);
+        console.log('Failed to get version information:', error);
     }
 }
 
-// 更新版本显示
+// Update version display
 function updateVersionDisplay(version) {
     const versionElement = document.getElementById('version-number');
     if (versionElement && version) {

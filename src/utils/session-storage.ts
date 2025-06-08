@@ -1,6 +1,6 @@
 /**
- * 会话存储管理器
- * 提供内存存储和可选的持久化存储
+ * Session Storage Manager
+ * Provides in-memory storage and optional persistent storage
  */
 
 import { logger } from './logger.js';
@@ -19,31 +19,31 @@ export class SessionStorage {
   private sessions = new Map<string, SessionData>();
   private cleanupInterval: NodeJS.Timeout | null = null;
 
-  constructor(private cleanupIntervalMs: number = 60000) { // 1分钟清理一次
+  constructor(private cleanupIntervalMs: number = 60000) { // Clean up every 1 minute
     this.startCleanupTimer();
   }
 
   /**
-   * 创建会话
+   * Create session
    */
   createSession(sessionId: string, data: SessionData): void {
     this.sessions.set(sessionId, data);
-    logger.debug(`会话已创建: ${sessionId}`);
+    logger.debug(`Session created: ${sessionId}`);
   }
 
   /**
-   * 获取会话
+   * Get session
    */
   getSession(sessionId: string): SessionData | undefined {
     const session = this.sessions.get(sessionId);
     
     if (session) {
-      // 检查会话是否过期
+      // Check if session has expired
       const now = Date.now();
       const elapsed = now - session.startTime;
       
       if (elapsed > session.timeout) {
-        logger.debug(`会话已过期: ${sessionId}`);
+        logger.debug(`Session expired: ${sessionId}`);
         this.deleteSession(sessionId);
         return undefined;
       }
@@ -53,7 +53,7 @@ export class SessionStorage {
   }
 
   /**
-   * 更新会话
+   * Update session
    */
   updateSession(sessionId: string, updates: Partial<SessionData>): boolean {
     const session = this.sessions.get(sessionId);
@@ -63,37 +63,37 @@ export class SessionStorage {
 
     Object.assign(session, updates);
     this.sessions.set(sessionId, session);
-    logger.debug(`会话已更新: ${sessionId}`);
+    logger.debug(`Session updated: ${sessionId}`);
     return true;
   }
 
   /**
-   * 删除会话
+   * Delete session
    */
   deleteSession(sessionId: string): boolean {
     const deleted = this.sessions.delete(sessionId);
     if (deleted) {
-      logger.debug(`会话已删除: ${sessionId}`);
+      logger.debug(`Session deleted: ${sessionId}`);
     }
     return deleted;
   }
 
   /**
-   * 获取所有活跃会话
+   * Get all active sessions
    */
   getAllSessions(): Map<string, SessionData> {
     return new Map(this.sessions);
   }
 
   /**
-   * 获取活跃会话数量
+   * Get active session count
    */
   getSessionCount(): number {
     return this.sessions.size;
   }
 
   /**
-   * 清理过期会话
+   * Clean up expired sessions
    */
   cleanupExpiredSessions(): number {
     const now = Date.now();
@@ -103,7 +103,7 @@ export class SessionStorage {
       const elapsed = now - session.startTime;
       
       if (elapsed > session.timeout) {
-        // 通知会话超时
+        // Notify session timeout
         if (session.reject) {
           session.reject(new MCPError(
             `Session timeout after ${session.timeout / 1000} seconds`,
@@ -113,19 +113,19 @@ export class SessionStorage {
         
         this.sessions.delete(sessionId);
         cleanedCount++;
-        logger.debug(`清理过期会话: ${sessionId}`);
+        logger.debug(`Cleaned up expired session: ${sessionId}`);
       }
     }
 
     if (cleanedCount > 0) {
-      logger.info(`清理了 ${cleanedCount} 个过期会话`);
+      logger.info(`Cleaned up ${cleanedCount} expired sessions`);
     }
 
     return cleanedCount;
   }
 
   /**
-   * 启动清理定时器
+   * Start cleanup timer
    */
   private startCleanupTimer(): void {
     this.cleanupInterval = setInterval(() => {
@@ -134,7 +134,7 @@ export class SessionStorage {
   }
 
   /**
-   * 停止清理定时器
+   * Stop cleanup timer
    */
   stopCleanupTimer(): void {
     if (this.cleanupInterval) {
@@ -144,10 +144,10 @@ export class SessionStorage {
   }
 
   /**
-   * 清理所有会话
+   * Clear all sessions
    */
   clear(): void {
-    // 通知所有会话关闭
+    // Notify all sessions to close
     for (const [sessionId, session] of this.sessions) {
       if (session.reject) {
         session.reject(new MCPError('Server is shutting down', 'SERVER_SHUTDOWN'));
@@ -155,11 +155,11 @@ export class SessionStorage {
     }
     
     this.sessions.clear();
-    logger.info('所有会话已清理');
+    logger.info('All sessions cleared');
   }
 
   /**
-   * 获取会话统计信息
+   * Get session statistics
    */
   getStats(): {
     totalSessions: number;

@@ -1,29 +1,29 @@
 /**
- * MCP Feedback Collector - 配置管理
+ * MCP Feedback Collector - Configuration Management
  */
 
 import { config as dotenvConfig } from 'dotenv';
 import { Config, MCPError } from '../types/index.js';
 
-// 加载环境变量
+// Load environment variables
 dotenvConfig();
 
 /**
- * 获取环境变量值，支持默认值
+ * Get environment variable value with default fallback
  */
 function getEnvVar(key: string, defaultValue: string): string {
   return process.env[key] || defaultValue;
 }
 
 /**
- * 获取可选的环境变量值
+ * Get optional environment variable value
  */
 function getOptionalEnvVar(key: string): string | undefined {
   return process.env[key] || undefined;
 }
 
 /**
- * 获取数字类型的环境变量
+ * Get numeric environment variable
  */
 function getEnvNumber(key: string, defaultValue: number): number {
   const value = process.env[key];
@@ -39,7 +39,7 @@ function getEnvNumber(key: string, defaultValue: number): number {
 }
 
 /**
- * 获取布尔类型的环境变量
+ * Get boolean environment variable
  */
 function getEnvBoolean(key: string, defaultValue: boolean): boolean {
   const value = process.env[key];
@@ -49,7 +49,7 @@ function getEnvBoolean(key: string, defaultValue: boolean): boolean {
 }
 
 /**
- * 创建默认配置
+ * Create default configuration
  */
 export function createDefaultConfig(): Config {
   return {
@@ -62,22 +62,22 @@ export function createDefaultConfig(): Config {
     corsOrigin: getEnvVar('MCP_CORS_ORIGIN', '*'),
     maxFileSize: getEnvNumber('MCP_MAX_FILE_SIZE', 10485760), // 10MB
     logLevel: getEnvVar('LOG_LEVEL', 'info'),
-    // 新增：服务器主机配置
+    // Added: Server host configuration
     serverHost: getOptionalEnvVar('MCP_SERVER_HOST'),
     serverBaseUrl: getOptionalEnvVar('MCP_SERVER_BASE_URL'),
-    // 新增：URL和端口优化配置
+    // Added: URL and port optimization configuration
     forcePort: getEnvBoolean('MCP_FORCE_PORT', false),
     killProcessOnPortConflict: getEnvBoolean('MCP_KILL_PORT_PROCESS', false),
-    useFixedUrl: getEnvBoolean('MCP_USE_FIXED_URL', true),  // 默认启用固定URL
-    cleanupPortOnStart: getEnvBoolean('MCP_CLEANUP_PORT_ON_START', true)  // 默认启用端口清理
+    useFixedUrl: getEnvBoolean('MCP_USE_FIXED_URL', true),  // Fixed URL enabled by default
+    cleanupPortOnStart: getEnvBoolean('MCP_CLEANUP_PORT_ON_START', true)  // Port cleanup enabled by default
   };
 }
 
 /**
- * 验证配置
+ * Validate configuration
  */
 export function validateConfig(config: Config): void {
-  // 验证端口范围
+  // Validate port range
   if (config.webPort < 1024 || config.webPort > 65535) {
     throw new MCPError(
       `Invalid port number: ${config.webPort}. Must be between 1024 and 65535.`,
@@ -85,7 +85,7 @@ export function validateConfig(config: Config): void {
     );
   }
 
-  // 验证超时时间 - 扩展支持到60000秒（约16.7小时）
+  // Validate timeout - extended support up to 60000 seconds (approximately 16.7 hours)
   if (config.dialogTimeout < 10 || config.dialogTimeout > 60000) {
     throw new MCPError(
       `Invalid timeout: ${config.dialogTimeout}. Must be between 10 and 60000 seconds.`,
@@ -93,7 +93,7 @@ export function validateConfig(config: Config): void {
     );
   }
 
-  // 验证文件大小限制
+  // Validate file size limit
   if (config.maxFileSize < 1024 || config.maxFileSize > 104857600) { // 1KB - 100MB
     throw new MCPError(
       `Invalid max file size: ${config.maxFileSize}. Must be between 1KB and 100MB.`,
@@ -101,7 +101,7 @@ export function validateConfig(config: Config): void {
     );
   }
 
-  // 验证API基础URL
+  // Validate API base URL
   try {
     new URL(config.apiBaseUrl);
   } catch {
@@ -111,7 +111,7 @@ export function validateConfig(config: Config): void {
     );
   }
 
-  // 验证日志级别
+  // Validate log level
   const validLogLevels = ['error', 'warn', 'info', 'debug'];
   if (!validLogLevels.includes(config.logLevel)) {
     throw new MCPError(
@@ -122,7 +122,7 @@ export function validateConfig(config: Config): void {
 }
 
 /**
- * 获取验证后的配置
+ * Get validated configuration
  */
 export function getConfig(): Config {
   const config = createDefaultConfig();
@@ -131,7 +131,7 @@ export function getConfig(): Config {
 }
 
 /**
- * 显示配置信息（隐藏敏感信息）
+ * Display configuration information (hiding sensitive information)
  */
 export function displayConfig(config: Config): void {
   console.log('📋 MCP Feedback Collector Configuration:');
@@ -144,8 +144,8 @@ export function displayConfig(config: Config): void {
   console.log(`  Max File Size: ${(config.maxFileSize / 1024 / 1024).toFixed(1)}MB`);
   console.log(`  Log Level: ${config.logLevel}`);
   console.log(`  API Key: ${config.apiKey ? '***configured***' : 'not set'}`);
-  console.log(`  Server Host: ${config.serverHost || '自动检测'}`);
-  console.log(`  Server Base URL: ${config.serverBaseUrl || '自动生成'}`);
+  console.log(`  Server Host: ${config.serverHost || 'auto-detect'}`);
+  console.log(`  Server Base URL: ${config.serverBaseUrl || 'auto-generate'}`);
   console.log(`  Force Port: ${config.forcePort ? 'enabled' : 'disabled'}`);
   console.log(`  Kill Port Process: ${config.killProcessOnPortConflict ? 'enabled' : 'disabled'}`);
   console.log(`  Use Fixed URL: ${config.useFixedUrl ? 'enabled' : 'disabled'}`);

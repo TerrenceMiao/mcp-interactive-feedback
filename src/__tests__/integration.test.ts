@@ -1,19 +1,19 @@
 /**
- * 集成测试 - 完整的反馈收集流程
+ * Integration Tests - Complete Feedback Collection Process
  */
 
 import { MCPServer } from '../server/mcp-server.js';
 import { createDefaultConfig } from '../config/index.js';
 import { ImageData } from '../types/index.js';
 
-describe('集成测试', () => {
+describe('Integration Tests', () => {
   let mcpServer: MCPServer;
   let config: any;
 
   beforeAll(async () => {
     config = createDefaultConfig();
-    config.webPort = 0; // 使用随机端口
-    config.logLevel = 'error'; // 减少测试日志
+    config.webPort = 0; // Use random port
+    config.logLevel = 'error'; // Reduce test logs
     mcpServer = new MCPServer(config);
   });
 
@@ -23,8 +23,8 @@ describe('集成测试', () => {
     }
   });
 
-  describe('Web服务器启动', () => {
-    test('应该能够启动Web服务器', async () => {
+  describe('Web Server Startup', () => {
+    test('should be able to start web server', async () => {
       await mcpServer.startWebOnly();
       
       const status = mcpServer.getStatus();
@@ -32,7 +32,7 @@ describe('集成测试', () => {
       expect(status.webPort).toBeGreaterThan(0);
     }, 10000);
 
-    test('应该能够获取服务器状态', () => {
+    test('should be able to get server status', () => {
       const status = mcpServer.getStatus();
       
       expect(status).toMatchObject({
@@ -43,8 +43,8 @@ describe('集成测试', () => {
     });
   });
 
-  describe('API端点测试', () => {
-    test('健康检查端点应该正常工作', async () => {
+  describe('API Endpoint Tests', () => {
+    test('health check endpoint should work properly', async () => {
       const status = mcpServer.getStatus();
       const response = await fetch(`http://localhost:${status.webPort}/health`);
       const data = await response.json();
@@ -57,7 +57,7 @@ describe('集成测试', () => {
       });
     });
 
-    test('配置端点应该返回配置信息', async () => {
+    test('config endpoint should return configuration information', async () => {
       const status = mcpServer.getStatus();
       const response = await fetch(`http://localhost:${status.webPort}/api/config`);
       const data = await response.json();
@@ -72,10 +72,10 @@ describe('集成测试', () => {
       });
     });
 
-    test('测试会话创建端点', async () => {
+    test('test session creation endpoint', async () => {
       const status = mcpServer.getStatus();
       const testData = {
-        work_summary: '这是一个集成测试的工作汇报',
+        work_summary: 'This is a work report for integration testing',
         timeout_seconds: 60
       };
       
@@ -96,17 +96,17 @@ describe('集成测试', () => {
         feedback_url: expect.any(String)
       });
       
-      // 验证会话ID格式
+      // Verify session ID format
       expect(data.session_id).toMatch(/^feedback_\d+_[a-z0-9]+$/);
       
-      // 验证反馈URL格式
+      // Verify feedback URL format
       expect(data.feedback_url).toContain(`localhost:${status.webPort}`);
       expect(data.feedback_url).toContain(`session=${data.session_id}`);
     });
   });
 
-  describe('静态文件服务', () => {
-    test('应该能够访问主页', async () => {
+  describe('Static File Service', () => {
+    test('should be able to access home page', async () => {
       const status = mcpServer.getStatus();
       const response = await fetch(`http://localhost:${status.webPort}/`);
       
@@ -114,7 +114,7 @@ describe('集成测试', () => {
       expect(response.headers.get('content-type')).toContain('text/html');
     });
 
-    test('应该能够访问JavaScript文件', async () => {
+    test('should be able to access JavaScript files', async () => {
       const status = mcpServer.getStatus();
       const response = await fetch(`http://localhost:${status.webPort}/app.js`);
       
@@ -122,7 +122,7 @@ describe('集成测试', () => {
       expect(response.headers.get('content-type')).toContain('javascript');
     });
 
-    test('应该能够访问CSS文件', async () => {
+    test('should be able to access CSS files', async () => {
       const status = mcpServer.getStatus();
       const response = await fetch(`http://localhost:${status.webPort}/style.css`);
       
@@ -130,7 +130,7 @@ describe('集成测试', () => {
       expect(response.headers.get('content-type')).toContain('css');
     });
 
-    test('应该能够访问测试页面', async () => {
+    test('should be able to access test page', async () => {
       const status = mcpServer.getStatus();
       const response = await fetch(`http://localhost:${status.webPort}/test.html`);
       
@@ -139,22 +139,22 @@ describe('集成测试', () => {
     });
   });
 
-  describe('错误处理', () => {
-    test('不存在的路径应该返回404', async () => {
+  describe('Error Handling', () => {
+    test('non-existent paths should return 404', async () => {
       const status = mcpServer.getStatus();
       const response = await fetch(`http://localhost:${status.webPort}/nonexistent`);
       
       expect(response.status).toBe(404);
     });
 
-    test('无效的API请求应该返回错误', async () => {
+    test('invalid API requests should return error', async () => {
       const status = mcpServer.getStatus();
       const response = await fetch(`http://localhost:${status.webPort}/api/test-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({}) // 缺少必要字段
+        body: JSON.stringify({}) // Missing required fields
       });
       
       const data = await response.json();
@@ -166,8 +166,8 @@ describe('集成测试', () => {
     });
   });
 
-  describe('性能测试', () => {
-    test('服务器启动时间应该合理', async () => {
+  describe('Performance Tests', () => {
+    test('server startup time should be reasonable', async () => {
       const startTime = Date.now();
       
       const newConfig = createDefaultConfig();
@@ -178,27 +178,27 @@ describe('集成测试', () => {
       await testServer.startWebOnly();
       
       const duration = Date.now() - startTime;
-      expect(duration).toBeLessThan(5000); // 5秒内启动
+      expect(duration).toBeLessThan(5000); // Start within 5 seconds
       
       await testServer.stop();
     }, 10000);
 
-    test('API响应时间应该合理', async () => {
+    test('API response time should be reasonable', async () => {
       const status = mcpServer.getStatus();
       const startTime = Date.now();
       
       const response = await fetch(`http://localhost:${status.webPort}/health`);
       
       const duration = Date.now() - startTime;
-      expect(duration).toBeLessThan(1000); // 1秒内响应
+      expect(duration).toBeLessThan(1000); // Respond within 1 second
       expect(response.status).toBe(200);
     });
 
-    test('并发请求处理', async () => {
+    test('concurrent request handling', async () => {
       const status = mcpServer.getStatus();
       const requests = [];
       
-      // 创建10个并发请求
+      // Create 10 concurrent requests
       for (let i = 0; i < 10; i++) {
         requests.push(
           fetch(`http://localhost:${status.webPort}/health`)
@@ -207,18 +207,18 @@ describe('集成测试', () => {
       
       const responses = await Promise.all(requests);
       
-      // 所有请求都应该成功
+      // All requests should succeed
       for (const response of responses) {
         expect(response.status).toBe(200);
       }
     });
   });
 
-  describe('内存和资源管理', () => {
-    test('多次启动停止不应该造成内存泄漏', async () => {
+  describe('Memory and Resource Management', () => {
+    test('multiple start/stop cycles should not cause memory leaks', async () => {
       const initialMemory = process.memoryUsage().heapUsed;
       
-      // 多次启动停止服务器
+      // Multiple server start/stop cycles
       for (let i = 0; i < 3; i++) {
         const testConfig = createDefaultConfig();
         testConfig.webPort = 0;
@@ -229,7 +229,7 @@ describe('集成测试', () => {
         await testServer.stop();
       }
       
-      // 强制垃圾回收（如果可用）
+      // Force garbage collection (if available)
       if (global.gc) {
         global.gc();
       }
@@ -237,7 +237,7 @@ describe('集成测试', () => {
       const finalMemory = process.memoryUsage().heapUsed;
       const memoryIncrease = finalMemory - initialMemory;
       
-      // 内存增长应该在合理范围内（小于50MB）
+      // Memory growth should be within reasonable range (less than 50MB)
       expect(memoryIncrease).toBeLessThan(50 * 1024 * 1024);
     }, 30000);
   });

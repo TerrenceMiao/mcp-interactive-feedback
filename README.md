@@ -6,85 +6,85 @@
 
 Nodejs based Interactive Feedback MCP Server - supports AI powered work reports and user feedback.
 
-## ✨ 特性
+## ✨ Features
 
-- 🚀 **一键启动**: 使用 `npx mcp-interactive-feedback` 直接运行
-- 🎨 **现代界面**: VS Code深色主题风格的Web界面
-- 🔧 **MCP集成**: 完整支持Model Context Protocol
-- 💬 **AI对话功能**: 集成AI助手，支持文字和图片对话
-- 🖼️ **图片支持**: 完整的图片上传、处理和显示功能
-- 🌐 **跨平台**: 支持Windows、macOS、Linux
-- ⚡ **高性能**: 解决了Python版本的稳定性问题
+- 🚀 **One-Click Launch**: Run directly with `npx mcp-interactive-feedback`
+- 🎨 **Modern Interface**: VS Code dark theme style web interface
+- 🔧 **MCP Integration**: Complete support for Model Context Protocol
+- 💬 **AI Conversation Features**: Integrated AI assistant, supports text and image conversations
+- 🖼️ **Image Support**: Complete image upload, processing and display functionality
+- 🌐 **Cross-Platform**: Supports Windows, macOS, Linux
+- ⚡ **High Performance**: Resolves stability issues in the Python version
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 安装和运行
+### Installation and Running
 
 ```bash
-# 直接运行（推荐）
+# Run directly (recommended)
 npx mcp-interactive-feedback
 
-# 或者全局安装
+# Or install globally
 npm install -g mcp-interactive-feedback
 mcp-interactive-feedback
 ```
 
-### 配置环境变量
+### Environment Variable Configuration
 
-创建 `.env` 文件：
+Create a `.env` file:
 
 ```bash
-# AI API配置
+# AI API Configuration
 MCP_API_KEY="your_api_key_here"
-MCP_API_BASE_URL="https://api.ssopen.top"  # 中转站，也可使用OpenAI官方API
+MCP_API_BASE_URL="https://api.ssopen.top"  # Proxy server, can also use OpenAI official API
 MCP_DEFAULT_MODEL="grok-3"
 
-# Web服务器配置
+# Web Server Configuration
 MCP_WEB_PORT="5000"
-MCP_DIALOG_TIMEOUT="60000"  # 反馈收集超时时间（秒），范围：10-60000
+MCP_DIALOG_TIMEOUT="60000"  # Feedback collection timeout (seconds), range: 10-60000
 
-# 功能开关
+# Feature Switches
 MCP_ENABLE_CHAT="true"
 
-# URL和端口优化配置 (v2.0.7新增)
-MCP_USE_FIXED_URL="true"           # 使用固定URL，不带会话参数 (默认: true)
-MCP_FORCE_PORT="false"             # 强制使用指定端口 (默认: false)
-MCP_KILL_PORT_PROCESS="false"      # 自动终止占用进程 (默认: false)
-MCP_CLEANUP_PORT_ON_START="true"   # 启动时清理端口 (默认: true)
+# URL and Port Optimization Config (added in v2.0.7)
+MCP_USE_FIXED_URL="true"           # Use fixed URL without session parameters (default: true)
+MCP_FORCE_PORT="false"             # Force use of specified port (default: false)
+MCP_KILL_PORT_PROCESS="false"      # Automatically terminate occupying process (default: false)
+MCP_CLEANUP_PORT_ON_START="true"   # Clean up port on startup (default: true)
 ```
 
-## 🔧 使用方法
+## 🔧 Usage Method
 
-### 命令行选项
+### Command Line Options
 
 ```bash
-# 启动服务器（默认）
+# Start server (default)
 mcp-interactive-feedback
 
-# 指定端口
+# Specify port
 mcp-interactive-feedback --port 8080
 
-# 仅Web模式
+# Only Web mode
 mcp-interactive-feedback --web
 
-# 测试interactive-feedback功能
+# Test interactive-feedback functionality
 mcp-interactive-feedback test-feedback
 
-# 自定义测试内容
-mcp-interactive-feedback test-feedback -m "我的工作汇报" -t 120
+# Custom test content
+mcp-interactive-feedback test-feedback -m "My work report" -t 120
 
-# 健康检查
+# Health check
 mcp-interactive-feedback health
 
-# 显示配置
+# Display configuration
 mcp-interactive-feedback config
 ```
 
-### Claude Desktop集成
+### Claude Desktop Integration
 
-#### 方式一：NPM包运行（推荐）
+#### Method One: NPM Package Run (Recommended)
 
-在Claude Desktop，cursor的MCP配置中添加：
+In Claude Desktop, add the following to the cursor's MCP configuration:
 
 ```json
 {
@@ -104,9 +104,9 @@ mcp-interactive-feedback config
 }
 ```
 
-#### 方式二：源码运行（本地开发）
+#### Method Two: Source Code Run (Local Development)
 
-如果您克隆了源码并想直接运行，可以使用以下配置：
+If you cloned the source code and want to run it directly, you can use the following configuration:
 
 ```json
 {
@@ -126,14 +126,14 @@ mcp-interactive-feedback config
 }
 ```
 
-**注意**：
-- 将 `path/to/your/project` 替换为您的实际项目路径
-- 确保已运行 `npm run build` 构建项目
-- 使用绝对路径，例如：`d:/zhuomian/nodejsweb/dist/cli.js`
+**Note**:
+- Replace `path/to/your/project` with your actual project path
+- Ensure you run `npm run build` to build the project
+- Use absolute path, e.g., `d:/projects/nodejsweb/dist/cli.js`
 
-#### 方式三：TypeScript源码直接运行（开发模式）
+#### Method Three: TypeScript Source Code Direct Run (Development Mode)
 
-如果您想直接运行TypeScript源码而无需构建：
+If you want to run TypeScript source code directly without building:
 
 ```json
 {
@@ -154,12 +154,12 @@ mcp-interactive-feedback config
 }
 ```
 
-**优点**：无需构建，直接运行源码
-**缺点**：启动稍慢，需要tsx依赖
+**Advantages**: No need to build, directly run source code
+**Disadvantages**: Start a little slower, need tsx dependency
 
-#### 🚀 快速配置示例
+#### 🚀 Quick Configuration Example
 
-假设您的项目位于 `d:\zhuomian\nodejsweb`，推荐配置：
+Assuming your project is located in `d:\projects\nodejsweb`, the recommended configuration:
 
 ```json
 {
@@ -179,195 +179,195 @@ mcp-interactive-feedback config
 }
 ```
 
-**配置步骤**：
-1. 确保项目已构建：`npm run build`
-2. 将上述配置添加到Cursor的MCP设置中
-3. 替换 `your_api_key_here` 为您的实际API密钥
-4. 重启Cursor，查看MCP服务器状态为绿色
-## 在cursor规则中可以下面这样配置
-“Whenever you want to ask a question, always call the MCP .
+**Configuration Steps**:
+1. Ensure project is built: `npm run build`
+2. Add the above configuration to the cursor's MCP setting
+3. Replace `your_api_key_here` with your actual API key
+4. Restart cursor, check MCP server status is green
+## In cursor rules, you can configure it like this
+"Whenever you want to ask a question, always call the MCP .
 
-Whenever you’re about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user’s feedback is empty, then end the request. mcp-interactive-feedback.interactive-feedback ”
+Whenever you're about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user's feedback is empty, then end the request. mcp-interactive-feedback.interactive-feedback 
 
 
-⚠️ **重要提醒**:
-- **不要在args中添加`--debug`参数**，这会导致JSON解析失败
-- Cursor/Claude Desktop要求极其纯净的JSON输出
-- 如需调试，请在命令行中单独使用：`npx mcp-interactive-feedback --debug`
+⚠️ **Important Reminder**:
+- **Do not add `--debug` parameter in args**, this will cause JSON parsing failure
+- Cursor/Claude Desktop requires extremely pure JSON output
+- If debugging is needed, please use separately in command line: `npx mcp-interactive-feedback --debug`
 
-💡 **API服务推荐**:
-- 默认配置使用 `https://api.ssopen.top` 中转站，支持多种AI模型
-- 也可以使用OpenAI官方API：`https://api.openai.com/v1`
-- 或其他兼容OpenAI格式的API服务
+💡 **API Service Recommendation**:
+- Default configuration uses `https://api.ssopen.top` proxy server, supports multiple AI models
+- Alternatively, use OpenAI official API: `https://api.openai.com/v1`
+- Or other compatible API services in OpenAI format
 
-## 🆕 最新功能 (v2.0.8)
+## 🆕 Latest Feature (v2.0.8)
 
-### 🎨 UI简化优化
-- **纯文字状态显示**: 移除旋转动画，简洁直观
-- **智能自动刷新**: 默认启用，无需用户选择
-- **简约设计**: 符合现代UI设计趋势
+### 🎨 UI Simplification Optimization
+- **Pure Text Status Display**: Remove rotation animation, simple and intuitive
+- **Smart Automatic Refresh**: Default enabled, no need for user selection
+- **Simple Design**: Conforms to modern UI design trend
 
-### 🔄 会话管理优化
-- **智能页面刷新**: 检测新内容时自动刷新页面
-- **会话自动重置**: 解决"对话过期"问题
-- **无缝体验**: 3秒倒计时提示
+### 🔄 Conversation Management Optimization
+- **Smart Page Refresh**: Automatically refresh page when new content is detected
+- **Conversation Automatic Reset**: Solves "Conversation Expiration" Problem
+- **Seamless Experience**: 3-second countdown prompt
 
-### 📝 表单体验改进
-- **自动清空**: 提交后自动清空输入框
-- **持续可用**: 页面保持打开状态
+### 📝 Form Experience Improvement
+- **Automatic Clear**: Input box is cleared automatically after submission
+- **Continuous Availability**: Page remains open
 
-### 🔗 固定URL模式 (v2.0.7)
-- 使用固定根路径：`http://localhost:5000`
-- 支持多个并发会话
-- 便于远程服务器转发
+### 🔗 Fixed URL Mode (v2.0.7)
+- Use fixed root path: `http://localhost:5000`
+- Supports multiple concurrent conversations
+- Convenient for remote server forwarding
 
-## 🛠️ MCP工具函数
+## 🛠️ MCP Tool Function
 
 ### interactive-feedback
 
-收集用户对AI工作的反馈：
+Collect user feedback on AI work:
 
 ```typescript
-// 基本调用（超时时间从环境变量读取）
-interactive-feedback("我已经完成了代码重构工作，主要改进了性能和可读性。")
+// Basic call (timeout time read from environment variable)
+interactive-feedback("I have completed the code refactoring work, mainly improving performance and readability.")
 ```
 
-**参数说明**:
-- `work_summary` (必需): AI工作汇报内容
+**Parameter Description**:
+- `work_summary` (Required): AI work report content
 
-**超时时间配置**:
-- 超时时间通过环境变量 `MCP_DIALOG_TIMEOUT` 统一配置
-- 默认值为 60000 秒（约16.7小时）
-- 有效范围：10-60000 秒
+**Timeout Time Configuration**:
+- Timeout time is configured uniformly through environment variable `MCP_DIALOG_TIMEOUT`
+- Default value is 60000 seconds (about 16.7 hours)
+- Effective range: 10-60000 seconds
 
-**功能**:
-- 启动Web界面显示工作汇报
-- 收集用户文字和图片反馈
-- 返回结构化的反馈数据
-- 自动管理服务器生命周期
-- 提交反馈后自动关闭标签页（3秒倒计时）
+**Function**:
+- Start Web interface to display work report
+- Collect user text and image feedback
+- Return structured feedback data
+- Automatically manage server lifecycle
+- Automatically close tab after 3 seconds (countdown)
 
-## 🎨 界面特性
+## 🎨 Interface Features
 
-- **双标签页设计**: 工作汇报 + AI对话
-- **VS Code主题**: 深色主题，专业美观
-- **响应式布局**: 支持桌面和移动设备
-- **实时通信**: WebSocket连接状态指示
-- **多模态支持**: 文字+图片组合输入
-- **智能关闭**: 反馈提交后3秒倒计时自动关闭标签页
+- **Double Tab Design**: Work Report + AI Conversation
+- **VS Code Theme**: Dark theme, professional and beautiful
+- **Responsive Layout**: Supports desktop and mobile devices
+- **Real-Time Communication**: WebSocket connection status indicator
+- **Multi-Modal Support**: Text+Image Combined Input
+- **Smart Close**: Automatically close tab after 3 seconds (countdown)
 
-## 📋 系统要求
+## 📋 System Requirements
 
-- **Node.js**: 18.0.0 或更高版本
-- **浏览器**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
-- **操作系统**: Windows 10+, macOS 10.15+, Ubuntu 18.04+
+- **Node.js**: 18.0.0 or higher version
+- **Browser**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+- **Operating System**: Windows 10+, macOS 10.15+, Ubuntu 18.04+
 
-## 🔒 安全特性
+## 🔒 Security Features
 
-- 输入验证和文件大小限制
-- CORS配置和安全头
-- API密钥安全存储
-- 恶意内容基础检测
+- Input Validation and File Size Limit
+- CORS Configuration and Security Headers
+- API Key Secure Storage
+- Malicious Content Basic Detection
 
-## 📊 性能指标
+## 📊 Performance Indicators
 
-- **启动时间**: < 3秒
-- **内存使用**: < 100MB
-- **响应时间**: < 2秒
-- **并发连接**: 支持10个同时连接
+- **Startup Time**: < 3 seconds
+- **Memory Usage**: < 100MB
+- **Response Time**: < 2 seconds
+- **Concurrent Connections**: Supports 10 simultaneous connections
 
-## 🐛 故障排除
+## 🐛 Fault Troubleshooting
 
-### 常见问题
+### Common Issues
 
-1. **WebSocket连接失败**
+1. **WebSocket Connection Failure**
    ```bash
-   # 检查服务器状态
+   # Check server status
    mcp-interactive-feedback health
 
-   # 访问测试页面
+   # Access test page
    http://localhost:5000/test.html
 
-   # 查看浏览器控制台错误信息
+   # View browser console error information
    ```
 
-2. **端口被占用**
+2. **Port Occupied**
    ```bash
-   # 检查端口使用情况
+   # Check port usage
    netstat -an | grep :5000
 
-   # 使用其他端口
+   # Use other port
    mcp-interactive-feedback --port 5001
    ```
 
-3. **API密钥错误**
+3. **API Key Error**
    ```bash
-   # 检查配置
+   # Check configuration
    mcp-interactive-feedback config
 
-   # 设置环境变量
+   # Set environment variable
    export MCP_API_KEY="your_key_here"
    ```
 
-4. **权限问题**
+4. **Permission Problem**
    ```bash
-   # 使用npx避免全局安装权限问题
+   # Use npx to avoid global installation permission problem
    npx mcp-interactive-feedback
    ```
 
-详细的故障排除指南请参考: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+Detailed fault troubleshooting guide please refer to: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
-## 📚 完整文档
+## 📚 Complete Documentation
 
-本项目提供了完整的文档体系，请参考 [📚 文档索引](DOCUMENTATION_INDEX.md) 查找您需要的信息：
+This project provides complete documentation system, please refer to [📚 Documentation Index](DOCUMENTATION_INDEX.md) to find the information you need:
 
-- **用户指南**: [USER_GUIDE.md](USER_GUIDE.md) - 详细使用说明
-- **配置指南**: [CONFIGURATION.md](CONFIGURATION.md) - 环境变量配置
-- **技术文档**: [ARCHITECTURE.md](ARCHITECTURE.md) - 系统架构设计
-- **故障排除**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - 问题解决方案
-- **版本说明**: [RELEASE_NOTES.md](RELEASE_NOTES.md) - 版本更新记录
+- **User Guide**: [USER_GUIDE.md](USER_GUIDE.md) - Detailed Usage Instructions
+- **Configuration Guide**: [CONFIGURATION.md](CONFIGURATION.md) - Environment Variable Configuration
+- **Technical Documentation**: [ARCHITECTURE.md](ARCHITECTURE.md) - System Architecture Design
+- **Fault Troubleshooting**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Problem Solution
+- **Version Description**: [RELEASE_NOTES.md](RELEASE_NOTES.md) - Version Update Record
 
-## 📝 开发
+## 📝 Development
 
-### 本地开发
+### Local Development
 
 ```bash
-# 克隆项目
+# Clone project
 git clone https://github.com/TerrenceMiao/mcp-interactive-feedback.git
 cd mcp-interactive-feedback-web
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 开发模式（实时编译TypeScript）
+# Development Mode (Real-Time Compile TypeScript)
 npm run dev
 
-# 构建项目（生成dist目录）
+# Build Project (Generate dist Directory)
 npm run build
 
-# 启动已构建的项目
+# Start Built Project
 npm start
 
-# 测试
+# Test
 npm test
 
-# 健康检查
+# Health Check
 npm start health
 
-# 显示配置
+# Display Configuration
 npm start config
 ```
 
-#### MCP配置测试
+#### MCP Configuration Test
 
-构建完成后，您可以使用以下配置在Cursor中测试：
+After building, you can use the following configuration in cursor for testing:
 
 ```json
 {
   "mcpServers": {
     "mcp-interactive-feedback": {
       "command": "node",
-      "args": ["您的项目路径/dist/cli.js"],
+      "args": ["Your Project Path/dist/cli.js"],
       "env": {
         "MCP_API_KEY": "your_api_key_here",
         "MCP_API_BASE_URL": "https://api.ssopen.top",
@@ -380,56 +380,56 @@ npm start config
 }
 ```
 
-### 项目结构
+### Project Structure
 
 ```
 src/
-├── cli.ts              # CLI入口
-├── index.ts            # 主入口
-├── config/             # 配置管理
-├── server/             # 服务器实现
-├── utils/              # 工具函数
-├── types/              # 类型定义
-└── static/             # 静态文件
+├── cli.ts              # CLI Entry
+├── index.ts            # Main Entry
+├── config/             # Configuration Management
+├── server/             # Server Implementation
+├── utils/              # Tool Functions
+├── types/              # Type Definitions
+└── static/             # Static Files
 ```
 
-## 📄 许可证
+## 📄 License
 
-MIT License - 详见 [LICENSE](LICENSE) 文件
+MIT License - See [LICENSE](LICENSE) File
 
-## 🤝 贡献
+## 🤝 Contribution
 
-欢迎提交Issue和Pull Request！
+Welcome to submit Issue and Pull Request!
 
-1. Fork 本仓库
-2. 创建您的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交您的更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开一个Pull Request
+1. Fork This Repository
+2. Create Your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Submit Your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 🔗 相关链接
+## 🔗 Related Links
 
-- **项目主页**: [GitHub Repository](https://github.com/TerrenceMiao/mcp-interactive-feedback)
-- **NPM包**: [mcp-interactive-feedback](https://www.npmjs.com/package/mcp-interactive-feedback)
-- **Model Context Protocol**: [官方网站](https://modelcontextprotocol.io)
-- **MCP规范**: [技术规范](https://spec.modelcontextprotocol.io)
-- **Claude Desktop**: [下载地址](https://claude.ai/desktop)
+- **Project Home Page**: [GitHub Repository](https://github.com/TerrenceMiao/mcp-interactive-feedback)
+- **NPM Package**: [mcp-interactive-feedback](https://www.npmjs.com/package/mcp-interactive-feedback)
+- **Model Context Protocol**: [Official Website](https://modelcontextprotocol.io)
+- **MCP Specification**: [Technical Specification](https://spec.modelcontextprotocol.io)
+- **Claude Desktop**: [Download Address](https://claude.ai/desktop)
 
-## 📊 项目状态
+## 📊 Project Status
 
-- **当前版本**: v2.0.8
-- **维护状态**: 积极维护
-- **支持平台**: Windows, macOS, Linux
+- **Current Version**: v2.0.8
+- **Maintenance Status**: Active Maintenance
+- **Supported Platform**: Windows, macOS, Linux
 
-## 📚 文档导航
+## 📚 Documentation Navigation
 
-- **[用户指南](USER_GUIDE.md)** - 详细使用说明和最佳实践
-- **[配置文档](CONFIGURATION.md)** - 环境变量和配置选项
-- **[故障排除](TROUBLESHOOTING.md)** - 常见问题和解决方案
-- **[开发文档](DEVELOPMENT.md)** - 开发环境搭建和贡献指南
-- **[技术文档](TECHNICAL.md)** - 系统架构和技术细节
-- **[更新日志](CHANGELOG.md)** - 版本变更历史
-- **[发布说明](RELEASE_NOTES.md)** - 详细的发布信息
+- **[User Guide](USER_GUIDE.md)** - Detailed Usage Instructions and Best Practices
+- **[Configuration Document](CONFIGURATION.md)** - Environment Variable and Configuration Options
+- **[Fault Troubleshooting](TROUBLESHOOTING.md)** - Common Issues and Solutions
+- **[Development Document](DEVELOPMENT.md)** - Development Environment Setup and Contribution Guide
+- **[Technical Document](TECHNICAL.md)** - System Architecture and Technical Details
+- **[Update Log](CHANGELOG.md)** - Version Change History
+- **[Release Note](RELEASE_NOTES.md)** - Detailed Release Information
 
-## 感谢支持
-https://api.ssopen.top/ API中转站，290+AI 大模型，官方成本七分之一，支持高并发！
+## Thanks for Support
+https://api.ssopen.top/ API Proxy Server, 290+ AI Large Models, Official Cost One-Seventh, Supports High Concurrency!

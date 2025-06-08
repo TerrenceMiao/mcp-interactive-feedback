@@ -1,6 +1,6 @@
 {
   "name": "mcp-interactive-feedback",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Nodejs based Interactive Feedback MCP Server - supports AI powered work reports and user feedback",
   "main": "dist/index.js",
   "bin": {

@@ -1,180 +1,180 @@
-# 🛠️ 开发文档
+# 🛠️ Development Documentation
 
-## 📋 项目架构
+## 📋 Project Architecture
 
-### 核心组件
-- **CLI入口**: `src/cli.ts` - 命令行界面和启动逻辑
-- **MCP服务器**: `src/server/mcp-server.ts` - MCP协议实现
-- **Web服务器**: `src/server/web-server.ts` - HTTP/WebSocket服务
-- **配置管理**: `src/config/index.ts` - 环境变量和配置
-- **工具函数**: `src/utils/` - 日志、端口管理、图片处理等
+### Core Components
+- **CLI Entry**: `src/cli.ts` - Command line interface and startup logic
+- **MCP Server**: `src/server/mcp-server.ts` - MCP protocol implementation
+- **Web Server**: `src/server/web-server.ts` - HTTP/WebSocket service
+- **Configuration Management**: `src/config/index.ts` - Environment variables and configuration
+- **Utility Functions**: `src/utils/` - Logging, port management, image processing, etc.
 
-### 技术栈
-- **后端**: Node.js + TypeScript + Express
-- **前端**: HTML5 + CSS3 + JavaScript + Socket.IO
-- **协议**: MCP (Model Context Protocol)
-- **图片处理**: Sharp
-- **构建工具**: TypeScript Compiler
+### Technology Stack
+- **Backend**: Node.js + TypeScript + Express
+- **Frontend**: HTML5 + CSS3 + JavaScript + Socket.IO
+- **Protocol**: MCP (Model Context Protocol)
+- **Image Processing**: Sharp
+- **Build Tools**: TypeScript Compiler
 
-## 🧪 测试策略
+## 🧪 Testing Strategy
 
-### 测试类型
-1. **单元测试** - Jest框架，覆盖核心功能
-2. **集成测试** - MCP协议集成测试
-3. **端到端测试** - 完整用户流程测试
-4. **性能测试** - 并发连接和响应时间
+### Test Types
+1. **Unit Tests** - Jest framework, covering core functionality
+2. **Integration Tests** - MCP protocol integration testing
+3. **End-to-End Tests** - Complete user flow testing
+4. **Performance Tests** - Concurrent connections and response time
 
-### 测试命令
+### Test Commands
 ```bash
-npm test              # 运行所有测试
-npm run test:unit     # 单元测试
-npm run test:integration # 集成测试
-npm run test:coverage # 测试覆盖率
+npm test              # Run all tests
+npm run test:unit     # Unit tests
+npm run test:integration # Integration tests
+npm run test:coverage # Test coverage
 ```
 
-## 🔧 开发环境
+## 🔧 Development Environment
 
-### 环境要求
+### Requirements
 - Node.js >= 18.0.0
 - TypeScript >= 5.0.0
-- 支持平台: Windows, macOS, Linux
+- Supported platforms: Windows, macOS, Linux
 
-### 开发命令
+### Development Commands
 ```bash
-npm run dev           # 开发模式
-npm run build         # 构建项目
-npm run clean         # 清理构建文件
-npm run lint          # 代码检查
+npm run dev           # Development mode
+npm run build         # Build project
+npm run clean         # Clean build files
+npm run lint          # Code linting
 ```
 
-## 🏗️ 构建流程
+## 🏗️ Build Process
 
-### 构建步骤
-1. **TypeScript编译** - 将TS文件编译为JS
-2. **静态文件复制** - 复制HTML/CSS/JS到dist目录
-3. **依赖打包** - 处理第三方依赖
-4. **文件优化** - 压缩和优化输出文件
+### Build Steps
+1. **TypeScript Compilation** - Compile TS files to JS
+2. **Static File Copy** - Copy HTML/CSS/JS to dist directory
+3. **Dependency Packaging** - Process third-party dependencies
+4. **File Optimization** - Compress and optimize output files
 
-### 发布流程
-1. **版本更新** - 更新package.json版本号
-2. **构建验证** - 确保构建成功
-3. **测试验证** - 运行完整测试套件
-4. **NPM发布** - 发布到NPM注册表
-5. **GitHub发布** - 创建GitHub Release
+### Release Process
+1. **Version Update** - Update package.json version number
+2. **Build Verification** - Ensure successful build
+3. **Test Verification** - Run complete test suite
+4. **NPM Publishing** - Publish to NPM registry
+5. **GitHub Release** - Create GitHub Release
 
-## 🐛 调试指南
+## 🐛 Debugging Guide
 
-### MCP通信调试
+### MCP Communication Debugging
 ```bash
-# 启用详细日志
+# Enable detailed logs
 DEBUG=mcp:* npm start
 
-# 测试MCP连接
+# Test MCP connection
 npm run test:mcp
 ```
 
-### Web服务调试
+### Web Service Debugging
 ```bash
-# 启用Web调试
+# Enable Web debugging
 DEBUG=web:* npm start
 
-# 测试WebSocket连接
+# Test WebSocket connection
 npm run test:websocket
 ```
 
-## 📊 性能监控
+## 📊 Performance Monitoring
 
-### 关键指标
-- **响应时间** - API响应时间 < 100ms
-- **并发连接** - 支持100+并发WebSocket连接
-- **内存使用** - 运行时内存 < 100MB
-- **CPU使用** - 正常负载下CPU < 10%
+### Key Metrics
+- **Response Time** - API response time < 100ms
+- **Concurrent Connections** - Support 100+ concurrent WebSocket connections
+- **Memory Usage** - Runtime memory < 100MB
+- **CPU Usage** - CPU < 10% under normal load
 
-### 监控工具
-- 内置性能监控器
-- 实时日志记录
-- 错误追踪和报告
+### Monitoring Tools
+- Built-in performance monitor
+- Real-time logging
+- Error tracking and reporting
 
-## 🔒 安全考虑
+## 🔒 Security Considerations
 
-### 安全措施
-1. **输入验证** - 严格验证所有用户输入
-2. **文件上传限制** - 限制文件类型和大小
-3. **会话管理** - 安全的会话ID生成和验证
-4. **CORS配置** - 适当的跨域资源共享设置
+### Security Measures
+1. **Input Validation** - Strict validation of all user inputs
+2. **File Upload Limits** - Limit file types and sizes
+3. **Session Management** - Secure session ID generation and validation
+4. **CORS Configuration** - Appropriate cross-origin resource sharing settings
 
-### 敏感信息保护
-- 环境变量存储敏感配置
-- .gitignore忽略敏感文件
-- 不在代码中硬编码密钥
+### Sensitive Information Protection
+- Environment variables store sensitive configurations
+- .gitignore ignores sensitive files
+- No hardcoded keys in code
 
-## 🚀 部署指南
+## 🚀 Deployment Guide
 
-### 本地部署
+### Local Deployment
 ```bash
 npm install -g mcp-interactive-feedback
 mcp-interactive-feedback
 ```
 
-### 服务器部署
+### Server Deployment
 ```bash
-# 使用PM2管理进程
+# Using PM2 for process management
 pm2 start npm --name "mcp-feedback" -- start
 
-# 使用Docker
+# Using Docker
 docker build -t mcp-interactive-feedback .
 docker run -p 5000:5000 mcp-interactive-feedback
 ```
 
-### 环境变量配置
+### Environment Variable Configuration
 ```bash
-MCP_WEB_PORT=5000           # Web服务端口
-MCP_LOG_LEVEL=info          # 日志级别
-MCP_SESSION_TIMEOUT=3600    # 会话超时时间
-MCP_MAX_FILE_SIZE=10485760  # 最大文件大小
+MCP_WEB_PORT=5000           # Web service port
+MCP_LOG_LEVEL=info          # Log level
+MCP_SESSION_TIMEOUT=3600    # Session timeout
+MCP_MAX_FILE_SIZE=10485760  # Maximum file size
 ```
 
-## 📈 版本发布
+## 📈 Version Release
 
-### 版本号规则
-- **Major**: 破坏性变更 (x.0.0)
-- **Minor**: 新功能，向后兼容 (0.x.0)
-- **Patch**: 问题修复，向后兼容 (0.0.x)
+### Version Number Rules
+- **Major**: Breaking changes (x.0.0)
+- **Minor**: New features, backward compatible (0.x.0)
+- **Patch**: Bug fixes, backward compatible (0.0.x)
 
-### 发布检查清单
-- [ ] 版本号更新
-- [ ] 构建成功
-- [ ] 测试通过
-- [ ] 文档更新
-- [ ] CHANGELOG更新
-- [ ] NPM发布
-- [ ] GitHub Release
+### Release Checklist
+- [ ] Version number updated
+- [ ] Build successful
+- [ ] Tests passed
+- [ ] Documentation updated
+- [ ] CHANGELOG updated
+- [ ] NPM published
+- [ ] GitHub Release created
 
-## 🤝 贡献指南
+## 🤝 Contribution Guidelines
 
-### 代码规范
-- 使用TypeScript严格模式
-- 遵循ESLint配置
-- 编写单元测试
-- 更新相关文档
+### Code Standards
+- Use TypeScript strict mode
+- Follow ESLint configuration
+- Write unit tests
+- Update relevant documentation
 
-### 提交规范
+### Commit Standards
 ```
-类型(范围): 简短描述
+type(scope): brief description
 
-详细描述（可选）
+detailed description (optional)
 
-相关Issue: #123
+Related Issue: #123
 ```
 
-类型: feat, fix, docs, style, refactor, test, chore
+Types: feat, fix, docs, style, refactor, test, chore
 
 ---
 
-## 📞 技术支持
+## 📞 Technical Support
 
-如有技术问题，请：
-1. 查看故障排除文档
-2. 搜索已知问题
-3. 创建GitHub Issue
-4. 联系维护团队
+For technical issues, please:
+1. Check troubleshooting documentation
+2. Search known issues
+3. Create a GitHub Issue
+4. Contact the maintenance team

@@ -1,8 +1,8 @@
-# 🔧 技术文档
+# 🔧 Technical Documentation
 
-## 🏗️ 系统架构
+## 🏗️ System Architecture
 
-### 整体架构
+### Overall Architecture
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   CLI Interface │    │   Web Browser   │    │  MCP Client     │
@@ -13,231 +13,231 @@
 │                    MCP Feedback Collector                      │
 ├─────────────────┬─────────────────┬─────────────────────────────┤
 │   CLI Module    │   Web Server    │      MCP Server             │
-│   - 启动管理     │   - HTTP API    │      - Tool Registration    │
-│   - 参数解析     │   - WebSocket   │      - Session Management   │
-│   - 进程控制     │   - 静态文件     │      - Protocol Handling    │
+│   - Startup Mgmt│   - HTTP API    │      - Tool Registration    │
+│   - Param Parse │   - WebSocket   │      - Session Management   │
+│   - Process Ctrl│   - Static Files│      - Protocol Handling    │
 └─────────────────┴─────────────────┴─────────────────────────────┘
           │                      │                      │
           ▼                      ▼                      ▼
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Port Manager  │    │ Session Storage │    │ Image Processor │
-│   - 端口检测     │    │ - 会话管理       │    │ - 图片处理       │
-│   - 进程清理     │    │ - 数据存储       │    │ - 格式转换       │
+│   - Port Detect │    │ - Session Mgmt  │    │ - Image Process │
+│   - Process Clean│   │ - Data Storage  │    │ - Format Convert│
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-### 核心模块
+### Core Modules
 
-#### 1. CLI模块 (`src/cli.ts`)
-- **功能**: 命令行界面，程序入口点
-- **职责**: 参数解析、模式选择、进程管理
-- **关键特性**: 
-  - 支持多种启动模式
-  - 环境变量配置
-  - 优雅的错误处理
+#### 1. CLI Module (`src/cli.ts`)
+- **Function**: Command-line interface, program entry point
+- **Responsibility**: Parameter parsing, mode selection, process management
+- **Key Features**: 
+  - Supports multiple startup modes
+  - Environment variable configuration
+  - Elegant error handling
 
-#### 2. MCP服务器 (`src/server/mcp-server.ts`)
-- **功能**: MCP协议实现
-- **职责**: 工具注册、会话管理、协议处理
-- **关键特性**:
-  - `interactive-feedback` 工具实现
-  - 标准MCP协议兼容
-  - 会话生命周期管理
+#### 2. MCP Server (`src/server/mcp-server.ts`)
+- **Function**: MCP protocol implementation
+- **Responsibility**: Tool registration, session management, protocol handling
+- **Key Features**:
+  - `interactive-feedback` tool implementation
+  - Standard MCP protocol compatibility
+  - Session lifecycle management
 
-#### 3. Web服务器 (`src/server/web-server.ts`)
-- **功能**: HTTP/WebSocket服务
-- **职责**: Web界面、API端点、实时通信
-- **关键特性**:
-  - Express.js框架
-  - Socket.IO实时通信
-  - 静态文件服务
+#### 3. Web Server (`src/server/web-server.ts`)
+- **Function**: HTTP/WebSocket service
+- **Responsibility**: Web interface, API endpoints, real-time communication
+- **Key Features**:
+  - Express.js framework
+  - Socket.IO real-time communication
+  - Static file service
 
-## 🔄 数据流
+## 🔄 Data Flow
 
-### 反馈收集流程
+### Feedback Collection Process
 ```
-1. AI调用interactive-feedback工具
+1. AI calls interactive-feedback tool
    ↓
-2. MCP服务器创建会话
+2. MCP server creates session
    ↓
-3. Web服务器生成反馈页面
+3. Web server generates feedback page
    ↓
-4. 用户在浏览器中提交反馈
+4. User submits feedback in browser
    ↓
-5. WebSocket传输反馈数据
+5. WebSocket transmits feedback data
    ↓
-6. MCP服务器处理并响应
+6. MCP server processes and responds
    ↓
-7. 会话清理和资源释放
-```
-
-### 会话管理
-- **会话ID**: 唯一标识符，格式: `feedback_{timestamp}_{random}`
-- **生命周期**: 创建 → 活跃 → 超时/完成 → 清理
-- **存储**: 内存存储，支持持久化扩展
-- **清理**: 定时清理过期会话
-
-## 🌐 网络通信
-
-### HTTP API端点
-```
-GET  /                    # 主页面
-GET  /api/version         # 版本信息
-POST /api/test-session    # 创建测试会话
-GET  /api/session/:id     # 获取会话信息
-POST /api/feedback        # 提交反馈
+7. Session cleanup and resource release
 ```
 
-### WebSocket事件
+### Session Management
+- **Session ID**: Unique identifier, format: `feedback_{timestamp}_{random}`
+- **Lifecycle**: Creation → Active → Timeout/Complete → Cleanup
+- **Storage**: In-memory storage, supports persistent extension
+- **Cleanup**: Periodic cleanup of expired sessions
+
+## 🌐 Network Communication
+
+### HTTP API Endpoints
 ```
-# 客户端 → 服务器
-connect                   # 连接建立
-request_session          # 请求会话分配
-submit_feedback          # 提交反馈
-request_latest_summary   # 请求最新汇报
-
-# 服务器 → 客户端
-session_assigned         # 会话分配完成
-feedback_submitted       # 反馈提交成功
-latest_summary_response  # 最新汇报响应
-error                    # 错误信息
+GET  /                    # Main page
+GET  /api/version         # Version information
+POST /api/test-session    # Create test session
+GET  /api/session/:id     # Get session information
+POST /api/feedback        # Submit feedback
 ```
 
-## 🔧 配置系统
+### WebSocket Events
+```
+# Client → Server
+connect                   # Connection established
+request_session          # Request session allocation
+submit_feedback          # Submit feedback
+request_latest_summary   # Request latest report
 
-### 环境变量
+# Server → Client
+session_assigned         # Session allocation completed
+feedback_submitted       # Feedback submission successful
+latest_summary_response  # Latest report response
+error                    # Error information
+```
+
+## 🔧 Configuration System
+
+### Environment Variables
 ```bash
-# 基础配置
-MCP_WEB_PORT=5000                    # Web服务端口
-MCP_LOG_LEVEL=info                   # 日志级别
-MCP_SESSION_TIMEOUT=3600             # 会话超时(秒)
+# Basic Configuration
+MCP_WEB_PORT=5000                    # Web service port
+MCP_LOG_LEVEL=info                   # Log level
+MCP_SESSION_TIMEOUT=3600             # Session timeout (seconds)
 
-# 高级配置
-MCP_USE_FIXED_URL=true               # 固定URL模式
-MCP_FORCE_PORT=false                 # 强制端口模式
-MCP_KILL_PORT_PROCESS=false          # 自动终止占用进程
-MCP_STARTUP_PORT_CLEANUP=true        # 启动时端口清理
+# Advanced Configuration
+MCP_USE_FIXED_URL=true               # Fixed URL mode
+MCP_FORCE_PORT=false                 # Force port mode
+MCP_KILL_PORT_PROCESS=false          # Auto-terminate occupying process
+MCP_STARTUP_PORT_CLEANUP=true        # Port cleanup at startup
 
-# 文件上传
-MCP_MAX_FILE_SIZE=10485760           # 最大文件大小(10MB)
-MCP_ALLOWED_FILE_TYPES=jpg,jpeg,png,gif,webp  # 允许的文件类型
+# File Upload
+MCP_MAX_FILE_SIZE=10485760           # Maximum file size (10MB)
+MCP_ALLOWED_FILE_TYPES=jpg,jpeg,png,gif,webp  # Allowed file types
 
-# 安全配置
-MCP_CORS_ORIGIN=*                    # CORS允许的源
-MCP_RATE_LIMIT_WINDOW=900000         # 速率限制窗口(15分钟)
-MCP_RATE_LIMIT_MAX=100               # 速率限制最大请求数
+# Security Configuration
+MCP_CORS_ORIGIN=*                    # CORS allowed origins
+MCP_RATE_LIMIT_WINDOW=900000         # Rate limit window (15 minutes)
+MCP_RATE_LIMIT_MAX=100               # Rate limit maximum requests
 ```
 
-### 配置优先级
-1. 命令行参数
-2. 环境变量
-3. 配置文件
-4. 默认值
+### Configuration Priority
+1. Command line parameters
+2. Environment variables
+3. Configuration file
+4. Default values
 
-## 🖼️ 图片处理
+## 🖼️ Image Processing
 
-### 支持格式
-- **输入**: JPEG, PNG, GIF, WebP, BMP
-- **输出**: JPEG, PNG, WebP
-- **最大尺寸**: 2048x2048像素
-- **最大文件**: 10MB
+### Supported Formats
+- **Input**: JPEG, PNG, GIF, WebP, BMP
+- **Output**: JPEG, PNG, WebP
+- **Maximum Size**: 2048x2048 pixels
+- **Maximum File**: 10MB
 
-### 处理流程
+### Processing Flow
 ```
-1. 文件上传验证
+1. File upload validation
    ↓
-2. 格式检测和转换
+2. Format detection and conversion
    ↓
-3. 尺寸调整和优化
+3. Size adjustment and optimization
    ↓
-4. Base64编码
+4. Base64 encoding
    ↓
-5. 存储和传输
+5. Storage and transmission
 ```
 
-## 🔒 安全机制
+## 🔒 Security Mechanisms
 
-### 输入验证
-- **文件类型检查**: MIME类型和文件扩展名双重验证
-- **文件大小限制**: 防止大文件攻击
-- **内容过滤**: 恶意内容检测和过滤
+### Input Validation
+- **File Type Check**: Dual validation of MIME type and file extension
+- **File Size Limit**: Prevention of large file attacks
+- **Content Filtering**: Malicious content detection and filtering
 
-### 会话安全
-- **随机ID生成**: 使用加密安全的随机数生成器
-- **会话隔离**: 不同会话间数据完全隔离
-- **自动过期**: 防止会话泄露和资源占用
+### Session Security
+- **Random ID Generation**: Using cryptographically secure random number generator
+- **Session Isolation**: Complete isolation of data between different sessions
+- **Automatic Expiration**: Prevention of session leakage and resource occupation
 
-### 网络安全
-- **CORS配置**: 适当的跨域资源共享设置
-- **速率限制**: 防止API滥用和DDoS攻击
-- **输入清理**: 防止XSS和注入攻击
+### Network Security
+- **CORS Configuration**: Appropriate cross-origin resource sharing settings
+- **Rate Limiting**: Prevention of API abuse and DDoS attacks
+- **Input Sanitization**: Prevention of XSS and injection attacks
 
-## 📊 性能优化
+## 📊 Performance Optimization
 
-### 内存管理
-- **会话清理**: 定时清理过期会话
-- **图片缓存**: 智能图片缓存策略
-- **连接池**: WebSocket连接复用
+### Memory Management
+- **Session Cleanup**: Periodic cleanup of expired sessions
+- **Image Caching**: Intelligent image caching strategy
+- **Connection Pool**: WebSocket connection reuse
 
-### 响应优化
-- **静态文件缓存**: 浏览器缓存策略
-- **压缩传输**: Gzip压缩
-- **异步处理**: 非阻塞I/O操作
+### Response Optimization
+- **Static File Caching**: Browser caching strategy
+- **Compression**: Gzip compression
+- **Asynchronous Processing**: Non-blocking I/O operations
 
-### 并发处理
-- **事件驱动**: Node.js事件循环
-- **连接限制**: 合理的并发连接数限制
-- **负载均衡**: 支持多实例部署
+### Concurrency Handling
+- **Event-Driven**: Node.js event loop
+- **Connection Limits**: Reasonable concurrent connection limits
+- **Load Balancing**: Support for multi-instance deployment
 
-## 🔍 监控和日志
+## 🔍 Monitoring and Logging
 
-### 日志系统
-- **分级日志**: ERROR, WARN, INFO, DEBUG
-- **结构化日志**: JSON格式，便于分析
-- **日志轮转**: 防止日志文件过大
+### Logging System
+- **Leveled Logging**: ERROR, WARN, INFO, DEBUG
+- **Structured Logging**: JSON format, easy to analyze
+- **Log Rotation**: Prevention of oversized log files
 
-### 性能监控
-- **响应时间**: API响应时间监控
-- **内存使用**: 实时内存使用情况
-- **连接状态**: WebSocket连接状态
-- **错误率**: 错误发生频率和类型
+### Performance Monitoring
+- **Response Time**: API response time monitoring
+- **Memory Usage**: Real-time memory usage
+- **Connection Status**: WebSocket connection status
+- **Error Rate**: Error frequency and type
 
-### 健康检查
+### Health Checks
 ```bash
-# 服务状态检查
+# Service status check
 curl http://localhost:5000/api/version
 
-# 内存使用检查
+# Memory usage check
 curl http://localhost:5000/api/health
 
-# 连接状态检查
+# Connection status check
 curl http://localhost:5000/api/status
 ```
 
-## 🚀 扩展性设计
+## 🚀 Extensibility Design
 
-### 插件系统
-- **工具扩展**: 支持自定义MCP工具
-- **中间件**: Express中间件扩展
-- **事件钩子**: 生命周期事件钩子
+### Plugin System
+- **Tool Extensions**: Support for custom MCP tools
+- **Middleware**: Express middleware extensions
+- **Event Hooks**: Lifecycle event hooks
 
-### 数据存储扩展
-- **内存存储**: 默认实现
-- **Redis存储**: 分布式会话存储
-- **数据库存储**: 持久化存储支持
+### Data Storage Extensions
+- **Memory Storage**: Default implementation
+- **Redis Storage**: Distributed session storage
+- **Database Storage**: Persistent storage support
 
-### 部署扩展
-- **单机部署**: 简单直接
-- **集群部署**: 多实例负载均衡
-- **容器化**: Docker支持
-- **云原生**: Kubernetes部署
+### Deployment Extensions
+- **Single Machine**: Simple and direct
+- **Cluster**: Multi-instance load balancing
+- **Containerization**: Docker support
+- **Cloud Native**: Kubernetes deployment
 
 ---
 
-## 📚 技术参考
+## 📚 Technical References
 
-- [MCP协议规范](https://modelcontextprotocol.io/)
-- [Node.js文档](https://nodejs.org/docs/)
-- [Socket.IO文档](https://socket.io/docs/)
-- [Express.js文档](https://expressjs.com/)
-- [Sharp图片处理](https://sharp.pixelplumbing.com/)
+- [MCP Protocol Specification](https://modelcontextprotocol.io/)
+- [Node.js Documentation](https://nodejs.org/docs/)
+- [Socket.IO Documentation](https://socket.io/docs/)
+- [Express.js Documentation](https://expressjs.com/)
+- [Sharp Image Processing](https://sharp.pixelplumbing.com/)

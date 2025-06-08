@@ -1,5 +1,5 @@
 /**
- * MCP Feedback Collector - 跨平台进程管理工具
+ * MCP Feedback Collector - Cross-platform Process Management Tool
  */
 
 import { exec } from 'child_process';
@@ -17,13 +17,13 @@ export interface ProcessInfo {
 }
 
 /**
- * 跨平台进程管理器
+ * Cross-platform Process Manager
  */
 export class ProcessManager {
   private readonly isWindows = process.platform === 'win32';
 
   /**
-   * 获取占用指定端口的进程信息
+   * Get process information occupying specified port
    */
   async getPortProcess(port: number): Promise<ProcessInfo | null> {
     try {
@@ -33,17 +33,17 @@ export class ProcessManager {
         return await this.getPortProcessUnix(port);
       }
     } catch (error) {
-      logger.debug(`获取端口 ${port} 进程信息失败:`, error);
+      logger.debug(`Failed to get port ${port} process information:`, error);
       return null;
     }
   }
 
   /**
-   * Windows系统获取端口进程
+   * Get port process on Windows systems
    */
   private async getPortProcessWindows(port: number): Promise<ProcessInfo | null> {
     try {
-      // 使用netstat查找端口占用
+      // Use netstat to find port occupation
       const { stdout } = await execAsync(`netstat -ano | findstr :${port}`);
       const lines = stdout.trim().split('\n');
       
@@ -54,7 +54,7 @@ export class ProcessManager {
           if (pidStr) {
             const pid = parseInt(pidStr, 10);
             if (!isNaN(pid)) {
-              // 获取进程详细信息
+              // Get detailed process information
               try {
                 const { stdout: processInfo } = await execAsync(`tasklist /FI "PID eq ${pid}" /FO CSV`);
                 const processLines = processInfo.trim().split('\n');
@@ -69,7 +69,7 @@ export class ProcessManager {
                   };
                 }
               } catch (error) {
-                logger.debug(`获取PID ${pid} 详细信息失败:`, error);
+                logger.debug(`Failed to get PID ${pid} detailed information:`, error);
               }
 
               return {
@@ -83,18 +83,18 @@ export class ProcessManager {
         }
       }
     } catch (error) {
-      logger.debug('Windows端口进程查询失败:', error);
+      logger.debug('Windows port process query failed:', error);
     }
     
     return null;
   }
 
   /**
-   * Unix系统获取端口进程
+   * Get port process on Unix systems
    */
   private async getPortProcessUnix(port: number): Promise<ProcessInfo | null> {
     try {
-      // 使用lsof查找端口占用
+      // Use lsof to find port occupation
       const { stdout } = await execAsync(`lsof -i :${port} -t`);
       const pids = stdout.trim().split('\n').filter(pid => pid);
       
@@ -102,7 +102,7 @@ export class ProcessManager {
         const pid = parseInt(pids[0], 10);
         if (!isNaN(pid)) {
           try {
-            // 获取进程详细信息
+            // Get detailed process information
             const { stdout: processInfo } = await execAsync(`ps -p ${pid} -o comm=,args=`);
             const lines = processInfo.trim().split('\n');
             if (lines.length > 0 && lines[0]) {
@@ -118,7 +118,7 @@ export class ProcessManager {
               };
             }
           } catch (error) {
-            logger.debug(`获取PID ${pid} 详细信息失败:`, error);
+            logger.debug(`Failed to get PID ${pid} detailed information:`, error);
           }
           
           return {
@@ -130,14 +130,14 @@ export class ProcessManager {
         }
       }
     } catch (error) {
-      logger.debug('Unix端口进程查询失败:', error);
+      logger.debug('Unix port process query failed:', error);
     }
     
     return null;
   }
 
   /**
-   * 终止进程
+   * Terminate process
    */
   async killProcess(pid: number, force: boolean = false): Promise<boolean> {
     try {
@@ -147,43 +147,43 @@ export class ProcessManager {
         return await this.killProcessUnix(pid, force);
       }
     } catch (error) {
-      logger.error(`终止进程 ${pid} 失败:`, error);
+      logger.error(`Failed to terminate process ${pid}:`, error);
       return false;
     }
   }
 
   /**
-   * Windows系统终止进程
+   * Terminate process on Windows systems
    */
   private async killProcessWindows(pid: number, force: boolean): Promise<boolean> {
     try {
       const command = force ? `taskkill /F /PID ${pid}` : `taskkill /PID ${pid}`;
       await execAsync(command);
-      logger.info(`已终止Windows进程: ${pid}`);
+      logger.info(`Terminated Windows process: ${pid}`);
       return true;
     } catch (error) {
-      logger.error(`Windows进程终止失败 (PID: ${pid}):`, error);
+      logger.error(`Windows process termination failed (PID: ${pid}):`, error);
       return false;
     }
   }
 
   /**
-   * Unix系统终止进程
+   * Terminate process on Unix systems
    */
   private async killProcessUnix(pid: number, force: boolean): Promise<boolean> {
     try {
       const signal = force ? '9' : '15';  // SIGKILL=9, SIGTERM=15
       await execAsync(`kill -${signal} ${pid}`);
-      logger.info(`已终止Unix进程: ${pid} (信号${signal})`);
+      logger.info(`Terminated Unix process: ${pid} (signal ${signal})`);
       return true;
     } catch (error) {
-      logger.error(`Unix进程终止失败 (PID: ${pid}):`, error);
+      logger.error(`Unix process termination failed (PID: ${pid}):`, error);
       return false;
     }
   }
 
   /**
-   * 检查进程是否安全可终止
+   * Check if process is safe to terminate
    */
   isSafeToKill(processInfo: ProcessInfo): boolean {
     const safePrefixes = [
@@ -209,73 +209,73 @@ export class ProcessManager {
     const processName = processInfo.name.toLowerCase();
     const processCommand = processInfo.command.toLowerCase();
     
-    // 检查是否是危险进程
+    // Check if it's a dangerous process
     for (const dangerous of dangerousNames) {
       if (processName.includes(dangerous) || processCommand.includes(dangerous)) {
         return false;
       }
     }
     
-    // 检查是否是安全进程
+    // Check if it's a safe process
     for (const safe of safePrefixes) {
       if (processName.includes(safe) || processCommand.includes(safe)) {
         return true;
       }
     }
     
-    // 默认不安全
+    // Default unsafe
     return false;
   }
 
   /**
-   * 强制释放端口（安全版本）
+   * Force release port (safe version)
    */
   async forceReleasePort(port: number): Promise<boolean> {
-    logger.info(`尝试强制释放端口: ${port}`);
+    logger.info(`Attempting to force release port: ${port}`);
     
     const processInfo = await this.getPortProcess(port);
     if (!processInfo) {
-      logger.info(`端口 ${port} 未被占用`);
+      logger.info(`Port ${port} is not occupied`);
       return true;
     }
     
-    logger.info(`发现占用端口 ${port} 的进程:`, {
+    logger.info(`Found process occupying port ${port}:`, {
       pid: processInfo.pid,
       name: processInfo.name,
       command: processInfo.command
     });
     
-    // 安全检查
+    // Security check
     if (!this.isSafeToKill(processInfo)) {
       throw new MCPError(
-        `不安全的进程，拒绝终止: ${processInfo.name} (PID: ${processInfo.pid})`,
+        `Unsafe process, refuse to terminate: ${processInfo.name} (PID: ${processInfo.pid})`,
         'UNSAFE_PROCESS_KILL',
         { processInfo }
       );
     }
     
-    // 先尝试优雅终止
-    logger.info(`尝试优雅终止进程: ${processInfo.pid}`);
+    // Try graceful termination first
+    logger.info(`Try graceful termination process: ${processInfo.pid}`);
     let success = await this.killProcess(processInfo.pid, false);
     
     if (!success) {
-      // 等待2秒后强制终止
-      logger.warn(`优雅终止失败，2秒后强制终止进程: ${processInfo.pid}`);
+      // Wait 2 seconds before forcing termination
+      logger.warn(`Graceful termination failed, 2 seconds before forcing termination process: ${processInfo.pid}`);
       await new Promise(resolve => setTimeout(resolve, 2000));
       success = await this.killProcess(processInfo.pid, true);
     }
     
     if (success) {
-      // 等待进程完全退出
+      // Wait for process to exit completely
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // 验证端口是否已释放
+      // Verify if port is released
       const stillOccupied = await this.getPortProcess(port);
       if (!stillOccupied) {
-        logger.info(`端口 ${port} 已成功释放`);
+        logger.info(`Port ${port} released successfully`);
         return true;
       } else {
-        logger.error(`端口 ${port} 仍被占用`);
+        logger.error(`Port ${port} still occupied`);
         return false;
       }
     }
@@ -284,5 +284,5 @@ export class ProcessManager {
   }
 }
 
-// 导出单例实例
+// Export singleton instance
 export const processManager = new ProcessManager();

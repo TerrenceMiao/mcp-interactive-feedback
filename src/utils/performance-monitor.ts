@@ -1,14 +1,14 @@
 /**
- * MCP Feedback Collector - 性能监控工具
+ * MCP Feedback Collector - Performance Monitoring Tool
  */
 
 import { logger } from './logger.js';
 
 /**
- * 性能指标接口
+ * Performance Metrics Interface
  */
 export interface PerformanceMetrics {
-  // 内存使用
+  // Memory Usage
   memoryUsage: {
     heapUsed: number;
     heapTotal: number;
@@ -16,16 +16,16 @@ export interface PerformanceMetrics {
     rss: number;
   };
   
-  // CPU使用
+  // CPU Usage
   cpuUsage: {
     user: number;
     system: number;
   };
   
-  // 运行时间
+  // Runtime
   uptime: number;
   
-  // 请求统计
+  // Request Statistics
   requestStats: {
     total: number;
     successful: number;
@@ -33,7 +33,7 @@ export interface PerformanceMetrics {
     averageResponseTime: number;
   };
   
-  // WebSocket连接
+  // WebSocket Connections
   websocketStats: {
     activeConnections: number;
     totalConnections: number;
@@ -41,7 +41,7 @@ export interface PerformanceMetrics {
     messagesSent: number;
   };
   
-  // 会话统计
+  // Session Statistics
   sessionStats: {
     activeSessions: number;
     totalSessions: number;
@@ -51,7 +51,7 @@ export interface PerformanceMetrics {
 }
 
 /**
- * 性能监控器类
+ * Performance Monitor Class
  */
 export class PerformanceMonitor {
   private startTime: number;
@@ -81,7 +81,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 记录HTTP请求
+   * Record HTTP Request
    */
   recordRequest(responseTime: number, success: boolean): void {
     this.requestStats.total++;
@@ -93,14 +93,14 @@ export class PerformanceMonitor {
       this.requestStats.failed++;
     }
     
-    // 保持最近1000个响应时间记录
+    // Keep only the most recent 1000 response times
     if (this.requestStats.responseTimes.length > 1000) {
       this.requestStats.responseTimes = this.requestStats.responseTimes.slice(-1000);
     }
   }
 
   /**
-   * 记录WebSocket连接
+   * Record WebSocket Connection
    */
   recordWebSocketConnection(): void {
     this.websocketStats.activeConnections++;
@@ -108,14 +108,14 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 记录WebSocket断开连接
+   * Record WebSocket Disconnection
    */
   recordWebSocketDisconnection(): void {
     this.websocketStats.activeConnections = Math.max(0, this.websocketStats.activeConnections - 1);
   }
 
   /**
-   * 记录WebSocket消息
+   * Record WebSocket Message
    */
   recordWebSocketMessage(direction: 'received' | 'sent'): void {
     if (direction === 'received') {
@@ -126,7 +126,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 记录会话创建
+   * Record Session Creation
    */
   recordSessionCreated(): void {
     this.sessionStats.activeSessions++;
@@ -134,7 +134,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 记录会话完成
+   * Record Session Completion
    */
   recordSessionCompleted(): void {
     this.sessionStats.activeSessions = Math.max(0, this.sessionStats.activeSessions - 1);
@@ -142,7 +142,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 记录会话超时
+   * Record Session Timeout
    */
   recordSessionTimeout(): void {
     this.sessionStats.activeSessions = Math.max(0, this.sessionStats.activeSessions - 1);
@@ -150,7 +150,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 获取当前性能指标
+   * Get Current Performance Metrics
    */
   getMetrics(): PerformanceMetrics {
     const memoryUsage = process.memoryUsage();
@@ -180,7 +180,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 计算平均响应时间
+   * Calculate Average Response Time
    */
   private calculateAverageResponseTime(): number {
     if (this.requestStats.responseTimes.length === 0) {
@@ -192,94 +192,94 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 获取格式化的性能报告
+   * Get Formatted Performance Report
    */
   getFormattedReport(): string {
     const metrics = this.getMetrics();
     
     return `
-📊 性能监控报告
+📊 Performance Monitoring Report
 ================
 
-💾 内存使用:
-  - 堆内存使用: ${(metrics.memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB
-  - 堆内存总量: ${(metrics.memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB
-  - 外部内存: ${(metrics.memoryUsage.external / 1024 / 1024).toFixed(2)} MB
+💾 Memory Usage:
+  - Heap Used: ${(metrics.memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB
+  - Heap Total: ${(metrics.memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB
+  - External Memory: ${(metrics.memoryUsage.external / 1024 / 1024).toFixed(2)} MB
   - RSS: ${(metrics.memoryUsage.rss / 1024 / 1024).toFixed(2)} MB
 
-⏱️ 运行时间: ${(metrics.uptime / 1000).toFixed(2)} 秒
+⏱️ Uptime: ${(metrics.uptime / 1000).toFixed(2)} seconds
 
-🌐 HTTP请求统计:
-  - 总请求数: ${metrics.requestStats.total}
-  - 成功请求: ${metrics.requestStats.successful}
-  - 失败请求: ${metrics.requestStats.failed}
-  - 平均响应时间: ${metrics.requestStats.averageResponseTime.toFixed(2)} ms
+🌐 HTTP Request Statistics:
+  - Total Requests: ${metrics.requestStats.total}
+  - Successful Requests: ${metrics.requestStats.successful}
+  - Failed Requests: ${metrics.requestStats.failed}
+  - Average Response Time: ${metrics.requestStats.averageResponseTime.toFixed(2)} ms
 
-🔌 WebSocket统计:
-  - 活跃连接: ${metrics.websocketStats.activeConnections}
-  - 总连接数: ${metrics.websocketStats.totalConnections}
-  - 接收消息: ${metrics.websocketStats.messagesReceived}
-  - 发送消息: ${metrics.websocketStats.messagesSent}
+🔌 WebSocket Statistics:
+  - Active Connections: ${metrics.websocketStats.activeConnections}
+  - Total Connections: ${metrics.websocketStats.totalConnections}
+  - Messages Received: ${metrics.websocketStats.messagesReceived}
+  - Messages Sent: ${metrics.websocketStats.messagesSent}
 
-📋 会话统计:
-  - 活跃会话: ${metrics.sessionStats.activeSessions}
-  - 总会话数: ${metrics.sessionStats.totalSessions}
-  - 完成会话: ${metrics.sessionStats.completedSessions}
-  - 超时会话: ${metrics.sessionStats.timeoutSessions}
+📋 Session Statistics:
+  - Active Sessions: ${metrics.sessionStats.activeSessions}
+  - Total Sessions: ${metrics.sessionStats.totalSessions}
+  - Completed Sessions: ${metrics.sessionStats.completedSessions}
+  - Timeout Sessions: ${metrics.sessionStats.timeoutSessions}
 `;
   }
 
   /**
-   * 检查性能警告
+   * Check Performance Warnings
    */
   checkPerformanceWarnings(): string[] {
     const metrics = this.getMetrics();
     const warnings: string[] = [];
     
-    // 内存使用警告
+    // Memory usage warning
     const heapUsedMB = metrics.memoryUsage.heapUsed / 1024 / 1024;
     if (heapUsedMB > 200) {
-      warnings.push(`内存使用过高: ${heapUsedMB.toFixed(2)} MB`);
+      warnings.push(`High memory usage: ${heapUsedMB.toFixed(2)} MB`);
     }
     
-    // 响应时间警告
+    // Response time warning
     if (metrics.requestStats.averageResponseTime > 2000) {
-      warnings.push(`平均响应时间过长: ${metrics.requestStats.averageResponseTime.toFixed(2)} ms`);
+      warnings.push(`Long average response time: ${metrics.requestStats.averageResponseTime.toFixed(2)} ms`);
     }
     
-    // 失败率警告
+    // Failure rate warning
     const failureRate = metrics.requestStats.total > 0 
       ? (metrics.requestStats.failed / metrics.requestStats.total) * 100 
       : 0;
     if (failureRate > 5) {
-      warnings.push(`请求失败率过高: ${failureRate.toFixed(2)}%`);
+      warnings.push(`High request failure rate: ${failureRate.toFixed(2)}%`);
     }
     
-    // 会话超时警告
+    // Session timeout warning
     const timeoutRate = metrics.sessionStats.totalSessions > 0
       ? (metrics.sessionStats.timeoutSessions / metrics.sessionStats.totalSessions) * 100
       : 0;
     if (timeoutRate > 20) {
-      warnings.push(`会话超时率过高: ${timeoutRate.toFixed(2)}%`);
+      warnings.push(`High session timeout rate: ${timeoutRate.toFixed(2)}%`);
     }
     
     return warnings;
   }
 
   /**
-   * 启动定期性能监控
+   * Start Periodic Performance Monitoring
    */
   startPeriodicMonitoring(intervalMs: number = 60000): NodeJS.Timeout {
     return setInterval(() => {
       const warnings = this.checkPerformanceWarnings();
       
       if (warnings.length > 0) {
-        logger.warn('性能警告:', warnings);
+        logger.warn('Performance warnings:', warnings);
       }
       
-      // 记录性能指标到日志
+      // Log performance metrics
       const metrics = this.getMetrics();
-      logger.debug('性能指标:', {
+      logger.debug('Performance metrics:', {
         memoryMB: (metrics.memoryUsage.heapUsed / 1024 / 1024).toFixed(2),
         uptime: (metrics.uptime / 1000).toFixed(2),
         requests: metrics.requestStats.total,
@@ -291,7 +291,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   * 重置统计数据
+   * Reset Statistics
    */
   reset(): void {
     this.startTime = Date.now();
@@ -316,5 +316,5 @@ export class PerformanceMonitor {
   }
 }
 
-// 全局性能监控实例
+// Global performance monitor instance
 export const performanceMonitor = new PerformanceMonitor();

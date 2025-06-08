@@ -1,5 +1,5 @@
 /**
- * MCP Feedback Collector - MCP服务器实现
+ * MCP Feedback Collector - MCP Server Implementation
  */
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -11,7 +11,7 @@ import { logger } from '../utils/logger.js';
 import { WebServer } from './web-server.js';
 
 /**
- * MCP服务器类
+ * MCP Server Class
  */
 export class MCPServer {
   private mcpServer: McpServer;
@@ -22,7 +22,7 @@ export class MCPServer {
   constructor(config: Config) {
     this.config = config;
 
-    // 创建MCP服务器实例
+    // Create MCP server instance
     this.mcpServer = new McpServer({
       name: 'mcp-interactive-feedback',
       version: '2.0.8'
@@ -32,29 +32,29 @@ export class MCPServer {
       }
     });
 
-    // 设置初始化完成回调
+    // Set initialization complete callback
     this.mcpServer.server.oninitialized = () => {
-      logger.info('✅ MCP初始化完成');
+      logger.info('✅ MCP initialization complete');
     };
 
-    // 创建Web服务器实例
+    // Create Web server instance
     this.webServer = new WebServer(config);
 
-    // 注册MCP工具函数
+    // Register MCP tool functions
     this.registerTools();
   }
 
   /**
-   * 注册MCP工具函数
+   * Register MCP tool functions
    */
   private registerTools(): void {
-    // 注册interactive-feedback工具 - 使用新的registerTool方法
+    // Register interactive-feedback tool - using new registerTool method
     this.mcpServer.registerTool(
       'interactive-feedback',
       {
         description: 'Collect feedback from users about AI work summary. This tool opens a web interface for users to provide feedback on the AI\'s work.',
         inputSchema: {
-          work_summary: z.string().describe('AI工作汇报内容，描述AI完成的工作和结果')
+          work_summary: z.string().describe('AI work report content, describing the work completed and results by AI')
         }
       },
       async (args: { work_summary: string }): Promise<CallToolResult> => {
@@ -69,7 +69,7 @@ export class MCPServer {
           logger.mcp('interactive-feedback', params, result);
           return result;
         } catch (error) {
-          logger.error('interactive-feedback工具调用失败:', error);
+          logger.error('interactive-feedback tool call failed:', error);
 
           if (error instanceof MCPError) {
             throw error;
@@ -85,31 +85,31 @@ export class MCPServer {
     );
 
     if (logger.getLevel() !== 'silent') {
-      logger.info('MCP工具函数注册完成');
+      logger.info('MCP tool functions registration complete');
     }
   }
 
   /**
-   * 实现interactive-feedback功能
+   * Implement interactive-feedback functionality
    */
   private async collectFeedback(params: CollectFeedbackParams): Promise<CallToolResult> {
     const { work_summary } = params;
     const timeout_seconds = this.config.dialogTimeout;
 
-    logger.info(`开始收集反馈，工作汇报长度: ${work_summary.length}字符，超时: ${timeout_seconds}秒`);
+    logger.info(`Starting to collect feedback, work report length: ${work_summary.length} characters, timeout: ${timeout_seconds} seconds`);
 
     try {
-      // 启动Web服务器（如果未运行）
+      // Start Web server (if not running)
       if (!this.webServer.isRunning()) {
         await this.webServer.start();
       }
 
-      // 收集用户反馈
+      // Collect user feedback
       const feedback = await this.webServer.collectFeedback(work_summary, timeout_seconds);
 
-      logger.info(`反馈收集完成，收到 ${feedback.length} 条反馈`);
+      logger.info(`Feedback collection complete, received ${feedback.length} feedback items`);
 
-      // 格式化反馈数据为MCP内容（支持图片）
+      // Format feedback data for MCP content (supports images)
       const content = this.formatFeedbackForMCP(feedback);
 
       return {
@@ -118,14 +118,14 @@ export class MCPServer {
       };
 
     } catch (error) {
-      logger.error('反馈收集失败:', error);
+      logger.error('Feedback collection failed:', error);
 
       const errorMessage = error instanceof MCPError ? error.message : 'Failed to collect user feedback';
 
       return {
         content: [{
           type: 'text',
-          text: `错误: ${errorMessage}`
+          text: `Error: ${errorMessage}`
         }],
         isError: true
       };
@@ -133,71 +133,71 @@ export class MCPServer {
   }
 
   /**
-   * 将反馈数据格式化为MCP内容（支持图片显示）
+   * Format feedback data for MCP content (supports image display)
    */
   private formatFeedbackForMCP(feedback: FeedbackData[]): (TextContent | ImageContent)[] {
     if (feedback.length === 0) {
       return [{
         type: 'text',
-        text: '未收到用户反馈'
+        text: 'No user feedback received'
       }];
     }
 
     const content: (TextContent | ImageContent)[] = [];
 
-    // 添加总结文本
+    // Add summary text
     content.push({
       type: 'text',
-      text: `收到 ${feedback.length} 条用户反馈：\n`
+      text: `Received ${feedback.length} user feedback items:\n`
     });
 
     feedback.forEach((item, index) => {
-      // 添加反馈标题
+      // Add feedback title
       content.push({
         type: 'text',
-        text: `\n--- 反馈 ${index + 1} ---`
+        text: `\n--- Feedback ${index + 1} ---`
       });
 
-      // 添加文字反馈
+      // Add text feedback
       if (item.text) {
         content.push({
           type: 'text',
-          text: `文字反馈: ${item.text}`
+          text: `Text feedback: ${item.text}`
         });
       }
 
-      // 添加图片（转换为base64格式）
+      // Add images (converted to base64 format)
       if (item.images && item.images.length > 0) {
         content.push({
           type: 'text',
-          text: `图片数量: ${item.images.length}`
+          text: `Number of images: ${item.images.length}`
         });
 
         item.images.forEach((img: ImageData, imgIndex: number) => {
-          // 添加图片信息
+          // Add image information
           content.push({
             type: 'text',
-            text: `图片 ${imgIndex + 1}: ${img.name} (${img.type}, ${(img.size / 1024).toFixed(1)}KB)`
+            text: `Image ${imgIndex + 1}: ${img.name} (${img.type}, ${(img.size / 1024).toFixed(1)}KB)`
           });
 
-          // 添加图片内容（Cursor格式）
+          // Add image content (Cursor format)
           if (img.data) {
-            // 确保是纯净的base64数据（移除data:image/...;base64,前缀）
+            // Ensure pure base64 data (remove data:image/...;base64, prefix)
             const base64Data = img.data.replace(/^data:image\/[^;]+;base64,/, '');
 
             content.push({
               type: 'image',
-              data: base64Data, // 纯净的base64字符串
+              data: base64Data, // Pure base64 string
               mimeType: img.type
             });
           }
         });
       }
 
-      // 添加时间戳
+      // Add timestamp
       content.push({
         type: 'text',
-        text: `提交时间: ${new Date(item.timestamp).toLocaleString()}\n`
+        text: `Submission time: ${new Date(item.timestamp).toLocaleString()}\n`
       });
     });
 
@@ -205,69 +205,71 @@ export class MCPServer {
   }
 
   /**
-   * 将反馈数据格式化为文本（保留用于其他用途）
+   * Format feedback data as text (preserved for other purposes)
    */
   private formatFeedbackAsText(feedback: FeedbackData[]): string {
     if (feedback.length === 0) {
-      return '未收到用户反馈';
+      return 'No user feedback received';
     }
-
+    
     const parts: string[] = [];
-    parts.push(`收到 ${feedback.length} 条用户反馈：\n`);
-
+    
+    // Add summary text
+    parts.push(`Received ${feedback.length} user feedback items:\n`);
+    
     feedback.forEach((item, index) => {
-      parts.push(`--- 反馈 ${index + 1} ---`);
-
+      parts.push(`--- Feedback ${index + 1} ---`);
+      
       if (item.text) {
-        parts.push(`文字反馈: ${item.text}`);
+        parts.push(`Text feedback: ${item.text}`);
       }
-
+      
       if (item.images && item.images.length > 0) {
-        parts.push(`图片数量: ${item.images.length}`);
-        item.images.forEach((img: ImageData, imgIndex: number) => {
-          parts.push(`  图片 ${imgIndex + 1}: ${img.name} (${img.type}, ${(img.size / 1024).toFixed(1)}KB)`);
+        parts.push(`Number of images: ${item.images.length}`);
+        item.images.forEach((img, imgIndex) => {
+          parts.push(`  Image ${imgIndex + 1}: ${img.name} (${img.type}, ${(img.size / 1024).toFixed(1)}KB)`);
         });
       }
-
-      parts.push(`提交时间: ${new Date(item.timestamp).toLocaleString()}`);
+      
+      parts.push(`Submission time: ${new Date(item.timestamp).toLocaleString()}`);
       parts.push('');
     });
-
+    
     return parts.join('\n');
   }
 
   /**
-   * 启动MCP服务器
+   * Start MCP server
    */
   async start(): Promise<void> {
     if (this.isRunning) {
-      logger.warn('MCP服务器已在运行中');
+      logger.warn('MCP server is already running');
       return;
     }
-
+    
     try {
-      logger.info('正在启动MCP服务器...');
+      logger.info('Starting MCP server...');
       
-      // 启动Web服务器
+      // Start Web server
       await this.webServer.start();
       
-      // 连接MCP传输
+      // Connect MCP transport
       const transport = new StdioServerTransport();
-
-      // 设置传输错误处理
-      transport.onerror = (error: Error) => {
-        logger.error('MCP传输错误:', error);
+      
+      // Set transport error handler
+      transport.onerror = (error) => {
+        logger.error('MCP transport error:', error);
       };
-
+      
       transport.onclose = () => {
-        logger.info('MCP传输连接已关闭');
+        logger.info('MCP transport connection closed');
         this.isRunning = false;
       };
-
-      // 添加消息调试
+      
+      // Add message debugging
       const originalOnMessage = transport.onmessage;
       transport.onmessage = (message) => {
-        logger.debug('📥 收到MCP消息:', JSON.stringify(message, null, 2));
+        logger.debug('📥 Received MCP message:', JSON.stringify(message, null, 2));
         if (originalOnMessage) {
           originalOnMessage(message);
         }
@@ -275,17 +277,17 @@ export class MCPServer {
 
       const originalSend = transport.send.bind(transport);
       transport.send = (message) => {
-        logger.debug('📤 发送MCP消息:', JSON.stringify(message, null, 2));
+        logger.debug('📤 Sending MCP message:', JSON.stringify(message, null, 2));
         return originalSend(message);
       };
 
       await this.mcpServer.connect(transport);
       
       this.isRunning = true;
-      logger.info('✅ MCP服务器启动成功');
+      logger.info('✅ MCP server started successfully');
       
     } catch (error) {
-      logger.error('MCP服务器启动失败:', error);
+      logger.error('MCP server start failed:', error);
       throw new MCPError(
         'Failed to start MCP server',
         'SERVER_START_ERROR',
@@ -295,23 +297,23 @@ export class MCPServer {
   }
 
   /**
-   * 仅启动Web模式
+   * Start Web mode only
    */
   async startWebOnly(): Promise<void> {
     try {
-      logger.info('正在启动Web模式...');
+      logger.info('Starting Web mode...');
       
-      // 仅启动Web服务器
+      // Start Web server only
       await this.webServer.start();
       
       this.isRunning = true;
-      logger.info('✅ Web服务器启动成功');
+      logger.info('✅ Web server started successfully');
       
-      // 保持进程运行
+      // Keep process running
       process.stdin.resume();
       
     } catch (error) {
-      logger.error('Web服务器启动失败:', error);
+      logger.error('Web server start failed:', error);
       throw new MCPError(
         'Failed to start web server',
         'WEB_SERVER_START_ERROR',
@@ -321,7 +323,7 @@ export class MCPServer {
   }
 
   /**
-   * 停止服务器
+   * Stop server
    */
   async stop(): Promise<void> {
     if (!this.isRunning) {
@@ -329,21 +331,21 @@ export class MCPServer {
     }
 
     try {
-      logger.info('正在停止服务器...');
+      logger.info('Stopping server...');
       
-      // 停止Web服务器
+      // Stop Web server
       await this.webServer.stop();
       
-      // 关闭MCP服务器
+      // Close MCP server
       if (this.mcpServer) {
         await this.mcpServer.close();
       }
       
       this.isRunning = false;
-      logger.info('✅ 服务器已停止');
+      logger.info('✅ Server stopped');
       
     } catch (error) {
-      logger.error('停止服务器时出错:', error);
+      logger.error('Error stopping server:', error);
       throw new MCPError(
         'Failed to stop server',
         'SERVER_STOP_ERROR',
@@ -353,7 +355,7 @@ export class MCPServer {
   }
 
   /**
-   * 获取服务器状态
+   * Get server status
    */
   getStatus(): { running: boolean; webPort?: number | undefined } {
     return {

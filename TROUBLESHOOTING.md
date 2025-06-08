@@ -1,23 +1,23 @@
-# 🔧 MCP Feedback Collector - 故障排除指南
+# 🔧 MCP Feedback Collector - Troubleshooting Guide
 
-## 📋 常见问题
+## 📋 Common Issues
 
-### 1. MCP配置中静态文件路径错误
+### 1. Static File Path Error in MCP Configuration
 
-**症状**: 在Claude Desktop中使用MCP配置时，浏览器显示"Internal Server Error"，错误信息为"ENOENT: no such file or directory, stat 'index.html'"。
+**Symptom**: When using MCP configuration in Claude Desktop, the browser shows "Internal Server Error" with the error message "ENOENT: no such file or directory, stat 'index.html'".
 
-**错误示例**:
+**Error Example**:
 ```json
 {"error":"Internal Server Error","message":"ENOENT: no such file or directory, stat 'C:\\Users\\Administrator\\AppData\\Local\\Programs\\cursor\\dist\\static\\index.html'"}
 ```
 
-**原因分析**:
-- ES模块中 `__dirname` 不可用，导致静态文件路径解析错误
-- 在MCP模式下，工作目录可能与项目目录不同
-- 相对路径在不同执行环境下会失效
+**Cause Analysis**:
+- `__dirname` is not available in ES modules, causing static file path resolution errors
+- In MCP mode, the working directory may differ from the project directory
+- Relative paths may fail in different execution environments
 
-**解决方案**:
-1. **使用ES模块兼容的路径解析** (已在v2.0.0中修复):
+**Solution**:
+1. **Use ES module compatible path resolution** (fixed in v2.0.0):
    ```typescript
    import { fileURLToPath } from 'url';
    import path from 'path';
@@ -27,16 +27,16 @@
    const staticPath = path.resolve(__dirname, '../static');
    ```
 
-2. **验证修复**:
+2. **Verify fix**:
    ```bash
-   # 重新构建项目
+   # Rebuild the project
    npm run build
 
-   # 测试功能
+   # Test functionality
    mcp-interactive-feedback test-feedback
    ```
 
-**推荐的MCP配置**:
+**Recommended MCP Configuration**:
 ```json
 {
   "mcpServers": {
@@ -53,11 +53,11 @@
 }
 ```
 
-### 2. 端口冲突和重复启动错误
+### 2. Port Conflict and Duplicate Startup Errors
 
-**症状**: 启动时出现 `Error: listen EADDRINUSE: address already in use :::5000` 错误，或者看到重复的启动日志。
+**Symptom**: Error `Error: listen EADDRINUSE: address already in use :::5000` at startup, or seeing duplicate startup logs.
 
-**错误示例**:
+**Error Example**:
 ```
 Error: listen EADDRINUSE: address already in use :::5000
     at Server.setupListenHandle [as _listen2] (node:net:1937:16)
@@ -65,71 +65,71 @@ Error: listen EADDRINUSE: address already in use :::5000
     at Server.listen (node:net:2099:7)
 ```
 
-**原因分析**:
-- 端口检测逻辑中的测试服务器没有正确关闭
-- CLI中存在重复启动逻辑
-- 端口管理器的`isPortAvailable`函数有竞态条件
+**Cause Analysis**:
+- Test server in port detection logic not properly closed
+- Duplicate startup logic in CLI
+- Race condition in the `isPortAvailable` function of the port manager
 
-**解决方案** (已在v2.0.0中修复):
-1. **修复端口检测逻辑**:
+**Solution** (fixed in v2.0.0):
+1. **Fix port detection logic**:
    ```typescript
    async isPortAvailable(port: number): Promise<boolean> {
      return new Promise((resolve) => {
        const server = createServer();
 
        server.listen(port, () => {
-         // 端口可用，立即关闭测试服务器
+         // Port available, close test server immediately
          server.close(() => {
            resolve(true);
          });
        });
 
        server.on('error', (err: any) => {
-         // 端口不可用
+         // Port unavailable
          resolve(false);
        });
      });
    }
    ```
 
-2. **移除重复启动逻辑**: 删除CLI中的默认启动代码
+2. **Remove duplicate startup logic**: Delete default startup code in CLI
 
-**验证修复**:
+**Verify fix**:
 ```bash
-# 重新构建
+# Rebuild
 npm run build
 
-# 测试启动
+# Test startup
 node D:/path/to/project/dist/cli.js
 
-# 应该看到单次启动日志：
-# ✅ Web服务器启动成功: http://localhost:5000
-# ✅ MCP服务器启动成功
+# Should see single startup log:
+# ✅ Web server started successfully: http://localhost:5000
+# ✅ MCP server started successfully
 ```
 
-### 3. MCP服务器显示红色但功能正常
+### 3. MCP Server Shows Red but Functions Normally
 
-**症状**: 在Claude Desktop的MCP Servers面板中，mcp-interactive-feedback显示为红色状态，但工具调用功能正常工作。
+**Symptom**: In the MCP Servers panel of Claude Desktop, mcp-interactive-feedback shows as red status, but tool call functionality works normally.
 
-**现象描述**:
-- MCP服务器在Claude Desktop中显示红色指示器
-- 工具函数`interactive-feedback`可以正常调用并返回结果
-- 服务器日志显示正常启动和运行
-- 可以正常处理MCP协议消息
+**Phenomenon Description**:
+- MCP server shows red indicator in Claude Desktop
+- Tool function `interactive-feedback` can be called normally and returns results
+- Server logs show normal startup and operation
+- Can process MCP protocol messages normally
 
-**可能原因**:
-1. **初始化流程不完整**: MCP协议要求完整的初始化握手，包括`initialize`请求和`initialized`通知
-2. **连接状态监控**: Claude Desktop可能依赖特定的心跳或状态检查机制
-3. **协议版本兼容性**: 不同版本的MCP协议可能有细微差异
-4. **传输层状态**: stdio传输的连接状态可能没有正确报告
+**Possible Causes**:
+1. **Incomplete initialization process**: MCP protocol requires complete initialization handshake, including `initialize` request and `initialized` notification
+2. **Connection status monitoring**: Claude Desktop may rely on specific heartbeat or status check mechanisms
+3. **Protocol version compatibility**: Different versions of MCP protocol may have subtle differences
+4. **Transport layer status**: Connection status of stdio transport may not be reported correctly
 
-**解决方案** (已在v2.0.0中修复):
+**Solution** (fixed in v2.0.0):
 
-**关键发现**: Cursor对MCP JSON输出要求极其严格，任何非JSON内容都会导致解析失败。
+**Key Finding**: Cursor has extremely strict requirements for MCP JSON output; any non-JSON content will cause parsing failure.
 
-1. **实现MCP模式检测**:
+1. **Implement MCP mode detection**:
    ```typescript
-   // 在CLI启动时立即检测MCP模式
+   // Detect MCP mode immediately at CLI startup
    const isMCPMode = !process.stdin.isTTY;
    if (isMCPMode) {
      logger.disableColors();
@@ -137,36 +137,36 @@ node D:/path/to/project/dist/cli.js
    }
    ```
 
-2. **完全禁用日志输出**:
+2. **Completely disable log output**:
    ```typescript
-   // 在logger中添加silent模式支持
+   // Add silent mode support in logger
    private shouldLog(level: LogLevel): boolean {
      if (this.currentLevel === 'silent') {
-       return false; // 完全禁用所有日志
+       return false; // Completely disable all logs
      }
      return LOG_LEVELS[level] <= LOG_LEVELS[this.currentLevel];
    }
    ```
 
-3. **确保纯净JSON输出**:
-   - MCP模式下：只输出JSON，无任何日志、颜色代码或欢迎信息
-   - 交互模式下：正常显示日志和欢迎信息
+3. **Ensure pure JSON output**:
+   - In MCP mode: Output only JSON, no logs, color codes, or welcome messages
+   - In interactive mode: Display logs and welcome messages normally
 
-**验证步骤**:
+**Verification Steps**:
 ```bash
-# 测试MCP协议通信（应该只返回纯JSON）
+# Test MCP protocol communication (should return pure JSON only)
 echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' | node dist/cli.js
 
-# 正确输出示例：
+# Correct output example:
 # {"result":{"tools":[{"name":"interactive-feedback",...}]},"jsonrpc":"2.0","id":1}
 ```
 
-**重要提醒**:
-- ⚠️ **不要在Cursor配置中使用`--debug`参数**，这会导致日志输出污染JSON
-- ✅ **Cursor要求极其纯净的JSON输出**，任何额外内容都会导致解析失败
-- 🔧 **调试时使用**: `node dist/cli.js --debug` 在命令行中查看详细日志
+**Important Reminders**:
+- ⚠️ **Do not use `--debug` parameter in Cursor configuration**, this will cause log output to contaminate JSON
+- ✅ **Cursor requires extremely pure JSON output**, any additional content will cause parsing failure
+- 🔧 **For debugging use**: `node dist/cli.js --debug` in command line to see detailed logs
 
-**推荐的Cursor配置**:
+**Recommended Cursor Configuration**:
 ```json
 {
   "mcpServers": {
@@ -183,32 +183,32 @@ echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' | node dist/cli.js
 }
 ```
 
-**注意事项**:
-- 修复后MCP服务器应该显示绿色状态
-- 如果仍显示红色，重启Cursor刷新连接状态
-- 功能完全正常，可以安全使用interactive-feedback工具
+**Notes**:
+- After fixing, the MCP server should show green status
+- If it still shows red, restart Cursor to refresh connection status
+- Functionality is completely normal, you can safely use the interactive-feedback tool
 
-### 4. Cursor图片显示问题
+### 4. Cursor Image Display Issues
 
-**症状**: 用户上传的图片在Cursor聊天界面中不显示，只显示文字描述
+**Symptom**: Images uploaded by users do not display in the Cursor chat interface, only showing text descriptions
 
-**原因分析**:
-1. **类型定义不兼容**: 自定义的MCPContent类型与MCP SDK标准类型不匹配
-2. **返回格式错误**: 没有使用MCP SDK提供的标准CallToolResult类型
-3. **图片格式不符合规范**: 图片数据格式不符合MCP协议要求
+**Cause Analysis**:
+1. **Incompatible type definitions**: Custom MCPContent type does not match MCP SDK standard types
+2. **Incorrect return format**: Not using the standard CallToolResult type provided by MCP SDK
+3. **Image format not compliant**: Image data format does not comply with MCP protocol requirements
 
-**解决方案** (已在v2.0.0中修复):
+**Solution** (fixed in v2.0.0):
 
-1. **使用MCP SDK标准类型**:
+1. **Use MCP SDK standard types**:
    ```typescript
-   // 导入MCP SDK标准类型
+   // Import MCP SDK standard types
    import { CallToolResult, TextContent, ImageContent } from '@modelcontextprotocol/sdk/types.js';
 
-   // 使用标准返回类型
+   // Use standard return type
    async function collectFeedback(): Promise<CallToolResult> {
      return {
        content: [
-         { type: 'text', text: '文字内容' },
+         { type: 'text', text: 'Text content' },
          {
            type: 'image',
            data: 'base64-encoded-data',
@@ -219,168 +219,168 @@ echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' | node dist/cli.js
    }
    ```
 
-2. **正确的图片格式**:
+2. **Correct image format**:
    ```typescript
-   // 符合MCP规范的图片内容
+   // Image content compliant with MCP specification
    const imageContent: ImageContent = {
      type: 'image',
-     data: img.data, // base64编码的图片数据
-     mimeType: img.type // 正确的MIME类型
+     data: img.data, // base64 encoded image data
+     mimeType: img.type // Correct MIME type
    };
    ```
 
-3. **混合内容数组**:
+3. **Mixed content array**:
    ```typescript
-   // 支持文本和图片混合的内容数组
+   // Support for mixed text and image content array
    const content: (TextContent | ImageContent)[] = [
-     { type: 'text', text: '反馈内容：' },
+     { type: 'text', text: 'Feedback content:' },
      { type: 'image', data: base64Data, mimeType: 'image/png' },
-     { type: 'text', text: '提交时间：2025-06-02' }
+     { type: 'text', text: 'Submission time: 2025-06-02' }
    ];
    ```
 
-**验证步骤**:
+**Verification Steps**:
 ```bash
-# 测试图片显示功能
-node dist/cli.js test-feedback --message "测试图片显示" --timeout 120
+# Test image display functionality
+node dist/cli.js test-feedback --message "Test image display" --timeout 120
 
-# 在浏览器中上传图片，然后在Cursor中查看结果
-# 图片应该直接显示在聊天界面中
+# Upload an image in the browser, then check the result in Cursor
+# The image should display directly in the chat interface
 ```
 
-**技术细节**:
-- **支持格式**: PNG, JPEG, GIF, WebP
-- **数据编码**: base64字符串
-- **MIME类型**: 必须正确设置（如image/png, image/jpeg）
-- **显示位置**: 图片会在相应的文本描述后直接显示
+**Technical Details**:
+- **Supported formats**: PNG, JPEG, GIF, WebP
+- **Data encoding**: base64 string
+- **MIME type**: Must be set correctly (e.g., image/png, image/jpeg)
+- **Display position**: Images will display directly after the corresponding text description
 
-**关键修复** (v2.0.0):
-发现图片处理器返回的是完整的Data URL格式（`data:image/png;base64,xxx`），但MCP协议要求纯净的base64字符串。
+**Key Fix** (v2.0.0):
+Found that the image processor was returning the complete Data URL format (`data:image/png;base64,xxx`), but the MCP protocol requires pure base64 strings.
 
 ```typescript
-// 修复前（错误）- 包含Data URL前缀
+// Before fix (incorrect) - includes Data URL prefix
 data: img.data // "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
 
-// 修复后（正确）- 纯净base64字符串
+// After fix (correct) - pure base64 string
 const base64Data = img.data.replace(/^data:image\/[^;]+;base64,/, '');
 data: base64Data // "iVBORw0KGgoAAAANSUhEUgAA..."
 ```
 
-**注意事项**:
-- 图片数据必须是纯净的base64编码（不包含Data URL前缀）
-- MIME类型必须与实际图片格式匹配
-- 大图片可能影响传输性能，建议适当压缩
-- Cursor严格验证base64格式，任何无效字符都会导致解析失败
+**Notes**:
+- Image data must be pure base64 encoding (without Data URL prefix)
+- MIME type must match the actual image format
+- Large images may affect transmission performance, compression is recommended
+- Cursor strictly validates base64 format, any invalid characters will cause parsing failure
 
-### 5. WebSocket连接失败
+### 5. WebSocket Connection Failure
 
-**症状**: 界面显示"连接失败"或"连接断开"
+**Symptom**: Interface shows "Connection Failed" or "Connection Disconnected"
 
-**可能原因**:
-- 静态文件路径配置错误
-- Socket.IO库未正确加载
-- 端口被占用或防火墙阻止
+**Possible Causes**:
+- Static file path configuration error
+- Socket.IO library not loaded correctly
+- Port occupied or blocked by firewall
 
-**解决方案**:
+**Solution**:
 ```bash
-# 1. 检查服务器是否正常启动
+# 1. Check if server started normally
 npm start health
 
-# 2. 检查端口是否被占用
+# 2. Check if port is occupied
 netstat -an | grep :5000
 
-# 3. 尝试使用其他端口
+# 3. Try using another port
 npm start -- --port 5001
 
-# 4. 检查防火墙设置
-# Windows: 允许Node.js通过防火墙
-# macOS/Linux: 检查iptables规则
+# 4. Check firewall settings
+# Windows: Allow Node.js through firewall
+# macOS/Linux: Check iptables rules
 ```
 
-**调试步骤**:
-1. 打开浏览器开发者工具 (F12)
-2. 查看Console标签页的错误信息
-3. 查看Network标签页的请求状态
-4. 访问测试页面: `http://localhost:端口/test.html`
+**Debugging Steps**:
+1. Open browser developer tools (F12)
+2. Check Console tab for error messages
+3. Check Network tab for request status
+4. Access test page: `http://localhost:port/test.html`
 
-### 2. 端口被占用
+### 2. Port Occupied
 
-**症状**: 启动时报错 `EADDRINUSE: address already in use`
+**Symptom**: Error at startup `EADDRINUSE: address already in use`
 
-**解决方案**:
+**Solution**:
 ```bash
 # Windows
 netstat -ano | findstr :5000
-taskkill /PID <进程ID> /F
+taskkill /PID <process_ID> /F
 
 # macOS/Linux
 lsof -ti:5000 | xargs kill -9
 
-# 或者使用其他端口
+# Or use another port
 npm start -- --port 5001
 ```
 
-### 3. 构建失败
+### 3. Build Failure
 
-**症状**: `npm run build` 报错
+**Symptom**: `npm run build` reports error
 
-**常见错误**:
-- TypeScript编译错误
-- 依赖包缺失
-- 文件权限问题
+**Common Errors**:
+- TypeScript compilation errors
+- Missing dependencies
+- File permission issues
 
-**解决方案**:
+**Solution**:
 ```bash
-# 1. 清理并重新安装依赖
+# 1. Clean and reinstall dependencies
 rm -rf node_modules package-lock.json
 npm install
 
-# 2. 检查TypeScript配置
+# 2. Check TypeScript configuration
 npx tsc --noEmit
 
-# 3. 检查ESLint
+# 3. Check ESLint
 npm run lint
 
-# 4. 清理构建目录
+# 4. Clean build directory
 npm run clean
 npm run build
 ```
 
-### 4. 图片上传失败
+### 4. Image Upload Failure
 
-**症状**: 图片选择或粘贴后无法显示
+**Symptom**: Images cannot be displayed after selection or paste
 
-**可能原因**:
-- 文件大小超过限制
-- 文件格式不支持
-- 浏览器权限问题
+**Possible Causes**:
+- File size exceeds limit
+- File format not supported
+- Browser permission issues
 
-**解决方案**:
-1. 检查文件大小 (默认限制10MB)
-2. 确保文件格式为常见图片格式 (jpg, png, gif, webp)
-3. 检查浏览器剪贴板权限
-4. 尝试使用文件选择而非粘贴
+**Solution**:
+1. Check file size (default limit 10MB)
+2. Ensure file format is common image format (jpg, png, gif, webp)
+3. Check browser clipboard permissions
+4. Try using file selection instead of paste
 
-### 5. MCP工具函数调用失败
+### 5. MCP Tool Function Call Failure
 
-**症状**: Claude Desktop中调用interactive-feedback失败
+**Symptom**: interactive-feedback call fails in Claude Desktop
 
-**检查清单**:
+**Checklist**:
 ```bash
-# 1. 验证MCP配置
+# 1. Verify MCP configuration
 cat ~/.config/claude-desktop/claude_desktop_config.json
 
-# 2. 检查服务器状态
+# 2. Check server status
 npm start health
 
-# 3. 查看服务器日志
+# 3. View server logs
 npm start -- --debug
 
-# 4. 测试工具函数
+# 4. Test tool function
 npm start test-mcp
 ```
 
-**MCP配置示例**:
+**MCP Configuration Example**:
 ```json
 {
   "mcpServers": {
@@ -396,169 +396,169 @@ npm start test-mcp
 }
 ```
 
-## 🐛 调试技巧
+## 🐛 Debugging Tips
 
-### 1. 启用调试日志
+### 1. Enable Debug Logs
 
 ```bash
-# 设置调试级别
+# Set debug level
 export LOG_LEVEL=debug
 npm start
 
-# 或者在.env文件中设置
+# Or set in .env file
 echo "LOG_LEVEL=debug" >> .env
 ```
 
-### 2. 检查系统状态
+### 2. Check System Status
 
 ```bash
-# 健康检查
+# Health check
 npm start health
 
-# 显示配置
+# Display configuration
 npm start config
 
-# 检查端口状态
+# Check port status
 npm start -- --check-ports
 ```
 
-### 3. 浏览器调试
+### 3. Browser Debugging
 
-1. **开发者工具**: F12 → Console/Network
-2. **WebSocket连接**: 查看WS连接状态
-3. **错误信息**: 查看具体错误堆栈
-4. **网络请求**: 检查API调用状态
+1. **Developer Tools**: F12 → Console/Network
+2. **WebSocket Connection**: Check WS connection status
+3. **Error Messages**: View specific error stacks
+4. **Network Requests**: Check API call status
 
-### 4. 服务器日志分析
+### 4. Server Log Analysis
 
-**日志级别**:
-- `ERROR`: 严重错误，需要立即处理
-- `WARN`: 警告信息，可能影响功能
-- `INFO`: 一般信息，正常运行状态
-- `DEBUG`: 详细调试信息
+**Log Levels**:
+- `ERROR`: Serious errors, need immediate attention
+- `WARN`: Warning information, may affect functionality
+- `INFO`: General information, normal operation status
+- `DEBUG`: Detailed debug information
 
-**关键日志标识**:
-- `✅`: 成功操作
-- `❌`: 失败操作
-- `🚧`: 进行中操作
-- `⚠️`: 警告信息
+**Key Log Identifiers**:
+- `✅`: Successful operation
+- `❌`: Failed operation
+- `🚧`: Operation in progress
+- `⚠️`: Warning information
 
-## 🔍 性能问题
+## 🔍 Performance Issues
 
-### 1. 内存使用过高
+### 1. High Memory Usage
 
-**检查方法**:
+**Check Method**:
 ```bash
-# 查看内存使用
+# View memory usage
 npm start health
 
-# 使用Node.js内置工具
+# Use Node.js built-in tools
 node --inspect dist/cli.js
 ```
 
-**优化建议**:
-- 检查是否有内存泄漏
-- 限制并发连接数
-- 定期清理过期会话
+**Optimization Suggestions**:
+- Check for memory leaks
+- Limit concurrent connections
+- Periodically clean up expired sessions
 
-### 2. 响应时间过长
+### 2. Long Response Time
 
-**可能原因**:
-- 网络延迟
-- 服务器负载过高
-- 数据库查询慢
+**Possible Causes**:
+- Network latency
+- High server load
+- Slow database queries
 
-**优化方案**:
-- 启用压缩中间件
-- 优化静态文件缓存
-- 减少不必要的日志输出
+**Optimization Solutions**:
+- Enable compression middleware
+- Optimize static file caching
+- Reduce unnecessary log output
 
-## 📞 获取帮助
+## 📞 Getting Help
 
-### 1. 日志收集
+### 1. Log Collection
 
-在报告问题时，请提供以下信息：
+When reporting issues, please provide the following information:
 
 ```bash
-# 系统信息
+# System information
 node --version
 npm --version
 uname -a  # Linux/macOS
 systeminfo  # Windows
 
-# 应用信息
+# Application information
 npm start config
 npm start health
 
-# 错误日志
+# Error logs
 npm start -- --debug > debug.log 2>&1
 ```
 
-### 2. 问题报告模板
+### 2. Issue Report Template
 
 ```markdown
-**环境信息**:
-- 操作系统: 
-- Node.js版本: 
-- NPM版本: 
-- 应用版本: 
+**Environment Information**:
+- Operating System: 
+- Node.js Version: 
+- NPM Version: 
+- Application Version: 
 
-**问题描述**:
-- 具体症状: 
-- 复现步骤: 
-- 预期行为: 
-- 实际行为: 
+**Problem Description**:
+- Specific Symptoms: 
+- Steps to Reproduce: 
+- Expected Behavior: 
+- Actual Behavior: 
 
-**错误信息**:
+**Error Messages**:
 ```
-[粘贴错误日志]
-```
-
-**已尝试的解决方案**:
-- [ ] 重启服务器
-- [ ] 清理缓存
-- [ ] 检查配置
-- [ ] 查看日志
+[Paste error logs]
 ```
 
-### 3. 联系方式
+**Solutions Attempted**:
+- [ ] Restart server
+- [ ] Clear cache
+- [ ] Check configuration
+- [ ] View logs
+```
 
-- **GitHub Issues**: [项目仓库](https://github.com/TerrenceMiao/mcp-interactive-feedback/issues)
-- **文档**: [README.md](README.md)
-- **更新日志**: [CHANGELOG.md](CHANGELOG.md)
+### 3. Contact Information
 
-## 🔄 定期维护
+- **GitHub Issues**: [Project Repository](https://github.com/TerrenceMiao/mcp-interactive-feedback/issues)
+- **Documentation**: [README.md](README.md)
+- **Update Log**: [CHANGELOG.md](CHANGELOG.md)
 
-### 1. 日志清理
+## 🔄 Regular Maintenance
+
+### 1. Log Cleanup
 
 ```bash
-# 清理旧日志文件
+# Clean old log files
 find logs/ -name "*.log" -mtime +7 -delete
 
-# 限制日志文件大小
+# Limit log file size
 logrotate /etc/logrotate.d/mcp-interactive-feedback
 ```
 
-### 2. 依赖更新
+### 2. Dependency Updates
 
 ```bash
-# 检查过时依赖
+# Check outdated dependencies
 npm outdated
 
-# 更新依赖
+# Update dependencies
 npm update
 
-# 安全审计
+# Security audit
 npm audit
 npm audit fix
 ```
 
-### 3. 性能监控
+### 3. Performance Monitoring
 
 ```bash
-# 监控内存使用
+# Monitor memory usage
 watch -n 5 'npm start health'
 
-# 监控端口状态
+# Monitor port status
 netstat -tulpn | grep :5000
 ```

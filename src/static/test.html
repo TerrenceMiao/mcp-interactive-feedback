@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socket.IO 连接测试</title>
+    <title>Socket.IO Connection Test</title>
     <style>
         body {
             font-family: monospace;
@@ -27,7 +27,7 @@
     </style>
 </head>
 <body>
-    <h1>🔧 Socket.IO 连接测试</h1>
+    <h1>🔧 Socket.IO Connection Test</h1>
     <div id="logs"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
@@ -40,16 +40,16 @@
             console.log(message);
         }
 
-        log('开始Socket.IO连接测试...');
+        log('Starting Socket.IO connection test...');
 
-        // 检查Socket.IO是否加载
+        // Check if Socket.IO is loaded
         if (typeof io === 'undefined') {
-            log('❌ Socket.IO库未加载', 'error');
+            log('❌ Socket.IO library not loaded', 'error');
         } else {
-            log('✅ Socket.IO库已加载', 'success');
+            log('✅ Socket.IO library loaded', 'success');
             
-            // 尝试连接
-            log('正在连接到服务器...');
+            // Try to connect
+            log('Connecting to server...');
             const socket = io({
                 transports: ['websocket', 'polling'],
                 timeout: 5000,
@@ -59,24 +59,24 @@
             });
 
             socket.on('connect', function() {
-                log(`✅ WebSocket连接成功! ID: ${socket.id}`, 'success');
+                log(`✅ WebSocket connection successful! ID: ${socket.id}`, 'success');
             });
 
             socket.on('disconnect', function(reason) {
-                log(`❌ WebSocket连接断开: ${reason}`, 'error');
+                log(`❌ WebSocket connection disconnected: ${reason}`, 'error');
             });
 
             socket.on('connect_error', function(error) {
-                log(`❌ WebSocket连接错误: ${error.message}`, 'error');
+                log(`❌ WebSocket connection error: ${error.message}`, 'error');
             });
 
-            // 测试发送消息
+            // Test sending message
             setTimeout(() => {
                 if (socket.connected) {
-                    log('发送测试消息...');
+                    log('Sending test message...');
                     socket.emit('test_message', { message: 'Hello from test page!' });
                 } else {
-                    log('❌ 连接未建立，无法发送测试消息', 'error');
+                    log('❌ Connection not established, cannot send test message', 'error');
                 }
             }, 2000);
         }

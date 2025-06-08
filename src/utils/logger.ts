@@ -1,12 +1,12 @@
 /**
- * MCP Feedback Collector - 日志工具
+ * MCP Feedback Collector - Logger Utility
  */
 
 import fs from 'fs';
 import path from 'path';
 import { LogLevel } from '../types/index.js';
 
-// 日志级别优先级
+// Log level priorities
 const LOG_LEVELS: Record<LogLevel, number> = {
   error: 0,
   warn: 1,
@@ -15,13 +15,13 @@ const LOG_LEVELS: Record<LogLevel, number> = {
   silent: 999
 };
 
-// 日志颜色
+// Log colors
 const LOG_COLORS: Record<LogLevel, string> = {
-  error: '\x1b[31m', // 红色
-  warn: '\x1b[33m',  // 黄色
-  info: '\x1b[36m',  // 青色
-  debug: '\x1b[37m', // 白色
-  silent: ''         // 无颜色
+  error: '\x1b[31m', // Red
+  warn: '\x1b[33m',  // Yellow
+  info: '\x1b[36m',  // Cyan
+  debug: '\x1b[37m', // White
+  silent: ''         // No color
 };
 
 const RESET_COLOR = '\x1b[0m';
@@ -33,42 +33,42 @@ class Logger {
   private colorsDisabled = false;
 
   /**
-   * 设置日志级别
+   * Set log level
    */
   setLevel(level: LogLevel): void {
     this.currentLevel = level;
   }
 
   /**
-   * 获取当前日志级别
+   * Get current log level
    */
   getLevel(): LogLevel {
     return this.currentLevel;
   }
 
   /**
-   * 禁用颜色输出（用于MCP模式）
+   * Disable color output (for MCP mode)
    */
   disableColors(): void {
     this.colorsDisabled = true;
   }
 
   /**
-   * 启用文件日志记录
+   * Enable file logging
    */
   enableFileLogging(logDir: string = 'logs'): void {
     try {
-      // 确保日志目录存在
+      // Ensure log directory exists
       if (!fs.existsSync(logDir)) {
         fs.mkdirSync(logDir, { recursive: true });
       }
 
-      // 生成日志文件名
+      // Generate log filename
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       this.logFile = path.join(logDir, `mcp-debug-${timestamp}.log`);
       this.fileLoggingEnabled = true;
 
-      // 写入日志文件头
+      // Write log file header
       const header = `=== MCP Feedback Collector Debug Log ===\n` +
                     `Start Time: ${new Date().toISOString()}\n` +
                     `Log Level: ${this.currentLevel}\n` +
@@ -76,18 +76,18 @@ class Logger {
 
       fs.writeFileSync(this.logFile, header);
 
-      console.log(`📁 日志文件已创建: ${this.logFile}`);
+      console.log(`📁 Log file created: ${this.logFile}`);
     } catch (error) {
-      console.error('❌ 无法创建日志文件:', error);
+      console.error('❌ Unable to create log file:', error);
       this.fileLoggingEnabled = false;
     }
   }
 
   /**
-   * 检查是否应该输出指定级别的日志
+   * Check if the specified log level should be output
    */
   private shouldLog(level: LogLevel): boolean {
-    // silent模式下不输出任何日志
+    // Don't output any logs in silent mode
     if (this.currentLevel === 'silent') {
       return false;
     }
@@ -95,14 +95,14 @@ class Logger {
   }
 
   /**
-   * 格式化时间戳
+   * Format timestamp
    */
   private formatTimestamp(): string {
     return new Date().toISOString();
   }
 
   /**
-   * 格式化日志消息
+   * Format log message
    */
   private formatMessage(level: LogLevel, message: string, ...args: unknown[]): string {
     const timestamp = this.formatTimestamp();
@@ -111,10 +111,10 @@ class Logger {
     let formattedMessage: string;
 
     if (this.colorsDisabled) {
-      // 无颜色模式（用于MCP）
+      // No color mode (for MCP)
       formattedMessage = `[${timestamp}] ${levelStr} ${message}`;
     } else {
-      // 有颜色模式（用于终端）
+      // Color mode (for terminal)
       const color = LOG_COLORS[level];
       formattedMessage = `${color}[${timestamp}] ${levelStr}${RESET_COLOR} ${message}`;
     }
@@ -130,14 +130,14 @@ class Logger {
   }
 
   /**
-   * 输出日志
+   * Output log
    */
   private log(level: LogLevel, message: string, ...args: unknown[]): void {
     if (!this.shouldLog(level)) return;
 
     const formattedMessage = this.formatMessage(level, message, ...args);
 
-    // 控制台输出
+    // Console output
     if (level === 'error') {
       console.error(formattedMessage);
     } else if (level === 'warn') {
@@ -146,54 +146,54 @@ class Logger {
       console.log(formattedMessage);
     }
 
-    // 文件输出（去除颜色代码）
+    // File output (remove color codes)
     if (this.fileLoggingEnabled && this.logFile) {
       try {
         const cleanMessage = this.removeColorCodes(formattedMessage);
         fs.appendFileSync(this.logFile, cleanMessage + '\n');
       } catch (error) {
-        console.error('❌ 写入日志文件失败:', error);
+        console.error('❌ Failed to write to log file:', error);
       }
     }
   }
 
   /**
-   * 移除颜色代码
+   * Remove color codes
    */
   private removeColorCodes(text: string): string {
     return text.replace(/\x1b\[[0-9;]*m/g, '');
   }
 
   /**
-   * 错误日志
+   * Error log
    */
   error(message: string, ...args: unknown[]): void {
     this.log('error', message, ...args);
   }
 
   /**
-   * 警告日志
+   * Warning log
    */
   warn(message: string, ...args: unknown[]): void {
     this.log('warn', message, ...args);
   }
 
   /**
-   * 信息日志
+   * Information log
    */
   info(message: string, ...args: unknown[]): void {
     this.log('info', message, ...args);
   }
 
   /**
-   * 调试日志
+   * Debug log
    */
   debug(message: string, ...args: unknown[]): void {
     this.log('debug', message, ...args);
   }
 
   /**
-   * 记录HTTP请求
+   * Record HTTP request
    */
   request(method: string, url: string, statusCode?: number, duration?: number): void {
     const parts = [method.toUpperCase(), url];
@@ -204,7 +204,7 @@ class Logger {
   }
 
   /**
-   * 记录WebSocket事件
+   * Record WebSocket event
    */
   socket(event: string, sessionId?: string, data?: unknown): void {
     const parts = ['WebSocket', event];
@@ -214,15 +214,15 @@ class Logger {
   }
 
   /**
-   * 记录MCP工具调用
+   * Record MCP tool call
    */
   mcp(tool: string, params?: unknown, result?: unknown): void {
     this.info(`MCP Tool: ${tool}`, { params, result });
   }
 }
 
-// 创建全局日志实例
+// Create global logger instance
 export const logger = new Logger();
 
-// 导出日志级别类型
+// Export log level type
 export type { LogLevel };

@@ -1,5 +1,5 @@
 /**
- * MCP Feedback Collector - 图片处理工具
+ * MCP Feedback Collector - Image Processing Tool
  */
 
 import sharp from 'sharp';
@@ -8,12 +8,12 @@ import { MCPError, ImageData } from '../types/index.js';
 import { logger } from './logger.js';
 
 /**
- * 支持的图片格式
+ * Supported image formats
  */
 const SUPPORTED_FORMATS = ['jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tiff'];
 
 /**
- * 图片处理器类
+ * Image Processor Class
  */
 export class ImageProcessor {
   private maxFileSize: number;
@@ -31,16 +31,16 @@ export class ImageProcessor {
   }
 
   /**
-   * 验证图片格式
+   * Validate image format
    */
   validateImageFormat(filename: string, mimeType: string): boolean {
-    // 检查文件扩展名
+    // Check file extension
     const ext = filename.toLowerCase().split('.').pop();
     if (!ext || !SUPPORTED_FORMATS.includes(ext)) {
       return false;
     }
 
-    // 检查MIME类型
+    // Check MIME type
     const validMimeTypes = [
       'image/jpeg',
       'image/jpg', 
@@ -55,14 +55,14 @@ export class ImageProcessor {
   }
 
   /**
-   * 验证图片大小
+   * Validate image size
    */
   validateImageSize(size: number): boolean {
     return size > 0 && size <= this.maxFileSize;
   }
 
   /**
-   * 从Base64数据中提取图片信息
+   * Extract image information from Base64 data
    */
   async getImageInfoFromBase64(base64Data: string): Promise<{
     format: string;
@@ -72,7 +72,7 @@ export class ImageProcessor {
     hasAlpha: boolean;
   }> {
     try {
-      // 移除Base64前缀
+      // Remove Base64 prefix
       const base64Content = base64Data.replace(/^data:image\/[^;]+;base64,/, '');
       const buffer = Buffer.from(base64Content, 'base64');
 
@@ -86,7 +86,7 @@ export class ImageProcessor {
         hasAlpha: metadata.hasAlpha || false
       };
     } catch (error) {
-      logger.error('获取图片信息失败:', error);
+      logger.error('Failed to get image information:', error);
       throw new MCPError(
         'Failed to get image information',
         'IMAGE_INFO_ERROR',
@@ -96,7 +96,7 @@ export class ImageProcessor {
   }
 
   /**
-   * 压缩图片
+   * Compress image
    */
   async compressImage(base64Data: string, options: {
     maxWidth?: number;
@@ -117,7 +117,7 @@ export class ImageProcessor {
 
       let processor = sharp(buffer);
 
-      // 调整尺寸
+      // Resize dimensions
       const metadata = await processor.metadata();
       if (metadata.width && metadata.height) {
         if (metadata.width > maxWidth || metadata.height > maxHeight) {
@@ -128,7 +128,7 @@ export class ImageProcessor {
         }
       }
 
-      // 转换格式和压缩
+      // Convert format and compress
       let outputBuffer: Buffer;
       switch (format) {
         case 'jpeg':
@@ -144,14 +144,14 @@ export class ImageProcessor {
           outputBuffer = await processor.jpeg({ quality }).toBuffer();
       }
 
-      // 转换回Base64
+      // Convert back to Base64
       const compressedBase64 = `data:image/${format};base64,${outputBuffer.toString('base64')}`;
       
-      logger.debug(`图片压缩完成: ${buffer.length} -> ${outputBuffer.length} bytes`);
+      logger.debug(`Image compression completed: ${buffer.length} -> ${outputBuffer.length} bytes`);
       
       return compressedBase64;
     } catch (error) {
-      logger.error('图片压缩失败:', error);
+      logger.error('Image compression failed:', error);
       throw new MCPError(
         'Failed to compress image',
         'IMAGE_COMPRESSION_ERROR',
@@ -161,11 +161,11 @@ export class ImageProcessor {
   }
 
   /**
-   * 验证和处理图片数据
+   * Validate and process image data
    */
   async validateAndProcessImage(imageData: ImageData): Promise<ImageData> {
     try {
-      // 验证基本信息
+      // Validate basic information
       if (!imageData.name || !imageData.data || !imageData.type) {
         throw new MCPError(
           'Invalid image data: missing required fields',
@@ -173,7 +173,7 @@ export class ImageProcessor {
         );
       }
 
-      // 验证格式
+      // Validate format
       if (!this.validateImageFormat(imageData.name, imageData.type)) {
         throw new MCPError(
           `Unsupported image format: ${imageData.type}`,
@@ -181,7 +181,7 @@ export class ImageProcessor {
         );
       }
 
-      // 验证大小
+      // Validate size
       if (!this.validateImageSize(imageData.size)) {
         throw new MCPError(
           `Image size ${imageData.size} exceeds limit ${this.maxFileSize}`,
@@ -189,12 +189,12 @@ export class ImageProcessor {
         );
       }
 
-      // 获取图片详细信息
+      // Get detailed image information
       const info = await this.getImageInfoFromBase64(imageData.data);
       
-      // 检查图片尺寸
+      // Check image dimensions
       if (info.width > this.maxWidth || info.height > this.maxHeight) {
-        logger.info(`图片尺寸过大 (${info.width}x${info.height})，正在压缩...`);
+        logger.info(`Image dimensions too large (${info.width}x${info.height}), compressing...`);
         
         const compressedData = await this.compressImage(imageData.data, {
           maxWidth: this.maxWidth,
@@ -218,7 +218,7 @@ export class ImageProcessor {
         throw error;
       }
       
-      logger.error('图片验证和处理失败:', error);
+      logger.error('Image validation and processing failed:', error);
       throw new MCPError(
         'Failed to validate and process image',
         'IMAGE_PROCESSING_ERROR',
@@ -228,29 +228,29 @@ export class ImageProcessor {
   }
 
   /**
-   * 批量处理图片
+   * Batch process images
    */
   async processImages(images: ImageData[]): Promise<ImageData[]> {
     const results: ImageData[] = [];
     
     for (let i = 0; i < images.length; i++) {
       try {
-        logger.debug(`处理图片 ${i + 1}/${images.length}: ${images[i]?.name}`);
+        logger.debug(`Processing image ${i + 1}/${images.length}: ${images[i]?.name}`);
         const processedImage = await this.validateAndProcessImage(images[i]!);
         results.push(processedImage);
       } catch (error) {
-        logger.error(`处理图片 ${images[i]?.name} 失败:`, error);
-        // 继续处理其他图片，但记录错误
+        logger.error(`Failed to process image ${images[i]?.name}:`, error);
+        // Continue processing other images, but record the error
         throw error;
       }
     }
     
-    logger.info(`成功处理 ${results.length}/${images.length} 张图片`);
+    logger.info(`Successfully processed ${results.length}/${images.length} images`);
     return results;
   }
 
   /**
-   * 生成图片缩略图
+   * Generate image thumbnail
    */
   async generateThumbnail(base64Data: string, size: number = 150): Promise<string> {
     try {
@@ -267,7 +267,7 @@ export class ImageProcessor {
 
       return `data:image/jpeg;base64,${thumbnailBuffer.toString('base64')}`;
     } catch (error) {
-      logger.error('生成缩略图失败:', error);
+      logger.error('Failed to generate thumbnail:', error);
       throw new MCPError(
         'Failed to generate thumbnail',
         'THUMBNAIL_ERROR',
@@ -277,7 +277,7 @@ export class ImageProcessor {
   }
 
   /**
-   * 获取图片统计信息
+   * Get image statistics
    */
   getImageStats(images: ImageData[]): {
     totalCount: number;

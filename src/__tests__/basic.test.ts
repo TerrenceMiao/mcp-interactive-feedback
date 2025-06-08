@@ -1,13 +1,13 @@
 /**
- * 基础功能测试
+ * Basic Functionality Tests
  */
 
-describe('基础功能', () => {
-  test('应该能够运行测试', () => {
+describe('Basic Functionality', () => {
+  test('should be able to run tests', () => {
     expect(1 + 1).toBe(2);
   });
 
-  test('应该能够导入类型', async () => {
+  test('should be able to import types', async () => {
     const { MCPError } = await import('../types/index');
     expect(MCPError).toBeDefined();
   });

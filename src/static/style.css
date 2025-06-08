@@ -1,4 +1,4 @@
-/* MCP Feedback Collector - VS Code深色主题样式 */
+/* MCP Feedback Collector - VS Code Dark Theme Style */
 
 * {
     margin: 0;
@@ -20,7 +20,7 @@ body {
     padding: 20px;
 }
 
-/* 头部样式 */
+/* Header Style */
 .header {
     background-color: #2d2d30;
     border-bottom: 1px solid #3e3e42;
@@ -40,7 +40,7 @@ body {
     margin-top: 5px;
 }
 
-/* 连接状态指示器 */
+/* Connection Status Indicator */
 .connection-status {
     position: fixed;
     top: 20px;
@@ -67,7 +67,7 @@ body {
     color: #000000;
 }
 
-/* 标签页样式 */
+/* Tab Style */
 .tabs {
     display: flex;
     background-color: #2d2d30;
@@ -97,7 +97,7 @@ body {
     background-color: #1e1e1e;
 }
 
-/* 标签页内容 */
+/* Tab Content */
 .tab-content {
     display: none;
 }
@@ -106,7 +106,7 @@ body {
     display: block;
 }
 
-/* 卡片样式 */
+/* Card Style */
 .card {
     background-color: #252526;
     border: 1px solid #3e3e42;
@@ -129,7 +129,7 @@ body {
     font-weight: 500;
 }
 
-/* 表单样式 */
+/* Form Style */
 .form-group {
     margin-bottom: 20px;
 }
@@ -165,7 +165,7 @@ textarea.form-control {
     min-height: 120px;
 }
 
-/* 按钮样式 */
+/* Button Style */
 .btn {
     display: inline-block;
     padding: 10px 16px;
@@ -215,7 +215,7 @@ textarea.form-control {
     background-color: #1e9973;
 }
 
-/* 图片预览样式 */
+/* Image Preview Style */
 .image-preview {
     display: flex;
     flex-wrap: wrap;
@@ -257,7 +257,7 @@ textarea.form-control {
     background-color: #e73c3c;
 }
 
-/* 状态消息样式 */
+/* Status Message Style */
 .status-message {
     padding: 12px 16px;
     border-radius: 4px;
@@ -284,7 +284,7 @@ textarea.form-control {
     color: #9cdcfe;
 }
 
-/* 加载动画 */
+/* Loading Animation */
 .loading {
     display: inline-block;
     width: 12px;
@@ -299,7 +299,7 @@ textarea.form-control {
     to { transform: rotate(360deg); }
 }
 
-/* 工作汇报样式 */
+/* Work Report Style */
 .work-summary {
     background-color: #2d2d30;
     border: 1px solid #3e3e42;
@@ -312,27 +312,27 @@ textarea.form-control {
     line-height: 1.5;
 }
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
     }
-    
+
     .tabs {
         flex-direction: column;
     }
-    
+
     .tab-button {
         text-align: left;
         border-bottom: 1px solid #3e3e42;
         border-right: none;
     }
-    
+
     .tab-button.active {
         border-bottom-color: #3e3e42;
         border-left: 3px solid #0e639c;
     }
-    
+
     .connection-status {
         position: static;
         margin-bottom: 20px;
@@ -340,7 +340,7 @@ textarea.form-control {
     }
 }
 
-/* 版本信息和GitHub链接样式 */
+/* Version Info and GitHub Link Style */
 .version-info {
     display: flex;
     align-items: center;
@@ -398,7 +398,7 @@ textarea.form-control {
     }
 }
 
-/* 快捷语选项样式 */
+/* Quick Phrase Option Style */
 .quick-phrase-option {
     margin-top: 12px;
     padding: 12px;
@@ -471,11 +471,11 @@ textarea.form-control {
     .quick-phrase-option {
         padding: 10px;
     }
-
+    
     .checkbox-label {
         font-size: 13px;
     }
-
+    
     .quick-phrase-hint {
         font-size: 11px;
         margin-left: 24px;

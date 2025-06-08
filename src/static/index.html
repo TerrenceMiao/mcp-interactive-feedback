@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 MCP Feedback Collector - Web版</title>
+    <title>🎯 MCP Feedback Collector - Web Version</title>
     <style>
-        /* VS Code 风格的深色主题 */
+        /* VS Code Dark Theme Style */
         * {
             margin: 0;
             padding: 0;
@@ -21,13 +21,13 @@
             padding: 20px;
         }
 
-        /* 主容器 */
+        /* Main Container */
         .container {
             max-width: 800px;
             margin: 0 auto;
         }
 
-        /* 页面标题 */
+        /* Page Title */
         .page-title {
             font-size: 24px;
             font-weight: 600;
@@ -44,7 +44,7 @@
             margin-bottom: 24px;
         }
 
-        /* 连接状态 */
+        /* Connection Status */
         .connection-status {
             position: fixed;
             top: 20px;
@@ -65,7 +65,7 @@
             color: white;
         }
 
-        /* 导航标签 */
+        /* Navigation Tabs */
         .nav-tabs {
             display: flex;
             margin-bottom: 24px;
@@ -92,7 +92,7 @@
             border-bottom-color: #007acc;
         }
 
-        /* 获取key链接 */
+        /* Get Key Link */
         .get-key-link {
             padding: 12px 20px;
             color: #007acc;
@@ -108,7 +108,7 @@
             text-decoration: none;
         }
 
-        /* 内容区域 */
+        /* Content Area */
         .content-area {
             display: none;
         }
@@ -117,7 +117,7 @@
             display: block;
         }
 
-        /* 工作汇报控制栏 */
+        /* Work Report Control Bar */
         .report-controls {
             display: flex;
             justify-content: space-between;
@@ -152,7 +152,7 @@
             cursor: not-allowed;
         }
 
-        /* 状态文字显示 */
+        /* Status Text Display */
         .refresh-status-text {
             font-size: 12px;
             color: #888;
@@ -173,7 +173,7 @@
             color: #ef4444;
         }
 
-        /* 工作汇报卡片 */
+        /* Work Report Card */
         .report-card {
             background: #2d2d30;
             border: 1px solid #3e3e42;
@@ -207,7 +207,7 @@
             padding: 16px 20px;
         }
 
-        /* 反馈表单卡片 */
+        /* Feedback Form Card */
         .feedback-card {
             background: #2d2d30;
             border: 1px solid #3e3e42;
@@ -235,7 +235,7 @@
             padding: 20px;
         }
 
-        /* 表单元素 */
+        /* Form Elements */
         .form-group {
             margin-bottom: 16px;
         }
@@ -270,7 +270,7 @@
             color: #6a6a6a;
         }
 
-        /* 图片预览区域 */
+        /* Image Preview Area */
         .image-preview-area {
             margin-bottom: 16px;
         }
@@ -315,7 +315,7 @@
             justify-content: center;
         }
 
-        /* 工具栏 */
+        /* Toolbar */
         .toolbar {
             display: flex;
             gap: 8px;
@@ -340,7 +340,7 @@
             border-color: #007acc;
         }
 
-        /* 按钮组 */
+        /* Button Group */
         .button-group {
             display: flex;
             gap: 12px;
@@ -380,7 +380,7 @@
             cursor: not-allowed;
         }
 
-        /* 状态消息 */
+        /* Status Message */
         .status-message {
             padding: 12px;
             border-radius: 4px;
@@ -403,14 +403,14 @@
             color: white;
         }
 
-        /* 加载状态 - 简化为纯文字显示 */
+        /* Loading State - Simplified to Text Display */
         .loading {
             display: inline;
             color: #007acc;
             font-weight: 500;
         }
 
-        /* 聊天界面样式 */
+        /* Chat Interface Style */
         .chat-container {
             background: #2d2d30;
             border: 1px solid #3e3e42;
@@ -578,7 +578,7 @@
             border: 1px solid #3e3e42;
         }
 
-        /* 滚动条样式 */
+        /* Scrollbar Style */
         ::-webkit-scrollbar {
             width: 14px;
         }
@@ -600,22 +600,22 @@
 </head>
 <body>
     <div class="container">
-        <!-- 连接状态 -->
+        <!-- Connection Status -->
         <div id="connection-status" class="connection-status disconnected">
-            连接中...
+            Connecting...
         </div>
 
-        <!-- 页面标题 -->
+        <!-- Page Title -->
         <h1 class="page-title">
             <span>🎯</span>
-            MCP Feedback Collector - Web版
+            MCP Feedback Collector - Web Version
         </h1>
-        <p class="page-subtitle">基于Node.js + WebSocket的现代化反馈收集器</p>
+        <p class="page-subtitle">Based on Node.js + WebSocket</p>
 
-        <!-- 版本信息和链接 -->
+        <!-- Version Information and Link -->
         <div class="version-info">
             <span class="version-badge">v<span id="version-number">2.0.8</span></span>
-            <a href="https://github.com/TerrenceMiao/mcp-interactive-feedback" target="_blank" class="github-link" title="查看源代码">
+            <a href="https://github.com/TerrenceMiao/mcp-interactive-feedback" target="_blank" class="github-link" title="View Source Code">
                 <svg class="github-icon" viewBox="0 0 24 24" width="20" height="20">
                     <path fill="currentColor" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                 </svg>
@@ -623,83 +623,83 @@
             </a>
         </div>
 
-        <!-- 导航标签 -->
+        <!-- Navigation Tabs -->
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('report')">📋 工作汇报</button>
-            <button class="nav-tab" onclick="switchTab('chat')">💬 AI对话</button>
-            <a href="https://api.ssopen.top" target="_blank" class="get-key-link">🔑 获取key</a>
+            <button class="nav-tab active" onclick="switchTab('report')">📋 Work Report</button>
+            <button class="nav-tab" onclick="switchTab('chat')">💬 AI Conversation</button>
+            <a href="https://api.ssopen.top" target="_blank" class="get-key-link">🔑 Get Key</a>
         </div>
 
-        <!-- 状态消息区域 -->
+        <!-- Status Message Area -->
         <div id="status-messages"></div>
 
-        <!-- 工作汇报内容区域 -->
+        <!-- Work Report Content Area -->
         <div id="report-content" class="content-area active">
-            <!-- 工作汇报控制栏 -->
+            <!-- Work Report Control Bar -->
             <div class="report-controls">
-                <button id="refresh-report-btn" class="refresh-btn" onclick="refreshWorkSummary()" title="刷新最新工作汇报">
-                    <span id="refresh-text">刷新最新汇报</span>
+                <button id="refresh-report-btn" class="refresh-btn" onclick="refreshWorkSummary()" title="Refresh Latest Work Report">
+                    <span id="refresh-text">Refresh Latest Report</span>
                 </button>
-                <!-- 状态文字显示 -->
-                <div id="refresh-status-text" class="refresh-status-text">下次自动刷新：<span id="auto-refresh-countdown">10</span>秒后</div>
+                <!-- Status Text Display -->
+                <div id="refresh-status-text" class="refresh-status-text">Next Auto Refresh: <span id="auto-refresh-countdown">10</span> seconds later</div>
             </div>
 
-            <!-- 动态工作汇报内容将在这里显示 -->
+            <!-- Dynamic Work Report Content Will Appear Here -->
             <div id="default-message" class="report-card" style="text-align: center; padding: 40px;">
                 <div class="card-body">
                     <div style="color: #969696; font-size: 14px;">
                         <span style="font-size: 24px;">📋</span>
                         <br><br>
-                        等待AI工作汇报...
+                        Waiting for AI Work Report...
                         <br><br>
-                        <small>当AI调用 interactive-feedback() 时，工作汇报内容将显示在这里</small>
+                        <small>When AI calls interactive-feedback(), the work report content will appear here</small>
                         <br><br>
                         <button onclick="refreshWorkSummary()" style="background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
-                            🔄 手动刷新
+                            🔄 Manual Refresh
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- 反馈表单 -->
+            <!-- Feedback Form -->
             <div class="feedback-card">
                 <div class="feedback-header">
                     <div class="feedback-title">
                         <span>💬</span>
-                        您的反馈
+                        Your Feedback
                     </div>
                 </div>
                 <div class="feedback-body">
                     <form id="feedback-form">
                         <div class="form-group">
-                            <label class="form-label">反馈内容</label>
+                            <label class="form-label">Feedback Content</label>
                             <textarea
                                 id="feedback-text"
                                 class="form-textarea"
-                                placeholder="请输入您对本次工作的反馈和建议..."
+                                placeholder="Please enter your feedback and suggestions for this work..."
                             ></textarea>
 
-                            <!-- 快捷语选项 -->
+                            <!-- Quick Phrase Option -->
                             <div class="quick-phrase-option">
                                 <label class="checkbox-label">
                                     <input type="checkbox" id="add-quick-phrase" checked>
                                     <span class="checkbox-custom"></span>
-                                    <span class="checkbox-text">附加快捷语（推荐）</span>
+                                    <span class="checkbox-text">Append Quick Phrase (Recommended)</span>
                                 </label>
                                 <div class="quick-phrase-hint">
-                                    自动附加MCP反馈收集提示词，提升AI响应质量
+                                    Automatically append MCP feedback collection prompt words to improve AI response quality
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">附件图片（可选）</label>
+                            <label class="form-label">Attachment Image (Optional)</label>
                             <div class="toolbar">
                                 <button type="button" class="toolbar-btn" onclick="selectImages()">
-                                    📁 选择图片
+                                    📁 Select Image
                                 </button>
                                 <button type="button" class="toolbar-btn" onclick="pasteImages()">
-                                    📋 粘贴图片
+                                    📋 Paste Image
                                 </button>
                             </div>
 
@@ -710,10 +710,10 @@
 
                         <div class="button-group">
                             <button type="button" class="btn btn-secondary" onclick="clearFeedbackForm()">
-                                清空
+                                Clear
                             </button>
                             <button type="submit" class="btn btn-primary" id="submit-feedback-btn">
-                                提交反馈
+                                Submit Feedback
                             </button>
                         </div>
                     </form>
@@ -721,47 +721,47 @@
             </div>
         </div>
 
-        <!-- AI对话内容区域 -->
+        <!-- AI Conversation Content Area -->
         <div id="chat-content" class="content-area">
             <div class="chat-container">
                 <div class="chat-header">
                     <div class="chat-title">
                         <span>💬</span>
-                        AI 助手对话
+                        AI Assistant Conversation
                     </div>
                 </div>
 
                 <div class="chat-messages" id="chat-messages">
-                    <div class="message-time">今天</div>
+                    <div class="message-time">Today</div>
 
                     <div class="message ai">
-                        <div class="message-bubble">您好！我是AI助手，有什么可以帮助您的吗？</div>
+                        <div class="message-bubble">Hello! I'm AI assistant, what can I help you with?</div>
                     </div>
 
                     <div id="api-hint" class="api-hint" style="display: none;">
-                        <div class="api-hint-title">🔑 需要API密钥</div>
+                        <div class="api-hint-title">�� Need API Key</div>
                         <div>
                             <a href="https://api.ssopen.top/" target="_blank" class="api-hint-link">
-                                点击获取 SSOpen API 密钥
+                                Click to Get SSOpen API Key
                             </a>
                         </div>
-                        <div class="api-hint-desc">高速稳定 | 价格优惠 | 安全可靠</div>
+                        <div class="api-hint-desc">Fast and Stable | Cost-Effective | Secure and Reliable</div>
                     </div>
                 </div>
 
                 <div class="chat-input-area">
-                    <!-- 聊天图片预览区域 -->
+                    <!-- Chat Image Preview Area -->
                     <div id="chat-image-previews" class="image-previews-container" style="display: none;">
                         <div class="image-previews" id="chat-image-previews-content"></div>
                     </div>
 
                     <div class="chat-input-row">
-                        <textarea id="chat-input" class="chat-input" placeholder="输入消息..." onkeydown="handleChatKeydown(event)"></textarea>
+                        <textarea id="chat-input" class="chat-input" placeholder="Enter message..." onkeydown="handleChatKeydown(event)"></textarea>
                         <div class="chat-actions">
-                            <button class="chat-btn" onclick="selectChatImage()" title="选择图片">📷</button>
-                            <button class="chat-btn" onclick="pasteChatImage()" title="粘贴图片">📋</button>
-                            <button class="chat-btn" onclick="clearChat()" title="清空聊天">🗑️</button>
-                            <button class="chat-btn send-btn" onclick="sendChatMessage()" title="发送" id="send-chat-btn">🚀</button>
+                            <button class="chat-btn" onclick="selectChatImage()" title="Select Image">📷</button>
+                            <button class="chat-btn" onclick="pasteChatImage()" title="Paste Image">📋</button>
+                            <button class="chat-btn" onclick="clearChat()" title="Clear Chat">🗑️</button>
+                            <button class="chat-btn send-btn" onclick="sendChatMessage()" title="Send" id="send-chat-btn">🚀</button>
                         </div>
                     </div>
                 </div>
@@ -769,10 +769,10 @@
         </div>
     </div>
 
-    <!-- Socket.IO客户端 -->
+    <!-- Socket.IO Client -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 
-    <!-- 主应用脚本 -->
+    <!-- Main Application Script -->
     <script src="/app.js"></script>
 </body>
 </html>

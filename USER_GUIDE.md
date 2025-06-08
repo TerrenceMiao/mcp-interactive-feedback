@@ -1,35 +1,35 @@
-# 📖 MCP Feedback Collector - 用户使用指南
+# 📖 MCP Feedback Collector - User Guide
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 1. 安装和启动
+### 1. Installation and Running
 
 ```bash
-# 方式1: 直接运行（推荐）
+# Method 1: Direct Run (Recommended)
 npx mcp-interactive-feedback
 
-# 方式2: 全局安装
+# Method 2: Global Installation
 npm install -g mcp-interactive-feedback
 mcp-interactive-feedback
 ```
 
-### 2. 测试功能
+### 2. Testing Functionality
 
 ```bash
-# 测试完整的反馈收集流程
+# Test the complete feedback collection process
 npx mcp-interactive-feedback test-feedback
 
-# 自定义测试内容
-npx mcp-interactive-feedback test-feedback -m "我完成了代码重构工作" -t 120
+# Custom test content
+npx mcp-interactive-feedback test-feedback -m "I have completed the code refactoring work" -t 120
 ```
 
-## 🎯 使用场景
+## 🎯 Use Cases
 
-### 场景1: Claude Desktop中使用
+### Case 1: Using in Claude Desktop
 
-1. **配置MCP服务器**
+1. **Configure MCP Server**
    
-   在Claude Desktop的配置文件中添加：
+   Add to Claude Desktop configuration file:
    ```json
    {
      "mcpServers": {
@@ -44,269 +44,269 @@ npx mcp-interactive-feedback test-feedback -m "我完成了代码重构工作" -
    }
    ```
 
-2. **调用工具函数**
+2. **Call Tool Function**
    
-   在Claude对话中使用：
+   Use in Claude conversation:
    ```
-   请使用interactive-feedback工具收集用户对我刚才完成的工作的反馈。
+   Please use the interactive-feedback tool to collect user feedback on the work I just completed.
    
-   工作汇报：我已经完成了网站首页的重构，主要改进了：
-   1. 响应式布局优化
-   2. 加载性能提升30%
-   3. 用户体验改进
+   Work Report: I have completed the website homepage refactoring, with the following main improvements:
+   1. Responsive layout optimization
+   2. Loading performance improved by 30%
+   3. User experience enhancements
    ```
 
-3. **用户反馈流程**
-   - 浏览器自动打开反馈页面
-   - 查看AI的工作汇报
-   - 输入文字反馈
-   - 上传相关图片（可选）
-   - 提交反馈
+3. **User Feedback Process**
+   - Browser automatically opens feedback page
+   - View AI's work report
+   - Enter text feedback
+   - Upload relevant images (optional)
+   - Submit feedback
 
-### 场景2: 独立Web模式
+### Case 2: Standalone Web Mode
 
 ```bash
-# 启动Web服务器
+# Start Web Server
 npx mcp-interactive-feedback --web --port 5000
 
-# 访问 http://localhost:5000
-# 在演示模式下体验界面功能
+# Visit http://localhost:5000
+# Experience interface functionality in demo mode
 ```
 
-### 场景3: 开发和测试
+### Case 3: Development and Testing
 
 ```bash
-# 开发模式（热重载）
+# Development Mode (Hot Reload)
 git clone <repository>
 cd mcp-interactive-feedback
 npm install
 npm run dev
 
-# 测试模式
+# Test Mode
 npm run test
 
-# 构建生产版本
+# Build Production Version
 npm run build
 npm start
 ```
 
-## 🎨 界面功能
+## 🎨 Interface Features
 
-### 工作汇报标签页
+### Work Report Tab
 
-- **AI工作汇报显示**: 自动显示AI提供的工作内容
-- **反馈表单**: 
-  - 文字反馈输入框
-  - 图片上传功能（文件选择 + 剪贴板粘贴）
-  - 图片预览和删除
-  - 提交和清空按钮
+- **AI Work Report Display**: Automatically shows the work content provided by AI
+- **Feedback Form**: 
+  - Text feedback input box
+  - Image upload functionality (file selection + clipboard paste)
+  - Image preview and deletion
+  - Submit and clear buttons
 
-### AI对话标签页
+### AI Conversation Tab
 
-- **聊天界面**: 保持现有的AI对话功能
-- **多模态支持**: 文字 + 图片组合输入
-- **流式响应**: 实时显示AI回复
+- **Chat Interface**: Maintains existing AI conversation functionality
+- **Multi-modal Support**: Text + Image combined input
+- **Streaming Response**: Real-time display of AI replies
 
-### 连接状态
+### Connection Status
 
-- **实时指示器**: 右上角显示连接状态
-- **自动重连**: 网络中断时自动尝试重连
-- **错误提示**: 清晰的错误信息和解决建议
+- **Real-time Indicator**: Shows connection status in the top right corner
+- **Auto Reconnect**: Automatically attempts to reconnect during network interruptions
+- **Error Messages**: Clear error information and solution suggestions
 
-## 🔧 配置选项
+## 🔧 Configuration Options
 
-### 环境变量配置
+### Environment Variables
 
-创建 `.env` 文件：
+Create a `.env` file:
 
 ```bash
-# AI API配置
+# AI API Configuration
 MCP_API_KEY="your_api_key_here"
 MCP_API_BASE_URL="https://api.ssopen.top"
 MCP_DEFAULT_MODEL="gpt-4o-mini"
 
-# Web服务器配置
+# Web Server Configuration
 MCP_WEB_PORT="5000"
-MCP_DIALOG_TIMEOUT="300"  # 反馈收集超时时间（秒），范围：10-3600
+MCP_DIALOG_TIMEOUT="300"  # Feedback collection timeout (seconds), range: 10-3600
 
-# 功能开关
+# Feature Switches
 MCP_ENABLE_CHAT="true"
 
-# 安全配置
+# Security Configuration
 MCP_CORS_ORIGIN="*"
 MCP_MAX_FILE_SIZE="10485760"  # 10MB
 
-# 日志配置
+# Log Configuration
 LOG_LEVEL="info"  # error, warn, info, debug
 ```
 
-### 命令行参数
+### Command Line Parameters
 
 ```bash
-# 基本选项
---port, -p <number>     指定Web服务器端口
---web, -w              仅启动Web模式
---config, -c <path>     指定配置文件路径
+# Basic Options
+--port, -p <number>     Specify Web server port
+--web, -w              Web mode only
+--config, -c <path>     Specify configuration file path
 
-# 测试选项
---message, -m <text>    测试工作汇报内容
---timeout, -t <seconds> 超时时间（秒）
+# Test Options
+--message, -m <text>    Test work report content
+--timeout, -t <seconds> Timeout (seconds)
 ```
 
-## 📱 图片功能
+## 📱 Image Features
 
-### 支持的格式
+### Supported Formats
 
-- **图片格式**: JPG, PNG, GIF, WebP, BMP
-- **文件大小**: 最大10MB（可配置）
-- **数量限制**: 建议不超过5张
+- **Image Formats**: JPG, PNG, GIF, WebP, BMP
+- **File Size**: Maximum 10MB (configurable)
+- **Quantity Limit**: Recommended not to exceed 5 images
 
-### 上传方式
+### Upload Methods
 
-1. **文件选择**: 点击"📁 选择图片"按钮
-2. **剪贴板粘贴**: 点击"📋 粘贴图片"按钮
-3. **拖拽上传**: 直接拖拽图片到预览区域
+1. **File Selection**: Click "📁 Select Image" button
+2. **Clipboard Paste**: Click "📋 Paste Image" button
+3. **Drag and Drop**: Directly drag images to the preview area
 
-### 图片预览
+### Image Preview
 
-- **缩略图显示**: 60x60像素预览
-- **删除功能**: 点击"×"按钮移除
-- **格式信息**: 显示文件名、类型、大小
+- **Thumbnail Display**: 60x60 pixel preview
+- **Delete Function**: Click "×" button to remove
+- **Format Information**: Displays filename, type, size
 
-## 🔍 故障排除
+## 🔍 Troubleshooting
 
-### 常见问题
+### Common Issues
 
-1. **WebSocket连接失败**
+1. **WebSocket Connection Failure**
    ```bash
-   # 检查服务器状态
+   # Check server status
    npx mcp-interactive-feedback health
    
-   # 访问测试页面
+   # Access test page
    http://localhost:5000/test.html
    ```
 
-2. **端口被占用**
+2. **Port Occupied**
    ```bash
-   # 使用其他端口
+   # Use another port
    npx mcp-interactive-feedback --port 5001
    
-   # 检查端口使用情况
+   # Check port usage
    netstat -an | grep :5000
    ```
 
-3. **图片上传失败**
-   - 检查文件大小是否超过限制
-   - 确认文件格式是否支持
-   - 检查浏览器权限设置
+3. **Image Upload Failure**
+   - Check if file size exceeds limit
+   - Confirm file format is supported
+   - Check browser permission settings
 
-### 调试模式
+### Debug Mode
 
 ```bash
-# 启用详细日志
+# Enable detailed logs
 export LOG_LEVEL=debug
 npx mcp-interactive-feedback
 
-# 查看配置信息
+# View configuration information
 npx mcp-interactive-feedback config
 
-# 健康检查
+# Health check
 npx mcp-interactive-feedback health
 ```
 
-## 🎯 最佳实践
+## 🎯 Best Practices
 
-### 1. 工作汇报编写
+### 1. Writing Work Reports
 
-**好的工作汇报示例**:
+**Good Work Report Example**:
 ```
-我已经完成了用户登录模块的开发，主要包括：
+I have completed the development of the user login module, which includes:
 
-✅ 完成的工作：
-1. 用户注册和登录功能
-2. 密码加密和验证
-3. JWT令牌管理
-4. 用户权限控制
+✅ Completed Work:
+1. User registration and login functionality
+2. Password encryption and verification
+3. JWT token management
+4. User permission control
 
-🔧 技术实现：
-- 使用bcrypt进行密码加密
-- JWT令牌有效期设置为7天
-- 实现了角色权限管理
+🔧 Technical Implementation:
+- Used bcrypt for password encryption
+- JWT token validity set to 7 days
+- Implemented role-based permission management
 
-📊 测试结果：
-- 单元测试覆盖率95%
-- 性能测试通过
-- 安全扫描无高危漏洞
+📊 Test Results:
+- Unit test coverage 95%
+- Performance tests passed
+- Security scan found no high-risk vulnerabilities
 
-❓ 需要反馈的问题：
-1. 登录界面的用户体验是否友好？
-2. 密码强度要求是否合适？
-3. 是否需要添加第三方登录？
+❓ Questions for Feedback:
+1. Is the login interface user-friendly?
+2. Are the password strength requirements appropriate?
+3. Should third-party login be added?
 ```
 
-### 2. 反馈收集技巧
+### 2. Feedback Collection Tips
 
-**有效的反馈包含**:
-- 具体的问题点
-- 改进建议
-- 相关截图或示例
-- 优先级评估
+**Effective feedback includes**:
+- Specific problem points
+- Improvement suggestions
+- Relevant screenshots or examples
+- Priority assessment
 
-### 3. 性能优化
+### 3. Performance Optimization
 
-- 定期清理过期会话
-- 控制并发连接数
-- 优化图片大小
-- 使用适当的超时时间
+- Regularly clean up expired sessions
+- Control concurrent connection numbers
+- Optimize image sizes
+- Use appropriate timeout settings
 
-## 📞 获取帮助
+## 📞 Getting Help
 
-### 文档资源
+### Documentation Resources
 
-- **README.md**: 项目概述和快速开始
-- **ARCHITECTURE.md**: 技术架构详解
-- **TROUBLESHOOTING.md**: 详细故障排除指南
-- **DEVELOPMENT_SUMMARY.md**: 开发总结和技术细节
+- **README.md**: Project overview and quick start
+- **ARCHITECTURE.md**: Technical architecture details
+- **TROUBLESHOOTING.md**: Detailed troubleshooting guide
+- **DEVELOPMENT_SUMMARY.md**: Development summary and technical details
 
-### 社区支持
+### Community Support
 
-- **GitHub Issues**: 报告问题和功能请求
-- **讨论区**: 技术交流和使用心得
-- **更新日志**: 版本更新和新功能介绍
+- **GitHub Issues**: Report problems and feature requests
+- **Discussion Area**: Technical exchange and usage experiences
+- **Changelog**: Version updates and new features
 
-### 联系方式
+### Contact Information
 
-- **项目仓库**: https://github.com/TerrenceMiao/mcp-interactive-feedback
-- **问题反馈**: 通过GitHub Issues提交
-- **功能建议**: 欢迎提交Pull Request
+- **Project Repository**: https://github.com/TerrenceMiao/mcp-interactive-feedback
+- **Issue Reporting**: Submit via GitHub Issues
+- **Feature Suggestions**: Pull Requests welcome
 
-## 🔄 版本更新
+## 🔄 Version Updates
 
-### 当前版本: v2.0.0
+### Current Version: v2.0.0
 
-**主要特性**:
-- ✅ 完整的MCP工具函数支持
-- ✅ VS Code深色主题界面
-- ✅ 实时WebSocket通信
-- ✅ 多模态反馈收集
-- ✅ 自动化测试功能
+**Main Features**:
+- ✅ Complete MCP tool function support
+- ✅ VS Code dark theme interface
+- ✅ Real-time WebSocket communication
+- ✅ Multi-modal feedback collection
+- ✅ Automated testing functionality
 
-**即将推出**:
-- 📋 更多MCP工具函数
-- 🎨 界面主题定制
-- 📊 反馈数据分析
-- 🔒 增强安全特性
+**Coming Soon**:
+- 📋 More MCP tool functions
+- 🎨 Interface theme customization
+- 📊 Feedback data analysis
+- 🔒 Enhanced security features
 
-### 升级指南
+### Upgrade Guide
 
 ```bash
-# 检查当前版本
+# Check current version
 npx mcp-interactive-feedback --version
 
-# 升级到最新版本
+# Upgrade to latest version
 npm update -g mcp-interactive-feedback
 
-# 或者重新安装
+# Or reinstall
 npm uninstall -g mcp-interactive-feedback
 npm install -g mcp-interactive-feedback@latest
 ```

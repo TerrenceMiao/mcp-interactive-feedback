@@ -1,112 +1,112 @@
-# 📋 MCP Feedback Collector - 版本发布说明
+# 📋 MCP Feedback Collector - Release Notes
 
 ## 🚀 v2.0.8 (2025-06-04)
 
-### 🎨 UI简化优化
-**解决问题**: 界面元素过多，旋转特效复杂，用户体验不够简约
+### 🎨 UI Simplification Optimization
+**Problem Solved**: Too many interface elements, complex rotation effects, user experience not simple enough
 
-**新特性**:
-- **纯文字状态显示**: 移除所有旋转动画，改为简洁的文字状态
-- **智能自动刷新**: 默认启用10秒自动刷新，无需用户选择
-- **简约控制栏**: 移除勾选框，状态信息集中显示
-- **一致性体验**: 所有状态都使用纯文字显示，符合VS Code简约风格
+**New Features**:
+- **Pure Text Status Display**: Removed all rotation animations, changed to simple text status
+- **Smart Auto Refresh**: 10-second auto refresh enabled by default, no user selection needed
+- **Simplified Control Bar**: Removed checkboxes, status information centrally displayed
+- **Consistent Experience**: All statuses use pure text display, matching VS Code minimalist style
 
-**改进详情**:
-- 刷新按钮状态：`刷新最新汇报` → `正在获取最新工作汇报...` → `刷新最新汇报`
-- 提交按钮状态：`提交反馈` → `提交中...` → `提交反馈`
-- 自动刷新显示：`下次自动刷新：8秒后`
+**Improvement Details**:
+- Refresh button status: `Refresh Latest Report` → `Getting latest work report...` → `Refresh Latest Report`
+- Submit button status: `Submit Feedback` → `Submitting...` → `Submit Feedback`
+- Auto refresh display: `Next auto refresh: in 8 seconds`
 
-### 🔄 会话管理优化
-**解决问题**: 提交反馈后会话过期，用户再次提交时显示"对话过期"错误
+### 🔄 Session Management Optimization
+**Problem Solved**: Session expiration after submitting feedback, "conversation expired" error when user tries to submit again
 
-**新特性**:
-- **智能页面刷新**: 检测到新工作汇报内容时自动刷新页面
-- **会话自动重置**: 页面刷新后重新分配有效会话
-- **无缝用户体验**: 3秒倒计时提示，用户无需手动操作
-- **状态提示优化**: 明确显示页面即将刷新的原因
+**New Features**:
+- **Smart Page Refresh**: Automatically refreshes page when new work report content is detected
+- **Session Auto Reset**: Reassigns valid session after page refresh
+- **Seamless User Experience**: 3-second countdown prompt, no manual operation needed
+- **Status Notification Optimization**: Clearly displays the reason for upcoming page refresh
 
-**工作流程**:
-1. 检测到新的工作汇报内容
-2. 显示提示：`✅ 已获取最新工作汇报，页面将自动刷新`
-3. 3秒后自动刷新页面
-4. 重新分配会话，用户可正常提交反馈
+**Workflow**:
+1. Detects new work report content
+2. Shows notification: `✅ Latest work report obtained, page will refresh automatically`
+3. Automatically refreshes page after 3 seconds
+4. Reassigns session, user can submit feedback normally
 
-### 📝 表单体验改进
-**新特性**:
-- **自动清空**: 提交反馈后自动清空输入框和图片附件
-- **状态保持**: 页面保持打开，可继续使用
-- **快速重用**: 清空后可立即输入新的反馈内容
+### 📝 Form Experience Improvement
+**New Features**:
+- **Auto Clear**: Automatically clears input box and image attachments after submitting feedback
+- **Status Retention**: Page remains open, can continue to use
+- **Quick Reuse**: Can immediately enter new feedback content after clearing
 
-### 🐛 问题修复
-- **🔄 旋转特效移除**: 完全移除所有旋转动画，包括提交按钮的loading动画
-- **💬 会话过期**: 修复提交反馈后会话失效导致的"对话过期"问题
-- **🧹 表单清理**: 修复提交反馈后输入框未清空的问题
-- **📱 UI一致性**: 统一所有状态显示为纯文字，提升用户体验
+### 🐛 Bug Fixes
+- **🔄 Rotation Effects Removed**: Completely removed all rotation animations, including submit button loading animation
+- **💬 Session Expiration**: Fixed "conversation expired" issue caused by session invalidation after submitting feedback
+- **🧹 Form Cleanup**: Fixed issue where input box was not cleared after form submission
+- **📱 UI Consistency**: Unified all status displays as pure text, improving user experience
 
-### 🎯 用户体验提升
-- **简约设计**: 界面更加简洁，符合现代UI设计趋势
-- **智能化**: 减少用户操作，系统自动处理复杂逻辑
-- **稳定性**: 解决会话管理问题，确保功能稳定可靠
-- **一致性**: 所有状态显示保持一致的文字风格
+### 🎯 User Experience Enhancement
+- **Minimalist Design**: Interface more concise, conforming to modern UI design trends
+- **Intelligence**: Reduced user operations, system automatically handles complex logic
+- **Stability**: Resolved session management issues, ensuring stable and reliable functionality
+- **Consistency**: All status displays maintain consistent text style
 
 ---
 
 ## 🚀 v2.0.5 (2025-06-02)
 
-### ⏰ 超时时间大幅扩展
-- **🔄 默认超时**: 从300秒扩展到60000秒（约16.7小时）
-- **📈 最大支持**: 从3600秒扩展到60000秒（约16.7小时）
-- **🌐 WebSocket优势**: 充分利用WebSocket长连接特性
+### ⏰ Timeout Time Greatly Extended
+- **🔄 Default Timeout**: Extended from 300 seconds to 60000 seconds (about 16.7 hours)
+- **📈 Maximum Support**: Extended from 3600 seconds to 60000 seconds (about 16.7 hours)
+- **🌐 WebSocket Advantage**: Fully utilizes WebSocket long connection features
 
-### 🎯 使用场景优化
-- **📊 长期反馈收集**: 支持跨时区、跨工作时段的反馈收集
-- **🔄 持续交互**: 适合需要长时间思考和讨论的复杂项目
-- **⚡ 灵活配置**: 用户可根据需要设置从10秒到16.7小时的任意超时时间
+### 🎯 Use Case Optimization
+- **📊 Long-term Feedback Collection**: Supports cross-timezone, cross-work period feedback collection
+- **🔄 Continuous Interaction**: Suitable for complex projects requiring long-term thinking and discussion
+- **⚡ Flexible Configuration**: Users can set any timeout from 10 seconds to 16.7 hours as needed
 
-### 🔧 技术改进
-- **✅ 配置验证**: 更新验证逻辑支持新的超时范围
-- **📚 文档同步**: 所有配置文档和示例已更新
-- **🧪 测试覆盖**: 更新测试用例确保新范围的正确性
+### 🔧 Technical Improvements
+- **✅ Configuration Validation**: Updated validation logic to support new timeout range
+- **📚 Documentation Synchronization**: All configuration docs and examples updated
+- **🧪 Test Coverage**: Updated test cases to ensure correctness of new range
 
-### 📋 配置示例
+### 📋 Configuration Example
 ```json
 {
   "env": {
-    "MCP_DIALOG_TIMEOUT": "60000"  // 16.7小时
+    "MCP_DIALOG_TIMEOUT": "60000"  // 16.7 hours
   }
 }
 ```
 
-### 🎯 推荐使用场景
-| 场景 | 建议时间 | 说明 |
+### 🎯 Recommended Use Cases
+| Scenario | Suggested Time | Description |
 |------|----------|------|
-| 快速测试 | 60-300秒 | 功能验证 |
-| 日常使用 | 1800-3600秒 | 1-2小时 |
-| 详细反馈 | 7200-14400秒 | 2-4小时 |
-| 长期收集 | 21600-60000秒 | 6-16.7小时 |
+| Quick Test | 60-300 seconds | Function verification |
+| Daily Use | 1800-3600 seconds | 1-2 hours |
+| Detailed Feedback | 7200-14400 seconds | 2-4 hours |
+| Long-term Collection | 21600-60000 seconds | 6-16.7 hours |
 
 ---
 
 ## 🚀 v2.0.4 (2025-06-02)
 
-### ✨ 新功能
-- **🚀 快捷语功能**: 反馈表单新增"附加快捷语"勾选框
-- **🎯 智能提示**: 默认勾选，自动附加MCP反馈收集提示词
-- **💡 用户体验**: 提升AI响应质量，确保持续的反馈收集流程
+### ✨ New Features
+- **🚀 Quick Phrase Function**: Added "Append Quick Phrase" checkbox to feedback form
+- **🎯 Smart Prompts**: Checked by default, automatically appends MCP feedback collection prompts
+- **💡 User Experience**: Improves AI response quality, ensures continuous feedback collection process
 
-### 🎨 界面改进
-- **✅ 精美勾选框**: 自定义样式的勾选框设计
-- **💎 蓝色主题**: 与整体UI风格保持一致的蓝色渐变背景
-- **📱 响应式设计**: 移动端友好的快捷语选项布局
-- **🔍 提示说明**: 清晰的功能说明和使用提示
+### 🎨 Interface Improvements
+- **✅ Elegant Checkbox**: Custom styled checkbox design
+- **💎 Blue Theme**: Blue gradient background consistent with overall UI style
+- **📱 Responsive Design**: Mobile-friendly quick phrase option layout
+- **🔍 Prompt Explanation**: Clear function description and usage tips
 
-### 🔧 技术实现
-- **📝 自动附加**: 提交时智能检测并附加快捷语内容
-- **🎛️ 用户控制**: 用户可以选择是否启用快捷语功能
-- **🔄 无缝集成**: 与现有反馈流程完美集成
+### 🔧 Technical Implementation
+- **📝 Auto Append**: Intelligently detects and appends quick phrase content when submitting
+- **🎛️ User Control**: User can choose whether to enable quick phrase function
+- **🔄 Seamless Integration**: Perfectly integrated with existing feedback process
 
-### 📚 快捷语内容
-自动附加的提示词内容：
+### 📚 Quick Phrase Content
+Automatically appended prompt content:
 ```
 ---
 
@@ -115,67 +115,67 @@ Whenever you want to ask a question, always call the MCP .
 Whenever you're about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user's feedback is empty, then end the request. mcp-interactive-feedback.interactive-feedback
 ```
 
-### 🎯 使用场景
-- **AI工作流程**: 确保AI在完成任务后继续收集反馈
-- **质量提升**: 提高AI响应的连续性和交互质量
-- **用户体验**: 减少手动输入重复提示词的工作量
+### 🎯 Use Cases
+- **AI Workflow**: Ensures AI continues to collect feedback after completing tasks
+- **Quality Improvement**: Enhances continuity and interaction quality of AI responses
+- **User Experience**: Reduces manual work of entering repeated prompts
 
 ---
 
 ## 🚀 v2.0.3 (2025-06-02)
 
-### ✨ 新功能
-- **📊 版本信息显示**: Web界面现在显示当前版本号
-- **🔗 GitHub链接**: 添加了GitHub仓库链接，方便查看源代码
-- **🔄 动态版本获取**: 版本号通过API动态获取，确保显示准确
+### ✨ New Features
+- **📊 Version Information Display**: Web interface now shows current version number
+- **🔗 GitHub Link**: Added GitHub repository link for easy source code access
+- **🔄 Dynamic Version Retrieval**: Version number dynamically retrieved via API, ensuring accuracy
 
-### 🎨 界面改进
-- **💎 版本徽章**: 精美的渐变版本徽章设计
-- **🎯 GitHub图标**: 标准的GitHub图标和悬停效果
-- **📱 响应式设计**: 移动端友好的版本信息布局
+### 🎨 Interface Improvements
+- **💎 Version Badge**: Beautifully designed gradient version badge
+- **🎯 GitHub Icon**: Standard GitHub icon with hover effect
+- **📱 Responsive Design**: Mobile-friendly version information layout
 
-### 🔧 技术改进
-- **🌐 版本API**: 新增 `/api/version` 端点
-- **🔄 动态更新**: 前端自动获取并显示最新版本信息
-- **📋 统一版本管理**: 所有组件使用统一的版本号
+### 🔧 Technical Improvements
+- **🌐 Version API**: New `/api/version` endpoint
+- **🔄 Dynamic Updates**: Frontend automatically retrieves and displays latest version information
+- **📋 Unified Version Management**: All components use unified version number
 
-### 📚 用户体验
-- **🔍 透明度**: 用户可以清楚看到当前使用的版本
-- **📖 源代码访问**: 一键访问GitHub仓库查看源代码
-- **🎨 美观设计**: 与VS Code深色主题完美融合
+### 📚 User Experience
+- **🔍 Transparency**: Users can clearly see the version currently in use
+- **📖 Source Code Access**: One-click access to GitHub repository to view source code
+- **🎨 Aesthetic Design**: Perfectly blends with VS Code dark theme
 
 ---
 
 ## 🚀 v2.0.2 (2025-06-02)
 
-### ✨ 新功能
-- **🌐 远程服务器支持**: 新增完整的远程服务器环境配置支持
-- **🔗 动态URL生成**: 支持通过环境变量配置服务器主机和基础URL
-- **💾 会话持久化改进**: 新增SessionStorage类，提供更好的会话管理
-- **🧹 自动会话清理**: 定期清理过期会话，优化内存使用
+### ✨ New Features
+- **🌐 Remote Server Support**: Added complete remote server environment configuration support
+- **🔗 Dynamic URL Generation**: Support for configuring server host and base URL via environment variables
+- **💾 Session Persistence Improvement**: New SessionStorage class, provides better session management
+- **🧹 Automatic Session Cleanup**: Periodically cleans up expired sessions, optimizes memory usage
 
-### 🔧 改进
-- **⚙️ 配置系统增强**: 新增`MCP_SERVER_HOST`和`MCP_SERVER_BASE_URL`环境变量
-- **🛠️ 错误处理优化**: 改进"会话不存在或已过期"错误的处理逻辑
-- **📚 文档完善**: 新增[远程服务器配置指南](REMOTE_SERVER_CONFIGURATION.md)
+### 🔧 Improvements
+- **⚙️ Configuration System Enhancement**: Added `MCP_SERVER_HOST` and `MCP_SERVER_BASE_URL` environment variables
+- **🛠️ Error Handling Optimization**: Improved handling of "session does not exist or has expired" errors
+- **📚 Documentation Completion**: Added [Remote Server Configuration Guide](REMOTE_SERVER_CONFIGURATION.md)
 
-### 🐛 修复
-- **🌍 远程环境兼容**: 修复在远程服务器环境下的会话管理问题
-- **🔗 URL生成**: 解决硬编码localhost导致的远程访问问题
-- **⏰ 会话超时**: 改进会话超时处理机制
+### 🐛 Fixes
+- **🌍 Remote Environment Compatibility**: Fixed session management issues in remote server environments
+- **🔗 URL Generation**: Resolved remote access issues caused by hardcoded localhost
+- **⏰ Session Timeout**: Improved session timeout handling mechanism
 
-### 📚 文档更新
-- 新增 `REMOTE_SERVER_CONFIGURATION.md` - 远程服务器配置指南
-- 更新 `DOCUMENTATION_INDEX.md` - 添加新文档索引
-- 更新配置示例和故障排除指南
+### 📚 Documentation Updates
+- Added `REMOTE_SERVER_CONFIGURATION.md` - Remote server configuration guide
+- Updated `DOCUMENTATION_INDEX.md` - Added new document index
+- Updated configuration examples and troubleshooting guide
 
-### 🎯 使用场景
-此版本特别适合：
-- 在远程服务器上部署MCP Feedback Collector
-- 需要通过端口转发或反向代理访问的环境
-- 多用户或团队协作环境
+### 🎯 Use Cases
+This version is especially suitable for:
+- Deploying MCP Feedback Collector on remote servers
+- Environments requiring port forwarding or reverse proxy access
+- Multi-user or team collaboration environments
 
-### 📋 配置示例
+### 📋 Configuration Example
 ```json
 {
   "mcpServers": {
@@ -199,117 +199,117 @@ Whenever you're about to complete a user request, call the MCP instead of simply
 
 ## 🚀 v2.0.0 (2025-06-02)
 
-### 🎯 重大功能发布
+### 🎯 Major Feature Release
 
-这是一个里程碑版本，实现了完整的MCP反馈收集器功能。
+This is a milestone version, implementing complete MCP feedback collector functionality.
 
-#### ✨ 新增功能
+#### ✨ New Features
 
-**核心功能**
-- 🎯 **完整的interactive-feedback工具**: 支持工作汇报展示和用户反馈收集
-- 🖼️ **图片处理功能**: 完整的图片上传、处理、显示支持
-- 💬 **AI对话集成**: 内置AI助手，支持文字和图片对话
-- ⏰ **自动关闭功能**: 反馈提交后3秒倒计时自动关闭标签页
+**Core Functionality**
+- 🎯 **Complete interactive-feedback tool**: Supports work report display and user feedback collection
+- 🖼️ **Image Processing Functionality**: Complete image upload, processing, and display support
+- 💬 **AI Conversation Integration**: Built-in AI assistant, supports text and image conversations
+- ⏰ **Auto-close Functionality**: 3-second countdown to automatically close tab after feedback submission
 
-**配置管理**
-- 🔧 **环境变量配置**: 完整的配置系统，支持所有参数自定义
-- ⏱️ **超时时间配置**: 支持通过环境变量和函数参数设置超时时间
-- 🎛️ **优先级配置**: 参数 > 环境变量 > 默认值的配置优先级
+**Configuration Management**
+- 🔧 **Environment Variable Configuration**: Complete configuration system, supports customization of all parameters
+- ⏱️ **Timeout Configuration**: Supports setting timeout through environment variables and function parameters
+- 🎛️ **Priority Configuration**: Parameters > Environment Variables > Default Values configuration priority
 
-**用户界面**
-- 🎨 **双标签页设计**: 工作汇报 + AI对话分离
-- 🌙 **VS Code深色主题**: 专业美观的界面风格
-- 📱 **响应式设计**: 完美适配桌面和移动设备
-- 🔄 **实时状态指示**: WebSocket连接状态实时显示
+**User Interface**
+- 🎨 **Dual Tab Design**: Separate Work Report + AI Conversation
+- 🌙 **VS Code Dark Theme**: Professional and beautiful interface style
+- 📱 **Responsive Design**: Perfect adaptation for desktop and mobile devices
+- 🔄 **Real-time Status Indicator**: Real-time display of WebSocket connection status
 
-#### 🔧 技术突破
+#### 🔧 Technical Breakthroughs
 
-**MCP协议兼容**
-- ✅ **严格JSON输出**: 解决Cursor对JSON格式的严格要求
-- ✅ **MCP模式检测**: 自动检测MCP环境，禁用日志输出
-- ✅ **标准类型支持**: 使用MCP SDK标准类型，确保兼容性
+**MCP Protocol Compatibility**
+- ✅ **Strict JSON Output**: Resolved Cursor's strict JSON format requirements
+- ✅ **MCP Mode Detection**: Automatically detects MCP environment, disables log output
+- ✅ **Standard Type Support**: Uses MCP SDK standard types, ensuring compatibility
 
-**图片处理优化**
-- ✅ **base64格式修复**: 移除Data URL前缀，符合MCP协议要求
-- ✅ **多格式支持**: PNG, JPEG, GIF, WebP等格式
-- ✅ **大小限制**: 可配置的文件大小限制（默认10MB）
+**Image Processing Optimization**
+- ✅ **base64 Format Fix**: Removed Data URL prefix, complies with MCP protocol requirements
+- ✅ **Multi-format Support**: PNG, JPEG, GIF, WebP and other formats
+- ✅ **Size Limit**: Configurable file size limit (default 10MB)
 
-**系统稳定性**
-- ✅ **端口管理优化**: 修复端口冲突和重复启动问题
-- ✅ **静态文件路径**: 修复ES模块环境下的路径解析问题
-- ✅ **错误处理**: 完善的错误处理和恢复机制
+**System Stability**
+- ✅ **Port Management Optimization**: Fixed port conflict and duplicate startup issues
+- ✅ **Static File Path**: Fixed path resolution issues in ES module environment
+- ✅ **Error Handling**: Comprehensive error handling and recovery mechanisms
 
-#### 📚 文档完善
+#### 📚 Documentation Improvements
 
-**用户文档**
-- 📖 **README.md**: 项目概述和快速开始指南
-- 👤 **USER_GUIDE.md**: 详细的用户使用指南
-- 🔧 **CONFIGURATION.md**: 完整的配置选项说明
-- 📚 **DOCUMENTATION_INDEX.md**: 文档索引和导航
+**User Documentation**
+- 📖 **README.md**: Project overview and quick start guide
+- 👤 **USER_GUIDE.md**: Detailed user guide
+- 🔧 **CONFIGURATION.md**: Complete configuration options description
+- 📚 **DOCUMENTATION_INDEX.md**: Documentation index and navigation
 
-**技术文档**
-- 🏗️ **ARCHITECTURE.md**: 系统架构和设计文档
-- 💻 **DEVELOPMENT_SUMMARY.md**: 开发总结和技术细节
-- 🔬 **TECHNICAL_ACHIEVEMENTS.md**: 技术成就和创新点
-- 🧪 **TESTING_STRATEGY.md**: 测试策略和质量保证
+**Technical Documentation**
+- 🏗️ **ARCHITECTURE.md**: System architecture and design document
+- 💻 **DEVELOPMENT_SUMMARY.md**: Development summary and technical details
+- 🔬 **TECHNICAL_ACHIEVEMENTS.md**: Technical achievements and innovations
+- 🧪 **TESTING_STRATEGY.md**: Testing strategy and quality assurance
 
-**运维文档**
-- 🐛 **TROUBLESHOOTING.md**: 详细的故障排除指南
-- 🔍 **DEBUG_MCP_COMMUNICATION.md**: MCP通信调试指南
-- 🎯 **CURSOR_CONFIGURATION.md**: Cursor/Claude Desktop配置指南
+**Operations Documentation**
+- 🐛 **TROUBLESHOOTING.md**: Detailed troubleshooting guide
+- 🔍 **DEBUG_MCP_COMMUNICATION.md**: MCP communication debugging guide
+- 🎯 **CURSOR_CONFIGURATION.md**: Cursor/Claude Desktop configuration guide
 
-#### 🛠️ 开发体验
+#### 🛠️ Development Experience
 
-**构建系统**
-- ⚡ **快速构建**: 优化的TypeScript编译配置
-- 🔄 **热重载**: 开发模式下的自动重载
-- 📦 **自动化**: 静态文件自动复制和处理
+**Build System**
+- ⚡ **Fast Build**: Optimized TypeScript compilation configuration
+- 🔄 **Hot Reload**: Automatic reload in development mode
+- 📦 **Automation**: Automatic static file copying and processing
 
-**代码质量**
-- 🎯 **TypeScript严格模式**: 0错误0警告
-- 📏 **ESLint规则**: 统一的代码风格
-- 🧪 **Jest测试**: 完整的测试框架配置
+**Code Quality**
+- 🎯 **TypeScript Strict Mode**: 0 errors 0 warnings
+- 📏 **ESLint Rules**: Unified code style
+- 🧪 **Jest Testing**: Complete test framework configuration
 
-### 🔄 重大变更
+### 🔄 Major Changes
 
-#### 破坏性变更
-- 无破坏性变更，向后兼容
+#### Breaking Changes
+- No breaking changes, backward compatible
 
-#### 配置变更
-- 新增 `MCP_DIALOG_TIMEOUT` 环境变量
-- 新增 `MCP_ENABLE_CHAT` 功能开关
-- 新增 `MCP_MAX_FILE_SIZE` 文件大小限制
+#### Configuration Changes
+- Added `MCP_DIALOG_TIMEOUT` environment variable
+- Added `MCP_ENABLE_CHAT` feature switch
+- Added `MCP_MAX_FILE_SIZE` file size limit
 
-### 🐛 问题修复
+### 🐛 Bug Fixes
 
-#### 关键问题修复
-- 🔧 **MCP JSON输出**: 修复Cursor严格JSON要求导致的解析失败
-- 🖼️ **图片显示**: 修复base64格式问题，图片现在正常显示
-- 🚪 **端口冲突**: 修复端口检测逻辑，避免重复启动
-- 📁 **静态文件**: 修复ES模块路径解析，静态文件正常加载
+#### Key Issue Fixes
+- 🔧 **MCP JSON Output**: Fixed parsing failures caused by Cursor's strict JSON requirements
+- 🖼️ **Image Display**: Fixed base64 format issues, images now display normally
+- 🚪 **Port Conflict**: Fixed port detection logic, avoiding duplicate startups
+- 📁 **Static Files**: Fixed ES module path resolution, static files load normally
 
-#### 稳定性改进
-- 🔄 **WebSocket连接**: 改进连接稳定性和错误处理
-- 💾 **会话管理**: 优化会话生命周期管理
-- 🛡️ **错误处理**: 增强错误处理和用户提示
+#### Stability Improvements
+- 🔄 **WebSocket Connection**: Improved connection stability and error handling
+- 💾 **Session Management**: Optimized session lifecycle management
+- 🛡️ **Error Handling**: Enhanced error handling and user notifications
 
-### 📊 性能优化
+### 📊 Performance Optimization
 
-- ⚡ **启动时间**: 优化启动流程，减少启动时间
-- 💾 **内存使用**: 优化内存管理，减少内存占用
-- 🌐 **网络传输**: 启用压缩，优化传输效率
-- 🖼️ **图片处理**: 优化图片处理性能
+- ⚡ **Startup Time**: Optimized startup process, reduced startup time
+- 💾 **Memory Usage**: Optimized memory management, reduced memory consumption
+- 🌐 **Network Transfer**: Enabled compression, optimized transfer efficiency
+- 🖼️ **Image Processing**: Optimized image processing performance
 
-### 🔒 安全增强
+### 🔒 Security Enhancements
 
-- 🛡️ **输入验证**: 增强输入验证和过滤
-- 🔐 **API密钥**: 安全的API密钥管理
-- 🚫 **CORS配置**: 可配置的跨域访问控制
-- 📏 **文件限制**: 严格的文件大小和格式限制
+- 🛡️ **Input Validation**: Enhanced input validation and filtering
+- 🔐 **API Keys**: Secure API key management
+- 🚫 **CORS Configuration**: Configurable cross-origin access control
+- 📏 **File Limitations**: Strict file size and format limitations
 
-### 🎯 使用建议
+### 🎯 Usage Recommendations
 
-#### 推荐配置
+#### Recommended Configuration
 ```json
 {
   "mcpServers": {
@@ -327,34 +327,34 @@ Whenever you're about to complete a user request, call the MCP instead of simply
 }
 ```
 
-#### 升级指南
-1. 备份现有配置
-2. 更新到最新版本
-3. 添加新的环境变量配置
-4. 重启Cursor/Claude Desktop
-5. 测试功能是否正常
+#### Upgrade Guide
+1. Backup existing configuration
+2. Update to latest version
+3. Add new environment variable configurations
+4. Restart Cursor/Claude Desktop
+5. Test if functionality works properly
 
-### 🔗 相关资源
+### 🔗 Related Resources
 
-- **项目仓库**: https://github.com/TerrenceMiao/mcp-interactive-feedback-collector
-- **文档中心**: [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)
-- **问题反馈**: GitHub Issues
-- **使用指南**: [USER_GUIDE.md](USER_GUIDE.md)
+- **Project Repository**: https://github.com/TerrenceMiao/mcp-interactive-feedback-collector
+- **Documentation Center**: [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)
+- **Issue Reporting**: GitHub Issues
+- **User Guide**: [USER_GUIDE.md](USER_GUIDE.md)
 
-### 🙏 致谢
+### 🙏 Acknowledgements
 
-感谢所有参与测试和反馈的用户，您的建议让这个项目变得更好！
+Thank you to all users who participated in testing and feedback, your suggestions have made this project better!
 
 ---
 
-## 📅 历史版本
+## 📅 Version History
 
 ### v1.0.0 (2025-01-02)
-- 🎯 初始版本发布
-- 🏗️ 基础架构搭建
-- 🌐 Web界面实现
-- 🔧 MCP协议集成
+- 🎯 Initial version release
+- 🏗️ Basic architecture setup
+- 🌐 Web interface implementation
+- 🔧 MCP protocol integration
 
 ---
 
-💡 **提示**: 如果您在使用过程中遇到任何问题，请参考 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 或提交 GitHub Issue。
+💡 **Tip**: If you encounter any issues while using the software, please refer to [TROUBLESHOOTING.md](TROUBLESHOOTING.md) or submit a GitHub Issue.
