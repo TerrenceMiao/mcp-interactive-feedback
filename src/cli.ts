@@ -144,7 +144,7 @@ async function healthCheck(): Promise<void> {
 
 // 配置CLI命令
 program
-  .name('mcp-feedback-collector')
+  .name('mcp-interactive-feedback')
   .description('基于Node.js的MCP反馈收集器')
   .version(VERSION);
 

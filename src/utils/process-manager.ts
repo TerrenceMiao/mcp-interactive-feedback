@@ -190,7 +190,7 @@ export class ProcessManager {
       'node',
       'npm',
       'npx',
-      'mcp-feedback-collector',
+      'mcp-interactive-feedback',
       'tsx'
     ];
     

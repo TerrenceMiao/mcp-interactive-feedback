@@ -333,7 +333,7 @@ interactive-feedback("我已经完成了代码重构工作，主要改进了性�
 
 ```bash
 # 克隆项目
-git clone https://github.com/sanshao85/mcp-interactive-feedback-web.git
+git clone https://github.com/TerrenceMiao/mcp-interactive-feedback.git
 cd mcp-interactive-feedback-web
 
 # 安装依赖
@@ -409,7 +409,7 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ## 🔗 相关链接
 
-- **项目主页**: [GitHub Repository](https://github.com/sanshao85/mcp-interactive-feedback-web)
+- **项目主页**: [GitHub Repository](https://github.com/TerrenceMiao/mcp-interactive-feedback)
 - **NPM包**: [mcp-interactive-feedback](https://www.npmjs.com/package/mcp-interactive-feedback)
 - **Model Context Protocol**: [官方网站](https://modelcontextprotocol.io)
 - **MCP规范**: [技术规范](https://spec.modelcontextprotocol.io)

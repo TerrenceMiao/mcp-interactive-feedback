@@ -150,7 +150,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 链接
 
-- [项目主页](https://github.com/sanshao85/mcp-feedback-collector-web)
-- [NPM包](https://www.npmjs.com/package/mcp-feedback-collector)
-- [问题反馈](https://github.com/sanshao85/mcp-feedback-collector-web/issues)
+- [项目主页](https://github.com/TerrenceMiao/mcp-interactive-feedback)
+- [问题反馈](https://github.com/TerrenceMiao/mcp-interactive-feedback/issues)
 - [发布说明](RELEASE_NOTES.md)

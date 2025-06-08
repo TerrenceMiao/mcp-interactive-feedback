@@ -6,21 +6,21 @@
 
 ```bash
 # 方式1: 直接运行（推荐）
-npx mcp-feedback-collector
+npx mcp-interactive-feedback
 
 # 方式2: 全局安装
-npm install -g mcp-feedback-collector
-mcp-feedback-collector
+npm install -g mcp-interactive-feedback
+mcp-interactive-feedback
 ```
 
 ### 2. 测试功能
 
 ```bash
 # 测试完整的反馈收集流程
-npx mcp-feedback-collector test-feedback
+npx mcp-interactive-feedback test-feedback
 
 # 自定义测试内容
-npx mcp-feedback-collector test-feedback -m "我完成了代码重构工作" -t 120
+npx mcp-interactive-feedback test-feedback -m "我完成了代码重构工作" -t 120
 ```
 
 ## 🎯 使用场景
@@ -33,9 +33,9 @@ npx mcp-feedback-collector test-feedback -m "我完成了代码重构工作" -t 
    ```json
    {
      "mcpServers": {
-       "mcp-feedback-collector": {
+       "mcp-interactive-feedback": {
          "command": "npx",
-         "args": ["mcp-feedback-collector"],
+         "args": ["mcp-interactive-feedback"],
          "env": {
            "MCP_API_KEY": "your_api_key_here"
          }
@@ -67,7 +67,7 @@ npx mcp-feedback-collector test-feedback -m "我完成了代码重构工作" -t 
 
 ```bash
 # 启动Web服务器
-npx mcp-feedback-collector --web --port 5000
+npx mcp-interactive-feedback --web --port 5000
 
 # 访问 http://localhost:5000
 # 在演示模式下体验界面功能
@@ -78,7 +78,7 @@ npx mcp-feedback-collector --web --port 5000
 ```bash
 # 开发模式（热重载）
 git clone <repository>
-cd mcp-feedback-collector
+cd mcp-interactive-feedback
 npm install
 npm run dev
 
@@ -180,7 +180,7 @@ LOG_LEVEL="info"  # error, warn, info, debug
 1. **WebSocket连接失败**
    ```bash
    # 检查服务器状态
-   npx mcp-feedback-collector health
+   npx mcp-interactive-feedback health
    
    # 访问测试页面
    http://localhost:5000/test.html
@@ -189,7 +189,7 @@ LOG_LEVEL="info"  # error, warn, info, debug
 2. **端口被占用**
    ```bash
    # 使用其他端口
-   npx mcp-feedback-collector --port 5001
+   npx mcp-interactive-feedback --port 5001
    
    # 检查端口使用情况
    netstat -an | grep :5000
@@ -205,13 +205,13 @@ LOG_LEVEL="info"  # error, warn, info, debug
 ```bash
 # 启用详细日志
 export LOG_LEVEL=debug
-npx mcp-feedback-collector
+npx mcp-interactive-feedback
 
 # 查看配置信息
-npx mcp-feedback-collector config
+npx mcp-interactive-feedback config
 
 # 健康检查
-npx mcp-feedback-collector health
+npx mcp-interactive-feedback health
 ```
 
 ## 🎯 最佳实践
@@ -276,7 +276,7 @@ npx mcp-feedback-collector health
 
 ### 联系方式
 
-- **项目仓库**: https://github.com/mcp-feedback-collector/nodejs
+- **项目仓库**: https://github.com/TerrenceMiao/mcp-interactive-feedback
 - **问题反馈**: 通过GitHub Issues提交
 - **功能建议**: 欢迎提交Pull Request
 
@@ -301,12 +301,12 @@ npx mcp-feedback-collector health
 
 ```bash
 # 检查当前版本
-npx mcp-feedback-collector --version
+npx mcp-interactive-feedback --version
 
 # 升级到最新版本
-npm update -g mcp-feedback-collector
+npm update -g mcp-interactive-feedback
 
 # 或者重新安装
-npm uninstall -g mcp-feedback-collector
-npm install -g mcp-feedback-collector@latest
+npm uninstall -g mcp-interactive-feedback
+npm install -g mcp-interactive-feedback@latest
 ```
