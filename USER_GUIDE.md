@@ -48,7 +48,7 @@ npx mcp-feedback-collector test-feedback -m "我完成了代码重构工作" -t 
    
    在Claude对话中使用：
    ```
-   请使用collect_feedback工具收集用户对我刚才完成的工作的反馈。
+   请使用interactive-feedback工具收集用户对我刚才完成的工作的反馈。
    
    工作汇报：我已经完成了网站首页的重构，主要改进了：
    1. 响应式布局优化

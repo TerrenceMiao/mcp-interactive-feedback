@@ -112,7 +112,7 @@
 
 Whenever you want to ask a question, always call the MCP .
 
-Whenever you're about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user's feedback is empty, then end the request. mcp-feedback-collector.collect_feedback
+Whenever you're about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user's feedback is empty, then end the request. mcp-feedback-collector.interactive-feedback
 ```
 
 ### 🎯 使用场景
@@ -206,7 +206,7 @@ Whenever you're about to complete a user request, call the MCP instead of simply
 #### ✨ 新增功能
 
 **核心功能**
-- 🎯 **完整的collect_feedback工具**: 支持工作汇报展示和用户反馈收集
+- 🎯 **完整的interactive-feedback工具**: 支持工作汇报展示和用户反馈收集
 - 🖼️ **图片处理功能**: 完整的图片上传、处理、显示支持
 - 💬 **AI对话集成**: 内置AI助手，支持文字和图片对话
 - ⏰ **自动关闭功能**: 反馈提交后3秒倒计时自动关闭标签页

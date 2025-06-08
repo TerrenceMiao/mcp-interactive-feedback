@@ -48,9 +48,9 @@ export class MCPServer {
    * 注册MCP工具函数
    */
   private registerTools(): void {
-    // 注册collect_feedback工具 - 使用新的registerTool方法
+    // 注册interactive-feedback工具 - 使用新的registerTool方法
     this.mcpServer.registerTool(
-      'collect_feedback',
+      'interactive-feedback',
       {
         description: 'Collect feedback from users about AI work summary. This tool opens a web interface for users to provide feedback on the AI\'s work.',
         inputSchema: {
@@ -62,14 +62,14 @@ export class MCPServer {
           work_summary: args.work_summary
         };
 
-        logger.mcp('collect_feedback', params);
+        logger.mcp('interactive-feedback', params);
 
         try {
           const result = await this.collectFeedback(params);
-          logger.mcp('collect_feedback', params, result);
+          logger.mcp('interactive-feedback', params, result);
           return result;
         } catch (error) {
-          logger.error('collect_feedback工具调用失败:', error);
+          logger.error('interactive-feedback工具调用失败:', error);
 
           if (error instanceof MCPError) {
             throw error;
@@ -77,7 +77,7 @@ export class MCPServer {
 
           throw new MCPError(
             'Failed to collect feedback',
-            'COLLECT_FEEDBACK_ERROR',
+            'interactive-feedback_ERROR',
             error
           );
         }
@@ -90,7 +90,7 @@ export class MCPServer {
   }
 
   /**
-   * 实现collect_feedback功能
+   * 实现interactive-feedback功能
    */
   private async collectFeedback(params: CollectFeedbackParams): Promise<CallToolResult> {
     const { work_summary } = params;

@@ -84,7 +84,7 @@ export MCP_DIALOG_TIMEOUT="60000"
 
 ```typescript
 // 超时时间统一从环境变量读取
-collect_feedback("工作汇报内容")
+interactive-feedback("工作汇报内容")
 ```
 
 ### 超时时间配置

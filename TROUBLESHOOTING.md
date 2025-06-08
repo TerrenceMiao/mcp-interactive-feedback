@@ -113,7 +113,7 @@ node D:/path/to/project/dist/cli.js
 
 **现象描述**:
 - MCP服务器在Claude Desktop中显示红色指示器
-- 工具函数`collect_feedback`可以正常调用并返回结果
+- 工具函数`interactive-feedback`可以正常调用并返回结果
 - 服务器日志显示正常启动和运行
 - 可以正常处理MCP协议消息
 
@@ -158,7 +158,7 @@ node D:/path/to/project/dist/cli.js
 echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' | node dist/cli.js
 
 # 正确输出示例：
-# {"result":{"tools":[{"name":"collect_feedback",...}]},"jsonrpc":"2.0","id":1}
+# {"result":{"tools":[{"name":"interactive-feedback",...}]},"jsonrpc":"2.0","id":1}
 ```
 
 **重要提醒**:
@@ -186,7 +186,7 @@ echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' | node dist/cli.js
 **注意事项**:
 - 修复后MCP服务器应该显示绿色状态
 - 如果仍显示红色，重启Cursor刷新连接状态
-- 功能完全正常，可以安全使用collect_feedback工具
+- 功能完全正常，可以安全使用interactive-feedback工具
 
 ### 4. Cursor图片显示问题
 
@@ -363,7 +363,7 @@ npm run build
 
 ### 5. MCP工具函数调用失败
 
-**症状**: Claude Desktop中调用collect_feedback失败
+**症状**: Claude Desktop中调用interactive-feedback失败
 
 **检查清单**:
 ```bash

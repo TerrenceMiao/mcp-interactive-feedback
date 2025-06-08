@@ -40,7 +40,7 @@
 - **功能**: MCP协议实现
 - **职责**: 工具注册、会话管理、协议处理
 - **关键特性**:
-  - `collect_feedback` 工具实现
+  - `interactive-feedback` 工具实现
   - 标准MCP协议兼容
   - 会话生命周期管理
 
@@ -56,7 +56,7 @@
 
 ### 反馈收集流程
 ```
-1. AI调用collect_feedback工具
+1. AI调用interactive-feedback工具
    ↓
 2. MCP服务器创建会话
    ↓

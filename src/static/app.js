@@ -431,7 +431,7 @@ const QUICK_PHRASE = `
 
 Whenever you want to ask a question, always call the MCP .
 
-Whenever you're about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user's feedback is empty, then end the request. mcp-feedback-collector.collect_feedback`;
+Whenever you're about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user's feedback is empty, then end the request. mcp-feedback-collector.interactive-feedback`;
 
 // 提交反馈
 document.getElementById('feedback-form').addEventListener('submit', function(e) {

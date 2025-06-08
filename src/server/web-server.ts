@@ -294,7 +294,7 @@ export class WebServer {
           logger.info(`客户端 ${socket.id} 请求最新工作汇报，但未找到`);
           socket.emit('latest_summary_response', {
             success: false,
-            message: '暂无最新工作汇报，请等待AI调用collect_feedback工具函数'
+            message: '暂无最新工作汇报，请等待AI调用interactive-feedback工具函数'
           });
         }
       });

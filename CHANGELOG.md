@@ -111,7 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2025-06-02
 
 ### Added
-- 完整的collect_feedback工具实现
+- 完整的interactive-feedback工具实现
 - 图片处理和显示功能
 - AI对话集成
 - 双标签页设计（工作汇报 + AI对话）

@@ -67,7 +67,7 @@ mcp-interactive-feedback --port 8080
 # 仅Web模式
 mcp-interactive-feedback --web
 
-# 测试collect_feedback功能
+# 测试interactive-feedback功能
 mcp-interactive-feedback test-feedback
 
 # 自定义测试内容
@@ -187,7 +187,7 @@ mcp-interactive-feedback config
 ## 在cursor规则中可以下面这样配置
 “Whenever you want to ask a question, always call the MCP .
 
-Whenever you’re about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user’s feedback is empty, then end the request. mcp-interactive-feedback.collect_feedback ”
+Whenever you’re about to complete a user request, call the MCP instead of simply ending the process. Keep calling MCP until the user’s feedback is empty, then end the request. mcp-interactive-feedback.interactive-feedback ”
 
 
 ⚠️ **重要提醒**:
@@ -223,13 +223,13 @@ Whenever you’re about to complete a user request, call the MCP instead of simp
 
 ## 🛠️ MCP工具函数
 
-### collect_feedback
+### interactive-feedback
 
 收集用户对AI工作的反馈：
 
 ```typescript
 // 基本调用（超时时间从环境变量读取）
-collect_feedback("我已经完成了代码重构工作，主要改进了性能和可读性。")
+interactive-feedback("我已经完成了代码重构工作，主要改进了性能和可读性。")
 ```
 
 **参数说明**:

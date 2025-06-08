@@ -229,8 +229,8 @@ program
 // 测试MCP工具函数命令
 program
   .command('test-feedback')
-  .description('测试collect_feedback工具函数')
-  .option('-m, --message <message>', '测试工作汇报内容', '这是一个测试工作汇报，用于验证collect_feedback功能是否正常工作。')
+  .description('测试interactive-feedback工具函数')
+  .option('-m, --message <message>', '测试工作汇报内容', '这是一个测试工作汇报，用于验证interactive-feedback功能是否正常工作。')
   .action(async (options) => {
     try {
       showWelcome();
@@ -238,7 +238,7 @@ program
       const config = getConfig();
       logger.setLevel(config.logLevel as any);
 
-      logger.info('🧪 开始测试collect_feedback工具函数...');
+      logger.info('🧪 开始测试interactive-feedback工具函数...');
 
       // 创建MCP服务器实例
       const server = new MCPServer(config);
